@@ -103,7 +103,7 @@ gboolean na_spawn_script(gpointer script)
 	nread = read(s->out,s->buf,BUFSIZ);
 	if (nread < BUFSIZ)
 		s->buf[nread]='\0';
-	if(s->error) {
+	if(ret == FALSE || s->error) {
 		g_warning("na_spawn_script: %s\n", s->error->message);
 		g_error_free(s->error);
 	}
@@ -111,7 +111,7 @@ gboolean na_spawn_script(gpointer script)
 	close(s->out);
 	close(s->err);
 	g_spawn_close_pid(s->pid);
-	return ret;
+	return TRUE; /* we always want it re-scheduled */
 }
 
 void na_script_purge(gpointer script, gpointer null)
