@@ -1,3 +1,6 @@
+/* Copyright © 2008 by Benoît Rouits
+ * Published under the terms of the GNU General Public License (GPL).
+ */
 #ifndef _NA_H
 #define _NA_H
 #include <gtk/gtk.h>

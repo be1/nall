@@ -1,3 +1,6 @@
+/* Copyright © 2008 by Benoît Rouits
+ * Published under the terms of the GNU General Public License (GPL).
+ */
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
