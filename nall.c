@@ -9,9 +9,6 @@
 #include <gtk/gtk.h>
 #include "na.h"
 
-extern char *optarg;
-extern int optind, opterr, optopt;
-
 GtkStatusIcon *global_tray_icon = NULL;
 GList* global_script_list = NULL;
 gchar global_tooltip_buffer [BUFSIZ];
@@ -53,7 +50,6 @@ int main(int argc, char **argv)
 {
 	GError* err = NULL;
 	gchar* script_path = NULL;
-	int opt;
 	gint reap = NA_FALLBACK_REAP_FREQ;
 
 	script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
@@ -66,17 +62,22 @@ int main(int argc, char **argv)
 	g_free(script_path);
 
 	gtk_init(&argc, &argv);
-	while ((opt = getopt(argc, argv, "r:")) != -1) {
-		switch (opt) {
-			case 'r':
-				if (isdigit(optarg[0]))
-					reap = atoi(optarg);
-				else
-					usage(argv[0], EXIT_FAILURE);
-				break;
-			default:
+	switch (argc) {
+		case 1:
+			break;
+		case 2:
+			usage(argv[0], EXIT_FAILURE);
+		case 3:
+			if (!strcmp(argv[1],"-r")) {
+				if (isdigit(argv[2][0])) {
+					reap = atoi(argv[2]);
+					break;
+				}
 				usage(argv[0], EXIT_FAILURE);
-		}
+			}
+			usage(argv[0], EXIT_FAILURE);
+		default:
+			usage(argv[0], EXIT_FAILURE);
 	}
 
 	na_init_reaper(reap, NULL);
