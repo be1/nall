@@ -12,10 +12,12 @@
 #include <gtk/gtk.h>
 #include "na.h"
 
+/* global stuff (FIXME) */
 extern GtkStatusIcon *global_tray_icon;
 extern GList* global_script_list;
 extern gchar global_tooltip_buffer[BUFSIZ];
 
+/* check if path is a file */
 static int is_file (const char* path)
 {
 	struct stat st;
@@ -25,6 +27,7 @@ static int is_file (const char* path)
 	return S_ISREG(st.st_mode);
 }
 
+/* registering scripts from 'path' to launch into the main G loop */
 GList* na_register_scripts (gchar* path, gpointer null)
 {
 	GDir* dir = NULL;
@@ -75,7 +78,7 @@ GList* na_register_scripts (gchar* path, gpointer null)
 			script_freq = atoi(buf);
 			script->name = g_strdup(entry+i);
 		}
-		/* register script */
+/* register script */
 		g_timeout_add_seconds
 			(script_freq, na_spawn_script, script);
 		script_list = g_list_prepend(script_list, script);
@@ -85,6 +88,7 @@ GList* na_register_scripts (gchar* path, gpointer null)
 	return script_list;
 }
 
+/* spawn a registered script */
 gboolean na_spawn_script(gpointer script)
 {
 	gchar* argv [2] = { NULL, NULL };
@@ -114,6 +118,7 @@ gboolean na_spawn_script(gpointer script)
 	return TRUE; /* we always want it re-scheduled */
 }
 
+/* purge a script object without to free it */
 void na_script_purge(gpointer script, gpointer null)
 {
 	Script* s = (Script*)script;
@@ -129,6 +134,7 @@ void na_script_purge(gpointer script, gpointer null)
 	return;
 }
 
+/* unregister scripts and free the script_list */
 void na_unregister_scripts (GList* script_list, gpointer null)
 {
 	g_list_foreach(script_list, na_script_purge, NULL);
@@ -136,6 +142,7 @@ void na_unregister_scripts (GList* script_list, gpointer null)
 	return;
 }
 
+/* append a script output into the toolitp buffer */
 void na_script_append_out(gpointer script, gpointer null)
 {
 	Script* s = (Script*)script;
@@ -161,6 +168,7 @@ void na_script_append_out(gpointer script, gpointer null)
 	return;
 }
 
+/* reap each script output */
 gboolean na_reap(gpointer script_list)
 {
 	GList* l = (GList*)script_list;
@@ -171,17 +179,20 @@ gboolean na_reap(gpointer script_list)
 	return TRUE;
 }
 
+/* add the na_reap into the main G loop */
 void na_init_reaper (gint reap_freq, gpointer null)
 {
 	g_timeout_add_seconds(reap_freq, na_reap, global_script_list);
 	
 }
 
+/* rescan the script directory (FIXME) */
 void na_rescan(GtkStatusIcon* tray_icon, GList* script_list)
 {
 	/* FIXME: unregister + remove hooks + register scripts */
 }
 
+/* popup the config menu (FIXME) */
 void na_popup_config(GtkStatusIcon* tray_icon, GList* script_list)
 {
 	/* this does quit: */

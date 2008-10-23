@@ -9,20 +9,24 @@
 #include <gtk/gtk.h>
 #include "na.h"
 
+/* global stuff (FIXME) */
 GtkStatusIcon *global_tray_icon = NULL;
 GList* global_script_list = NULL;
 gchar global_tooltip_buffer [BUFSIZ];
 
+/* handler for left-button click (FIXME) */
 void tray_icon_on_click(void)
 {
         na_rescan(global_tray_icon, global_script_list);
 }
 
+/* handler for right-button click (FIXME) */
 void tray_icon_on_menu(void)
 {
         na_popup_config(global_tray_icon, global_script_list);
 }
 
+/* GtkStatusIcon creator */
 GtkStatusIcon* tray_icon_new(void)
 {
         GtkStatusIcon *tray_icon;
@@ -40,18 +44,21 @@ GtkStatusIcon* tray_icon_new(void)
         return tray_icon;
 }
 
+/* cli usage message */
 void usage(char* prog, int exitcode) {
 	fprintf(stderr,"Usage: %s [-r REAP_FREQ] (defaults to %d seconds)\n",
 			basename(prog), NA_FALLBACK_REAP_FREQ);
 	exit(exitcode);
 }
 
+/* here we are */
 int main(int argc, char **argv)
 {
 	GError* err = NULL;
 	gchar* script_path = NULL;
 	gint reap = NA_FALLBACK_REAP_FREQ;
 
+/* we scan $HOME/.nall for scripts */
 	script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
 	global_script_list = na_register_scripts(script_path, NULL);
 
@@ -61,6 +68,7 @@ int main(int argc, char **argv)
 	}
 	g_free(script_path);
 
+/* cli argument parsing */
 	gtk_init(&argc, &argv);
 	switch (argc) {
 		case 1:
@@ -79,9 +87,11 @@ int main(int argc, char **argv)
 		default:
 			usage(argv[0], EXIT_FAILURE);
 	}
-
+/* initialisation */
 	na_init_reaper(reap, NULL);
 	global_tray_icon = tray_icon_new();
+
+/* run */
         gtk_main();
         exit(EXIT_SUCCESS);
 }
