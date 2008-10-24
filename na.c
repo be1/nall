@@ -187,18 +187,17 @@ void na_init_reaper (gint reap_freq, gpointer null)
 }
 
 /* rescan the script directory (FIXME) */
-void na_rescan(GtkStatusIcon* tray_icon, GList* script_list)
+void na_refresh(GtkStatusIcon* tray_icon, GList* script_list)
 {
-	/* FIXME: unregister + remove hooks + register scripts */
+	na_reap(script_list);
 }
 
 /* popup the config menu (FIXME) */
-void na_popup_config(GtkStatusIcon* tray_icon, GList* script_list)
+void na_quit(GtkStatusIcon* tray_icon, GList* script_list)
 {
 	/* this does quit: */
 	na_unregister_scripts(script_list, NULL);
 	g_list_free(script_list);
 	gtk_main_quit();
-	/* FIXME: popup a "apropos"/"quit" menu entry instead */
 }
 

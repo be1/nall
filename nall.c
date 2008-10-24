@@ -17,13 +17,14 @@ gchar global_tooltip_buffer [BUFSIZ];
 /* handler for left-button click (FIXME) */
 void tray_icon_on_click(void)
 {
-        na_rescan(global_tray_icon, global_script_list);
+        na_refresh(global_tray_icon, global_script_list);
 }
 
 /* handler for right-button click (FIXME) */
 void tray_icon_on_menu(void)
 {
-        na_popup_config(global_tray_icon, global_script_list);
+	/* FIXME: popup a "apropos"/"quit" menu entry instead */
+        na_quit(global_tray_icon, global_script_list);
 }
 
 /* GtkStatusIcon creator */
