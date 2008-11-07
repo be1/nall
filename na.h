@@ -1,4 +1,5 @@
-/* Copyright © 2008 by Benoît Rouits
+/* 
+ * na.h Copyright © 2008 by Benoît Rouits
  * Published under the terms of the GNU General Public License (GPL).
  */
 #ifndef _NA_H
