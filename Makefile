@@ -1,4 +1,4 @@
-# vim:ts=4:sw=4:noexpandtab:cindent
+# vim:ts=4:sw=4:noexpandtab:autoindent
 PRGNAME=nall
 SRC=$(PRGNAME).c na.c
 CFLAGS=`pkg-config --cflags glib-2.0` `pkg-config --cflags gtk+-2.0` -g
