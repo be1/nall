@@ -1,0 +1,8 @@
+#!/bin/sh
+# probe for nall (see http://brouits.free.fr/nall)
+# tell the disk usage in % of a particular partition on e remot host
+# need: ssh
+#
+HOST=example.com
+PART=/
+ssh $HOST "df -P" $PART "| tail -1 | awk '{ print "'$5'"}'"

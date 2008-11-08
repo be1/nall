@@ -1,0 +1,8 @@
+#!/bin/sh
+# probe for nall (see http://brouits.free.fr/nall)
+# tell the latest listened song on lastfm
+# need: telnet and a lastfm account (see http://last.fm)
+#
+USERNAME=example
+{ echo GET /1.0/user/$USERNAME/recenttracks.txt HTTP/1.1 ; echo Host: ws.audioscrobbler.com ; echo Connection: Close; echo ; sleep 1; } | telnet ws.audioscrobbler.com 80 | tail -10 | head -1 | sed -e "s/[0-9]*,//"
+

@@ -1,0 +1,7 @@
+#!/bin/sh
+# probe for nall (see http://brouits.free.fr/nall)
+# tell if HOSTNAME is alive
+# need: fping
+#
+HOSTNAME=example.com
+fping $HOSTNAME
