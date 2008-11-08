@@ -1,5 +1,9 @@
 2008-10-16
-this version of nall is unstable (and ugly) but... work.
-example scripts are in the scripts directory
-to make a script, read the introduction at http://brouits.free.fr/nall
-happy hacking.
+This version of nall is unstable (and ugly) but... work.
+2008-11-08
+Example scripts are in the scripts directory.
+All given scripts are released into the public domain
+You must modify it in order to fit your needs (HOSTNAME, etc..)
+To make a script, read the introduction at http://brouits.free.fr/nall
+and don't forget the script filename is important to nall (NNtitle)
+- happy hacking.
