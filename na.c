@@ -167,13 +167,15 @@ void na_unregister_scripts (GList* script_list, gpointer null)
 	return;
 }
 
-/* append a script output into the toolitp buffer */
+/* append a script output into the tooltip buffer (uses a mutex) */
 void na_script_append_out(gpointer script, gpointer null)
 {
 	Script* s = (Script*)script;
 	gchar* p = global_tooltip_buffer;
 	gint rst;
+	static GStaticMutex tooltip_mutex = G_STATIC_MUTEX_INIT;
 
+	g_static_mutex_lock (&tooltip_mutex);
 	while(*p)
 		p++;
 	rst = global_tooltip_buffer + BUFSIZ - p;
@@ -190,6 +192,7 @@ void na_script_append_out(gpointer script, gpointer null)
 		}
 	}
 	p = g_stpcpy(p, "\n");
+	g_static_mutex_unlock (&tooltip_mutex);
 	return;
 }
 
