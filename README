@@ -1,3 +1,5 @@
+2008-12-16
+This version uses a mutex for tooltip refresh. This is safer.
 2008-10-16
 This version of nall is unstable (and ugly) but... work.
 2008-11-08
