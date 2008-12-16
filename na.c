@@ -211,8 +211,8 @@ void na_init_reaper (gint reap_freq, gpointer null)
 	
 }
 
-/* rescan the script directory (FIXME) */
-void na_refresh(GtkStatusIcon* tray_icon, GList* script_list)
+/* refresh the tooltip buffer */
+void na_refresh_tooltip(GtkStatusIcon* tray_icon, GList* script_list)
 {
 	na_reap(script_list);
 }

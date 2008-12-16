@@ -42,7 +42,7 @@ gchar global_tooltip_buffer [BUFSIZ];
 /* handler for left-button click (FIXME) */
 void tray_icon_on_click(void)
 {
-        na_refresh(global_tray_icon, global_script_list);
+        na_refresh_tooltip(global_tray_icon, global_script_list);
 }
 
 /* handler for right-button click (FIXME) */
