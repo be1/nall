@@ -71,9 +71,11 @@ GList* na_register_scripts (gchar* path, gpointer null)
 
 	dir = g_dir_open(path,0,NULL);
 	while (entry = g_dir_read_name(dir)) {
+		/* FIXME: which order ? */
 		/* store script path */
 		script_path = g_build_path("/", path, entry, NULL);
 		if (!is_file(script_path)) {
+			/* FIXME: check if is_exec */
 			g_free(script_path);
 			continue;
 		}
