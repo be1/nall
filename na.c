@@ -30,8 +30,10 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdio.h>
+#if 0
 #include <sys/stat.h>
 #include <sys/types.h>
+#endif
 #include <string.h>
 #include <glib.h>
 #include <gtk/gtk.h>
@@ -42,6 +44,7 @@ extern GtkStatusIcon *global_tray_icon;
 extern GList* global_script_list;
 extern gchar global_tooltip_buffer[BUFSIZ];
 
+#if 0
 /* check if path is a file */
 static int is_file (const char* path)
 {
@@ -50,6 +53,13 @@ static int is_file (const char* path)
 	if(stat(path, &st) == -1)
 		return 0;
 	return S_ISREG(st.st_mode);
+}
+#endif
+
+/* check if path is an executable file */
+static int is_exe_file (const char* path)
+{
+	return !access(path,F_OK|X_OK);
 }
 
 /* registering scripts from 'path' to launch into the main G loop */
@@ -74,8 +84,7 @@ GList* na_register_scripts (gchar* path, gpointer null)
 		/* FIXME: which order ? */
 		/* store script path */
 		script_path = g_build_path("/", path, entry, NULL);
-		if (!is_file(script_path)) {
-			/* FIXME: check if is_exec */
+		if (!is_exe_file(script_path)) {
 			g_free(script_path);
 			continue;
 		}
