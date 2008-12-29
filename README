@@ -1,6 +1,9 @@
+		nall: notify everything in a discrete tooltip
+			http://brouits.free.fr/nall/
+
 2008-12-29
 This version fixes a bad behaviour when trying to launch a non-executable script
-and adds a default script output sorting in the tooltip by frequency order.
+and adds a default output sorting in the tooltip by frequency order.
 2008-12-16
 This version uses a mutex for tooltip refresh. This is safer.
 2008-11-08
