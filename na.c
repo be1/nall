@@ -62,6 +62,17 @@ static int is_exe_file (const char* path)
 	return !access(path,F_OK|X_OK);
 }
 
+/* compare order of 2 scripts based on their freq (for sorting) */
+gint script_freq_cmp (gconstpointer a, gconstpointer b)
+{
+	Script* s1, *s2;
+	if ((!a) || (!b))
+		return 0;
+	s1 = (Script*)a;
+	s2 = (Script*)b;
+	return (s1->freq > s2->freq);
+}
+
 /* registering scripts from 'path' to launch into the main G loop */
 GList* na_register_scripts (gchar* path, gpointer null)
 {
@@ -81,7 +92,6 @@ GList* na_register_scripts (gchar* path, gpointer null)
 
 	dir = g_dir_open(path,0,NULL);
 	while (entry = g_dir_read_name(dir)) {
-		/* FIXME: which order ? */
 		/* store script path */
 		script_path = g_build_path("/", path, entry, NULL);
 		if (!is_exe_file(script_path)) {
@@ -114,13 +124,15 @@ GList* na_register_scripts (gchar* path, gpointer null)
 			script_freq = atoi(buf);
 			script->name = g_strdup(entry+i);
 		}
-/* register script */
+		/* register script */
+		script->freq = script_freq;
 		g_timeout_add_seconds
 			(script_freq, na_spawn_script, script);
 		script_list = g_list_prepend(script_list, script);
 
 	}
 	g_dir_close(dir);
+	script_list = g_list_sort(script_list, script_freq_cmp);
 	return script_list;
 }
 

@@ -36,6 +36,7 @@
 struct _script {
 	gchar* cmd;
 	gchar* name;
+	gint freq;
 	gint in;
 	gint out;
 	gint err;
