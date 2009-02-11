@@ -140,6 +140,9 @@ gboolean na_spawn_script(gpointer script)
 
 	Script* s = (Script*)script;
 
+	if (!s) /* disable the schedule */
+		return FALSE;
+
 	if (s->cmd) {
 		argv[0] = (gchar*) s->cmd;
 		argv[1] = NULL;
