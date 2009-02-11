@@ -1,5 +1,5 @@
 /* 
- * na.h Copyright © 2008 by Benoît Rouits <brouits@free.fr>
+ * menu.c Copyright © 2008 by Benoît Rouits <brouits@free.fr>
  * Published under the terms of the GNU General Public License v2 (GPLv2).
  * 
  ***************************************************** 
@@ -26,39 +26,42 @@
  * 
  */
 
-#ifndef _NA_H
-#define _NA_H
+#include <glib.h>
 #include <gtk/gtk.h>
 
-#define NA_FALLBACK_REAP_FREQ 3
-#define NA_FALLBACK_SCRIPT_FREQ 5
+GtkMenu* menu_new(void)
+{
+	GtkWidget* menu;
 
-struct _script {
-	gchar* cmd;
-	gchar* name;
-	gint freq;
-	gint in;
-	gint out;
-	gint err;
-	GPid pid;
-	gchar buf[BUFSIZ];
-	gchar old[BUFSIZ];
-	GError* error;
-};
+	menu = gtk_menu_new ();
 
-typedef struct _script Script;
+	return GTK_MENU(menu);
+}
 
-enum {ICON, MENU, LIST, TIP};
+/* append an item to the menu, and connect its callback on "activate" event */
+void menu_append_item(GtkMenu* menu, gchar* label, GCallback callback, gpointer cb_data)
+{
+	GtkWidget* item;
 
-GList* na_register_scripts (gchar* path);
+	item = gtk_menu_item_new_with_label (label);
+	gtk_menu_shell_append ((GtkMenuShell*) (menu), item);
+	if (callback)
+		g_signal_connect (G_OBJECT(item), "activate", G_CALLBACK(callback), cb_data);
+	gtk_widget_show (item);
 
-void na_unregister_scripts (GList* script_list);
+	return;
+}
 
-gboolean na_spawn_script(gpointer script);
+/* show the menu */
+void menu_show(GtkMenu* menu, guint button, guint activate_time)
+{
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, button, activate_time);
+	return;
+}
 
-void na_popup_info(GtkStatusIcon* tray_icon, GList* script_list);
-
-void na_popup_config(GtkStatusIcon* tray_icon, GList* script_list);
-
-void na_quit(gpointer app_data);
-#endif
+/* hide the menu */
+void menu_hide(GtkMenu* menu)
+{
+	gtk_menu_popdown(GTK_MENU(menu));
+	return;
+}

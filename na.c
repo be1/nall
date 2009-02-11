@@ -39,11 +39,6 @@
 #include <gtk/gtk.h>
 #include "na.h"
 
-/* global stuff (FIXME) */
-extern GtkStatusIcon *global_tray_icon;
-extern GList* global_script_list;
-extern gchar global_tooltip_buffer[BUFSIZ];
-
 #if 0
 /* check if path is a file */
 static int is_file (const char* path)
@@ -74,7 +69,7 @@ gint script_freq_cmp (gconstpointer a, gconstpointer b)
 }
 
 /* registering scripts from 'path' to launch into the main G loop */
-GList* na_register_scripts (gchar* path, gpointer null)
+GList* na_register_scripts (gchar* path)
 {
 	GDir* dir = NULL;
 	const gchar* entry;
@@ -167,7 +162,7 @@ gboolean na_spawn_script(gpointer script)
 }
 
 /* purge a script object without to free it */
-void na_script_purge(gpointer script, gpointer null)
+void na_script_purge(gpointer script, gpointer unused)
 {
 	Script* s = (Script*)script;
 
@@ -183,7 +178,7 @@ void na_script_purge(gpointer script, gpointer null)
 }
 
 /* unregister scripts and free the script_list */
-void na_unregister_scripts (GList* script_list, gpointer null)
+void na_unregister_scripts (GList* script_list)
 {
 	g_list_foreach(script_list, na_script_purge, NULL);
 	g_list_free(script_list);
@@ -191,17 +186,18 @@ void na_unregister_scripts (GList* script_list, gpointer null)
 }
 
 /* append a script output into the tooltip buffer (uses a mutex) */
-void na_script_append_out(gpointer script, gpointer null)
+void na_script_append_out(gpointer script, gpointer tooltip_buffer)
 {
 	Script* s = (Script*)script;
-	gchar* p = global_tooltip_buffer;
+	gchar* p = tooltip_buffer;
+	gchar* b = tooltip_buffer;
 	gint rst;
 	static GStaticMutex tooltip_mutex = G_STATIC_MUTEX_INIT;
 
 	g_static_mutex_lock (&tooltip_mutex);
 	while(*p)
 		p++;
-	rst = global_tooltip_buffer + BUFSIZ - p;
+	rst = b + BUFSIZ - p;
 	if (strlen(s->name) < rst)
 		p = g_stpcpy(p, s->name);
 	if (strlen(s->name) + strlen(": ") + strlen(s->buf) >= rst){
@@ -219,35 +215,35 @@ void na_script_append_out(gpointer script, gpointer null)
 	return;
 }
 
-/* reap each script output */
-gboolean na_reap(gpointer script_list)
+/* reap each script output and refresh the tooltip buffer */
+gboolean na_reap(gpointer app_data)
 {
-	GList* l = (GList*)script_list;
-	global_tooltip_buffer[0] = '\0';
-	g_list_foreach(l, na_script_append_out, NULL);
-	global_tooltip_buffer[strlen(global_tooltip_buffer)-1]='\0';
-        gtk_status_icon_set_tooltip(global_tray_icon, global_tooltip_buffer);
+	gpointer* d = (gpointer*)app_data;
+	gchar* tooltip_buffer = (gchar*)d[TIP];
+	GList* script_list = (GList*)d[LIST];
+	GtkStatusIcon* tray_icon = GTK_STATUS_ICON(d[ICON]);
+
+	tooltip_buffer[0] = '\0';
+	g_list_foreach(script_list, na_script_append_out, tooltip_buffer);
+	tooltip_buffer[strlen(tooltip_buffer)-1]='\0';
+        gtk_status_icon_set_tooltip(tray_icon, tooltip_buffer);
 	return TRUE;
 }
 
 /* add the na_reap into the main G loop */
-void na_init_reaper (gint reap_freq, gpointer null)
+void na_init_reaper (gint reap_freq, void** app_data)
 {
-	g_timeout_add_seconds(reap_freq, na_reap, global_script_list);
+	g_timeout_add_seconds(reap_freq, na_reap, (gpointer)app_data);
 	
 }
 
-/* refresh the tooltip buffer */
-void na_refresh_tooltip(GtkStatusIcon* tray_icon, GList* script_list)
+/* quit nall */
+void na_quit(gpointer app_data)
 {
-	na_reap(script_list);
-}
+	gpointer* d = (gpointer*) app_data;
+	GList* script_list = (GList*)d[LIST];
 
-/* popup the config menu (FIXME) */
-void na_quit(GtkStatusIcon* tray_icon, GList* script_list)
-{
-	/* this does quit: */
-	na_unregister_scripts(script_list, NULL);
+	na_unregister_scripts(script_list);
 	g_list_free(script_list);
 	gtk_main_quit();
 }

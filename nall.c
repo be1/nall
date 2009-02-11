@@ -33,36 +33,45 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include "na.h"
+#include "menu.h"
 
-/* global stuff (FIXME) */
-GtkStatusIcon *global_tray_icon = NULL;
-GList* global_script_list = NULL;
-gchar global_tooltip_buffer [BUFSIZ];
-
-/* handler for left-button click (FIXME) */
-void tray_icon_on_click(void)
+/* handler for the "Quit" menu item */
+void menu_item_on_quit(GtkMenuItem* instance, gpointer app_data)
 {
-        na_refresh_tooltip(global_tray_icon, global_script_list);
+	na_quit(app_data);
 }
 
-/* handler for right-button click (FIXME) */
-void tray_icon_on_menu(void)
+/* handler for left-button click */
+void tray_icon_on_click(GtkStatusIcon* instance, gpointer app_data)
 {
-	/* FIXME: popup a "apropos"/"quit" menu entry instead */
-        na_quit(global_tray_icon, global_script_list);
+	if (app_data)
+		na_reap(app_data);
+}
+
+/* handler for right-button click */
+void tray_icon_on_menu(GtkStatusIcon* instance, guint button, guint activate_time, gpointer app_data)
+{
+	gpointer* d = (gpointer*) app_data;
+	if (app_data)
+		menu_show(GTK_MENU(d[MENU]), button, activate_time);
+}
+
+/* Gtkmenu creator */
+GtkMenu* menu_create(void)
+{
+	GtkMenu* menu;
+
+	menu = menu_new();
+
+	return GTK_MENU(menu);
 }
 
 /* GtkStatusIcon creator */
-GtkStatusIcon* tray_icon_new(void)
+GtkStatusIcon* tray_icon_create(void)
 {
-        GtkStatusIcon *tray_icon;
+        GtkStatusIcon* tray_icon;
 
         tray_icon = gtk_status_icon_new();
-
-	g_signal_connect(G_OBJECT(tray_icon), "popup-menu",
-                         G_CALLBACK(tray_icon_on_menu), NULL);
-        g_signal_connect(G_OBJECT(tray_icon), "activate", 
-                         G_CALLBACK(tray_icon_on_click), NULL);
         gtk_status_icon_set_from_icon_name(tray_icon, GTK_STOCK_INFO);
         gtk_status_icon_set_tooltip(tray_icon, "nall");
         gtk_status_icon_set_visible(tray_icon, TRUE);
@@ -84,17 +93,30 @@ int main(int argc, char **argv)
 	gchar* script_path = NULL;
 	gint reap = NA_FALLBACK_REAP_FREQ;
 
-/* we scan $HOME/.nall for scripts */
-	script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
-	global_script_list = na_register_scripts(script_path, NULL);
+	GtkStatusIcon* main_tray_icon = NULL;
+	GtkMenu* main_menu = NULL;
+	GList* main_script_list = NULL;
+	gchar main_tooltip_buffer [BUFSIZ];
 
-	if (!global_script_list) {
+	/* application data for callbacks: icon, menu, list, and tip */
+	gpointer app_data [4];
+
+/*
+ * scan $HOME/.nall for scripts
+ */ 
+	script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
+	main_script_list = na_register_scripts(script_path);
+
+	if (!main_script_list) {
 		g_message("no script to run: aborting");
 		exit(EXIT_SUCCESS);
 	}
+	app_data[LIST]=(void*)main_script_list;
 	g_free(script_path);
 
-/* cli argument parsing */
+/*
+ * cli argument parsing
+ */ 
 	gtk_init(&argc, &argv);
 	switch (argc) {
 		case 1:
@@ -113,11 +135,40 @@ int main(int argc, char **argv)
 		default:
 			usage(argv[0], EXIT_FAILURE);
 	}
-/* initialisation */
-	na_init_reaper(reap, NULL);
-	global_tray_icon = tray_icon_new();
 
-/* run */
+/*
+ * initialisation
+ */
+	app_data[TIP]=(gpointer)main_tooltip_buffer;
+
+	/* create the main menu */
+	main_menu = menu_create();
+
+	/* and its item callbacks */
+	menu_append_item(main_menu, "Schedule", NULL, NULL);
+	menu_append_item(main_menu, "Rescan", NULL, NULL);
+	menu_append_item(main_menu, "About", NULL, NULL);
+	menu_append_item(main_menu, "Quit", G_CALLBACK(menu_item_on_quit), app_data);
+
+	app_data[MENU]=(gpointer)main_menu;
+
+	/* the tray icon */
+	main_tray_icon = tray_icon_create();
+
+	/* and its callbacks */
+	g_signal_connect(G_OBJECT(main_tray_icon), "popup-menu",
+                         G_CALLBACK(tray_icon_on_menu), app_data);
+        g_signal_connect(G_OBJECT(main_tray_icon), "activate", 
+                         G_CALLBACK(tray_icon_on_click), app_data);
+
+	app_data[ICON]=(gpointer)main_tray_icon;
+
+/* 
+ * run
+ */
+	/* schedule the buffers reaper */
+	na_init_reaper(reap, app_data);
+
         gtk_main();
         exit(EXIT_SUCCESS);
 }
