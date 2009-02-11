@@ -146,7 +146,9 @@ gboolean na_spawn_script(gpointer script)
 	if (s->cmd) {
 		argv[0] = (gchar*) s->cmd;
 		argv[1] = NULL;
-	}
+	} else
+		return FALSE; /* disable schedule */
+
 	ret = g_spawn_async_with_pipes
 		(NULL, argv, NULL, 0, NULL, NULL, 
 		&s->pid, &s->in, &s->out, &s->err, &s->error);
@@ -226,15 +228,23 @@ void na_script_append_out(gpointer script, gpointer tooltip_buffer)
 /* reap each script output and refresh the tooltip buffer */
 gboolean na_reap(gpointer app_data)
 {
+	gchar temp_buffer[BUFSIZ]; /* WARN: same size as tooltip_buffer */
 	gpointer* d = (gpointer*)app_data;
 	gchar* tooltip_buffer = (gchar*)d[TIP];
 	GList* script_list = (GList*)d[LIST];
 	GtkStatusIcon* tray_icon = GTK_STATUS_ICON(d[ICON]);
 
+	strncpy(temp_buffer, tooltip_buffer, BUFSIZ);
 	tooltip_buffer[0] = '\0';
 	g_list_foreach(script_list, na_script_append_out, tooltip_buffer);
 	tooltip_buffer[strlen(tooltip_buffer)-1]='\0';
         gtk_status_icon_set_tooltip(tray_icon, tooltip_buffer);
+
+	/* blink on message changes */
+	if (strncmp(tooltip_buffer, temp_buffer, BUFSIZ))
+			gtk_status_icon_set_blinking (tray_icon, TRUE);
+	else	/* remove blink on second pass (REAP_FREQ) */
+			gtk_status_icon_set_blinking (tray_icon, FALSE);
 	return TRUE;
 }
 

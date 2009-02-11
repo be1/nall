@@ -32,6 +32,7 @@
 /* handler for left-button click */
 void tray_icon_on_click(GtkStatusIcon* instance, gpointer app_data)
 {
+	gtk_status_icon_set_blinking(instance, FALSE);
 	if (app_data)
 		na_reap(app_data);
 }
@@ -40,6 +41,8 @@ void tray_icon_on_click(GtkStatusIcon* instance, gpointer app_data)
 void tray_icon_on_menu(GtkStatusIcon* instance, guint button, guint activate_time, gpointer app_data)
 {
 	gpointer* d = (gpointer*) app_data;
+
+	gtk_status_icon_set_blinking(instance, FALSE);
 	if (app_data)
 		menu_show(GTK_MENU(d[MENU]), button, activate_time);
 }
