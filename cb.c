@@ -29,12 +29,6 @@
 #include <gtk/gtk.h>
 #include "na.h"
 
-/* handler for the "Quit" menu item */
-void menu_item_on_quit(GtkMenuItem* instance, gpointer app_data)
-{
-	na_quit(app_data);
-}
-
 /* handler for left-button click */
 void tray_icon_on_click(GtkStatusIcon* instance, gpointer app_data)
 {
@@ -48,5 +42,43 @@ void tray_icon_on_menu(GtkStatusIcon* instance, guint button, guint activate_tim
 	gpointer* d = (gpointer*) app_data;
 	if (app_data)
 		menu_show(GTK_MENU(d[MENU]), button, activate_time);
+}
+
+/* handler for the "Quit" menu item */
+void menu_item_on_quit(GtkMenuItem* instance, gpointer app_data)
+{
+	na_quit(app_data);
+}
+
+/* handler for the "Rescan" menu item */
+void menu_item_on_rescan(GtkMenuItem* instance, gpointer app_data)
+{
+	gpointer* d = (gpointer*) app_data;
+	gchar* script_path = (gchar*) d[PATH];
+	GList* script_list = (GList*) d[LIST];
+	
+	na_unregister_scripts(script_list);
+	script_list = na_register_scripts(script_path);
+	d[LIST] = (gpointer) script_list;
+}
+
+/* handler for the "About" menu item */
+void menu_item_on_about(GtkMenuItem* instance, gpointer app_data)
+{
+}
+
+/* convenience script spawn from menu */
+void glist_spawn_script (gpointer s, gpointer unused) {
+	gboolean ret;
+	ret = na_spawn_script(s);
+}
+
+/* handler for the "Schedule" menu item */
+void menu_item_on_schedule(GtkMenuItem* instance, gpointer app_data)
+{
+	gpointer* d = (gpointer*) app_data;
+	GList* script_list = (GList*) d[LIST];
+
+	g_list_foreach (script_list, glist_spawn_script, NULL);
 }
 

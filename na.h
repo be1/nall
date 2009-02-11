@@ -48,7 +48,7 @@ struct _script {
 
 typedef struct _script Script;
 
-enum {ICON, MENU, LIST, TIP};
+enum {ICON, MENU, LIST, TIP, PATH};
 
 GList* na_register_scripts (gchar* path);
 

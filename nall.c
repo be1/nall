@@ -79,12 +79,14 @@ int main(int argc, char **argv)
 	gchar main_tooltip_buffer [BUFSIZ];
 
 	/* application data for callbacks: icon, menu, list, and tip */
-	gpointer app_data [4];
+	gpointer app_data [5]; /* WARN: must be as enum{} in na.h */
 
 /*
  * scan $HOME/.nall for scripts
  */ 
 	script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
+	app_data[PATH]=(void*)script_path;
+
 	main_script_list = na_register_scripts(script_path);
 
 	if (!main_script_list) {
@@ -92,7 +94,6 @@ int main(int argc, char **argv)
 		exit(EXIT_SUCCESS);
 	}
 	app_data[LIST]=(void*)main_script_list;
-	g_free(script_path);
 
 /*
  * cli argument parsing
@@ -125,9 +126,9 @@ int main(int argc, char **argv)
 	main_menu = menu_create();
 
 	/* and its item callbacks */
-	menu_append_item(main_menu, "Schedule", NULL, NULL);
-	menu_append_item(main_menu, "Rescan", NULL, NULL);
-	menu_append_item(main_menu, "About", NULL, NULL);
+	menu_append_item(main_menu, "Schedule", G_CALLBACK(menu_item_on_schedule), app_data);
+	menu_append_item(main_menu, "Rescan", G_CALLBACK(menu_item_on_rescan), app_data);
+	menu_append_item(main_menu, "About", G_CALLBACK(menu_item_on_about), app_data);
 	menu_append_item(main_menu, "Quit", G_CALLBACK(menu_item_on_quit), app_data);
 
 	app_data[MENU]=(gpointer)main_menu;
@@ -150,6 +151,7 @@ int main(int argc, char **argv)
 	na_init_reaper(reap, app_data);
 
         gtk_main();
+	g_free(script_path);
         exit(EXIT_SUCCESS);
 }
 

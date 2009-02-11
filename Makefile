@@ -8,4 +8,4 @@ all:
 	@$(CC) $(SRC) -o $(PRGNAME) $(CFLAGS) $(LDFLAGS) && echo Have Fun!
 
 clean:
-	rm -f $(PRGNAME) *.o
+	rm -f $(PRGNAME)

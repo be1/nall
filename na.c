@@ -153,6 +153,7 @@ gboolean na_spawn_script(gpointer script)
 	if(ret == FALSE || s->error) {
 		g_warning("na_spawn_script: %s\n", s->error->message);
 		g_error_free(s->error);
+		s->error=NULL;
 	}
 	close(s->in);
 	close(s->out);
@@ -167,13 +168,17 @@ void na_script_purge(gpointer script, gpointer unused)
 	Script* s = (Script*)script;
 
 	g_free(s->cmd);
+	s->cmd=NULL;
 	g_free(s->name);
+	s->name=NULL;
 	close(s->in);
 	close(s->out);
 	close(s->err);
 	g_spawn_close_pid(s->pid);
-	if(s->error)
+	if (s->error) {
 		g_error_free(s->error);
+		s->error=NULL;
+	}
 	return;
 }
 

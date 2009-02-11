@@ -32,9 +32,6 @@ void tray_icon_on_click(GtkStatusIcon* instance, gpointer app_data);
 /* handler for right-button click */
 void tray_icon_on_menu(GtkStatusIcon* instance, guint button, guint activate_time, gpointer app_data);
 
-/* handler for the "Quit" menu item */
-void menu_item_on_quit(GtkMenuItem* instance, gpointer app_data);
-
 /* handler for the "Schedule" menu item */
 void menu_item_on_schedule(GtkMenuItem* instance, gpointer app_data);
 
@@ -43,4 +40,7 @@ void menu_item_on_rescan(GtkMenuItem* instance, gpointer app_data);
 
 /* handler for the "About" menu item */
 void menu_item_on_about(GtkMenuItem* instance, gpointer app_data);
+
+/* handler for the "Quit" menu item */
+void menu_item_on_quit(GtkMenuItem* instance, gpointer app_data);
 
