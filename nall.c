@@ -34,27 +34,7 @@
 #include <gtk/gtk.h>
 #include "na.h"
 #include "menu.h"
-
-/* handler for the "Quit" menu item */
-void menu_item_on_quit(GtkMenuItem* instance, gpointer app_data)
-{
-	na_quit(app_data);
-}
-
-/* handler for left-button click */
-void tray_icon_on_click(GtkStatusIcon* instance, gpointer app_data)
-{
-	if (app_data)
-		na_reap(app_data);
-}
-
-/* handler for right-button click */
-void tray_icon_on_menu(GtkStatusIcon* instance, guint button, guint activate_time, gpointer app_data)
-{
-	gpointer* d = (gpointer*) app_data;
-	if (app_data)
-		menu_show(GTK_MENU(d[MENU]), button, activate_time);
-}
+#include "cb.h"
 
 /* Gtkmenu creator */
 GtkMenu* menu_create(void)
