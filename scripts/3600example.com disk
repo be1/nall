@@ -1,7 +1,7 @@
 #!/bin/sh
 # probe for nall (see http://brouits.free.fr/nall)
 # tell the disk usage in % of a particular partition on e remot host
-# need: ssh
+# need: ssh (and an ssh authorized public key on the remote host)
 #
 HOST=example.com
 PART=/
