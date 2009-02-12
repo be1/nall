@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 	GList* main_script_list = NULL;
 	gchar main_tooltip_buffer [BUFSIZ];
 
-	/* application data for callbacks: icon, menu, list, and tip */
+	/* application data for callbacks: icon, menu, list, tip... */
 	gpointer app_data [5]; /* WARN: must be as enum{} in na.h */
 
 /*
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 		case 2:
 			usage(argv[0], EXIT_FAILURE);
 		case 3:
-			if (!strcmp(argv[1],"-r")) {
+			if (!strcmp(argv[1], "-r")) {
 				if (isdigit(argv[2][0])) {
 					reap = atoi(argv[2]);
 					break;

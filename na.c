@@ -30,7 +30,10 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdio.h>
-#if 0
+#ifdef EBUG
+#include <time.h>
+#endif
+#ifdef TRASHCODE
 #include <sys/stat.h>
 #include <sys/types.h>
 #endif
@@ -39,7 +42,7 @@
 #include <gtk/gtk.h>
 #include "na.h"
 
-#if 0
+#ifdef TRASHCODE
 /* check if path is a file */
 static int is_file (const char* path)
 {
@@ -102,6 +105,11 @@ GList* na_register_scripts (gchar* path)
 		script->pid = 0;
 		script->buf[0] = '\0';
 		script->error = NULL;
+#ifdef EBUG
+		script->dbg = TRUE;
+#else
+		script->dbg = FALSE;
+#endif
 		/* store script freq (in seconds) */
 		if (!isdigit(entry[0])) {
 			script_freq = NA_FALLBACK_SCRIPT_FREQ;
@@ -153,8 +161,7 @@ gboolean na_spawn_script(gpointer script)
 		(NULL, argv, NULL, 0, NULL, NULL, 
 		&s->pid, &s->in, &s->out, &s->err, &s->error);
 
-	/* FIXME: could waitpid(s->pid) here */
-
+	/* read() blocks until s->out gives EOF (child hanged up) */
 	nread = read(s->out, s->buf, BUFSIZ);
 	if (nread < BUFSIZ)
 		s->buf[nread]='\0';
@@ -167,6 +174,19 @@ gboolean na_spawn_script(gpointer script)
 	close(s->out);
 	close(s->err);
 	g_spawn_close_pid(s->pid);
+
+	/* could also output to dbus from here... */
+#ifdef EBUG
+	if(s->dbg) {
+		time_t t;
+		gchar* info;
+
+		t = time(NULL);
+		info = g_path_get_basename(s->cmd);
+		g_message("%s\t%s [%d] %s", ctime(&t), info, s->pid, s->buf);
+		g_free(info);
+	}
+#endif
 	return TRUE; /* we want it re-scheduled */
 }
 

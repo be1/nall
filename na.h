@@ -34,16 +34,16 @@
 #define NA_FALLBACK_SCRIPT_FREQ 5
 
 struct _script {
-	gchar* cmd;
-	gchar* name;
-	gint freq;
-	gint in;
-	gint out;
-	gint err;
-	GPid pid;
-	gchar buf[BUFSIZ];
-	gchar old[BUFSIZ];
-	GError* error;
+	gchar* cmd;	/* full program path */
+	gchar* name;	/* program name */
+	gint freq;	/* program frequency (s) */
+	gint in;	/* program stdin */
+	gint out;	/* program stdout */
+	gint err;	/* progream stderr */
+	GPid pid;	/* program pid */
+	gchar buf[BUFSIZ];	/* program relevant out */
+	gboolean dbg;		/* debug (verbose) mode */
+	GError* error;		/* program start error */
 };
 
 typedef struct _script Script;
