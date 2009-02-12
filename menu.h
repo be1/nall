@@ -26,6 +26,8 @@
  * 
  */
 
+#ifndef _MENU_H
+#define _MENU_H
 #include <glib.h>
 #include <gtk/gtk.h>
 
@@ -40,3 +42,4 @@ void menu_show(GtkMenu* menu, guint button, guint activate_time);
 
 /* hide the menu */
 void menu_hide(GtkMenu* menu);
+#endif /* _MENU_H */

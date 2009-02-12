@@ -6,4 +6,4 @@
 HOSTNAME=example.com
 USERNAME=example
 PASSWORD=example
-{ echo X login $USERNAME $PASSWORD; sleep 1; echo X select inbox; sleep 1; echo X logout;} | telnet $HOSTNAME 143 2>/dev/null | grep RECENT | tail -1
+{ echo X login $USERNAME $PASSWORD; sleep 1; echo X select inbox; sleep 1; echo X logout;} | telnet $HOSTNAME 143 2>/dev/null | grep RECENT | tail -1 | sed 's/.* \([0-9][0-9]*\) .*/\1 recent mail/'

@@ -29,6 +29,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 #include <libgen.h>
 #include <glib.h>
 #include <gtk/gtk.h>
@@ -69,7 +71,6 @@ void usage(char* prog, int exitcode) {
 /* here we are */
 int main(int argc, char **argv)
 {
-	GError* err = NULL;
 	gchar* script_path = NULL;
 	gint reap = NA_FALLBACK_REAP_FREQ;
 

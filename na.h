@@ -56,9 +56,9 @@ void na_unregister_scripts (GList* script_list);
 
 gboolean na_spawn_script(gpointer script);
 
-void na_popup_info(GtkStatusIcon* tray_icon, GList* script_list);
+void na_init_reaper(gint reap_freq, void** app_data);
 
-void na_popup_config(GtkStatusIcon* tray_icon, GList* script_list);
+gboolean na_reap(gpointer app_data);
 
 void na_quit(gpointer app_data);
-#endif
+#endif /* _NA_H */

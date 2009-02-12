@@ -28,6 +28,7 @@
 
 #include <gtk/gtk.h>
 #include "na.h"
+#include "menu.h"
 
 /* handler for left-button click */
 void tray_icon_on_click(GtkStatusIcon* instance, gpointer app_data)

@@ -86,7 +86,7 @@ GList* na_register_scripts (gchar* path)
 	}
 
 	dir = g_dir_open(path,0,NULL);
-	while (entry = g_dir_read_name(dir)) {
+	while ((entry = g_dir_read_name(dir))) {
 		/* store script path */
 		script_path = g_build_path("/", path, entry, NULL);
 		if (!is_exe_file(script_path)) {
@@ -107,7 +107,7 @@ GList* na_register_scripts (gchar* path)
 			script_freq = NA_FALLBACK_SCRIPT_FREQ;
 			script->name = g_strdup(entry);
 		} else {
-			int i;
+			unsigned int i;
 			for (i=0; i<strlen(entry); i++) {
 				if(!isdigit(entry[i])) {
 					buf[i]='\0';
@@ -152,7 +152,10 @@ gboolean na_spawn_script(gpointer script)
 	ret = g_spawn_async_with_pipes
 		(NULL, argv, NULL, 0, NULL, NULL, 
 		&s->pid, &s->in, &s->out, &s->err, &s->error);
-	nread = read(s->out,s->buf,BUFSIZ);
+
+	/* FIXME: could waitpid(s->pid) here */
+
+	nread = read(s->out, s->buf, BUFSIZ);
 	if (nread < BUFSIZ)
 		s->buf[nread]='\0';
 	if(ret == FALSE || s->error) {
@@ -164,7 +167,7 @@ gboolean na_spawn_script(gpointer script)
 	close(s->out);
 	close(s->err);
 	g_spawn_close_pid(s->pid);
-	return TRUE; /* we always want it re-scheduled */
+	return TRUE; /* we want it re-scheduled */
 }
 
 /* purge a script object without to free it */
@@ -195,16 +198,14 @@ void na_unregister_scripts (GList* script_list)
 	return;
 }
 
-/* append a script output into the tooltip buffer (uses a mutex) */
+/* append a script output into the tooltip buffer */
 void na_script_append_out(gpointer script, gpointer tooltip_buffer)
 {
 	Script* s = (Script*)script;
 	gchar* p = tooltip_buffer;
 	gchar* b = tooltip_buffer;
-	gint rst;
-	static GStaticMutex tooltip_mutex = G_STATIC_MUTEX_INIT;
+	guint rst;
 
-	g_static_mutex_lock (&tooltip_mutex);
 	while(*p)
 		p++;
 	rst = b + BUFSIZ - p;
@@ -221,11 +222,10 @@ void na_script_append_out(gpointer script, gpointer tooltip_buffer)
 		}
 	}
 	p = g_stpcpy(p, "\n");
-	g_static_mutex_unlock (&tooltip_mutex);
 	return;
 }
 
-/* reap each script output and refresh the tooltip buffer */
+/* reap each script output and refresh the tooltip buffer (mutex) */
 gboolean na_reap(gpointer app_data)
 {
 	gchar temp_buffer[BUFSIZ]; /* WARN: same size as tooltip_buffer */
@@ -233,6 +233,9 @@ gboolean na_reap(gpointer app_data)
 	gchar* tooltip_buffer = (gchar*)d[TIP];
 	GList* script_list = (GList*)d[LIST];
 	GtkStatusIcon* tray_icon = GTK_STATUS_ICON(d[ICON]);
+	static GStaticMutex reap_mutex = G_STATIC_MUTEX_INIT;
+
+	g_static_mutex_lock (&reap_mutex);
 
 	strncpy(temp_buffer, tooltip_buffer, BUFSIZ);
 	tooltip_buffer[0] = '\0';
@@ -245,6 +248,8 @@ gboolean na_reap(gpointer app_data)
 			gtk_status_icon_set_blinking (tray_icon, TRUE);
 	else	/* remove blink on second pass (REAP_FREQ) */
 			gtk_status_icon_set_blinking (tray_icon, FALSE);
+
+	g_static_mutex_unlock (&reap_mutex);
 	return TRUE;
 }
 

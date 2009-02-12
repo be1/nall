@@ -26,6 +26,10 @@
  * 
  */
 
+#ifndef _CB_H
+#define _CB_H
+#include <gtk/gtk.h>
+
 /* handler for left-button click */
 void tray_icon_on_click(GtkStatusIcon* instance, gpointer app_data);
 
@@ -43,4 +47,4 @@ void menu_item_on_about(GtkMenuItem* instance, gpointer app_data);
 
 /* handler for the "Quit" menu item */
 void menu_item_on_quit(GtkMenuItem* instance, gpointer app_data);
-
+#endif /* _CB_H */
