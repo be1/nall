@@ -169,14 +169,14 @@ gboolean na_spawn_script(gpointer script)
 
 	Script* s = (Script*)script;
 
-	if (!s) /* disable the schedule */
+	if (!s) /* do not reschedule */
 		return FALSE;
 
 	if (s->cmd) {
 		argv[0] = (gchar*) s->cmd;
 		argv[1] = NULL;
 	} else
-		return FALSE; /* disable schedule */
+		return FALSE; /* do not reschedule */
 
 	ret = g_spawn_async_with_pipes
 		(NULL, argv, NULL, 0, NULL, NULL, 
