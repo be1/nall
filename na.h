@@ -44,6 +44,7 @@ struct _script {
 	gchar buf[BUFSIZ];	/* program relevant out */
 	gboolean dbg;		/* debug (verbose) mode */
 	GError* error;		/* program start error */
+	guint tag;		/* Glib source identifier */
 };
 
 typedef struct _script Script;
@@ -60,7 +61,7 @@ gboolean na_schedule_script_once(gpointer script); /* always return FALSE */
 
 gboolean na_schedule_script_freq(gpointer script); /* always return FALSE */
 
-void na_init_reaper(gint reap_freq, void** app_data);
+guint na_init_reaper(gint reap_freq, void** app_data);
 
 gboolean na_reap(gpointer app_data);
 

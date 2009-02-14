@@ -84,6 +84,7 @@ void menu_item_on_schedule(GtkMenuItem* instance, gpointer app_data)
 	while (script_list) {
 		g_timeout_add_seconds
 			(i, na_schedule_script_once, script_list->data);
+		/* na_schedule_script_once must always return FALSE */
 		++i;
 		script_list = script_list->next;
 	}

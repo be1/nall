@@ -75,8 +75,10 @@ gint script_freq_cmp (gconstpointer a, gconstpointer b)
 gboolean na_schedule_script_freq (gpointer script)
 {
 	Script* s = (Script*)script;
+	guint tag;
 
-	g_timeout_add_seconds (s->freq, na_spawn_script, s);
+	tag = g_timeout_add_seconds (s->freq, na_spawn_script, s);
+	s->tag = tag; /* this tag represents the Glib source id */
 	return FALSE; /* FALSE is required here */
 }
 
@@ -148,6 +150,7 @@ GList* na_register_scripts (gchar* path)
 		script->freq = script_freq;
 		/* postpone scheduling in i seconds */
 		g_timeout_add_seconds (i, na_schedule_script_freq, script);
+		/* na_schedule_script_freq must always return FALSE */
 		script_list = g_list_prepend(script_list, script);
 		++i;
 
@@ -223,11 +226,12 @@ gboolean na_spawn_script(gpointer script)
 	return TRUE; /* we want it re-scheduled */
 }
 
-/* purge a script object without to free it */
+/*  remove script periodic spawn, and free data members */
 void na_script_purge(gpointer script, gpointer unused)
 {
 	Script* s = (Script*)script;
 
+	g_source_remove (s->tag);
 	g_free(s->cmd);
 	s->cmd=NULL;
 	g_free(s->name);
@@ -307,9 +311,9 @@ gboolean na_reap(gpointer app_data)
 }
 
 /* add the na_reap into the main G loop */
-void na_init_reaper (gint reap_freq, void** app_data)
+guint na_init_reaper (gint reap_freq, void** app_data)
 {
-	g_timeout_add_seconds(reap_freq, na_reap, (gpointer)app_data);
+	return g_timeout_add_seconds(reap_freq, na_reap, (gpointer)app_data);
 	
 }
 
