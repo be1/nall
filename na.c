@@ -71,6 +71,15 @@ gint script_freq_cmp (gconstpointer a, gconstpointer b)
 	return (s1->freq > s2->freq);
 }
 
+/* schedule a script given its frequency (script->freq) */
+gboolean na_schedule_script (gpointer script)
+{
+	Script* s = (Script*)script;
+
+	g_timeout_add_seconds (s->freq, na_spawn_script, s);
+	return FALSE; /* FALSE is required here */
+}
+
 /* registering scripts from 'path' to launch into the main G loop */
 GList* na_register_scripts (gchar* path)
 {
@@ -78,6 +87,7 @@ GList* na_register_scripts (gchar* path)
 	const gchar* entry;
 	char* script_path = NULL;
 	int script_freq = 0;
+	int i = 0;
 	char buf [BUFSIZ];
 	Script* script = NULL;
 	GList* script_list = NULL;
@@ -114,7 +124,7 @@ GList* na_register_scripts (gchar* path)
 		if (!isdigit(entry[0])) {
 			script_freq = NA_FALLBACK_SCRIPT_FREQ;
 			script->name = g_strdup(entry);
-		} else {
+		} else { /* scan the frequency */
 			unsigned int i;
 			for (i=0; i<strlen(entry); i++) {
 				if(!isdigit(entry[i])) {
@@ -129,9 +139,10 @@ GList* na_register_scripts (gchar* path)
 		}
 		/* register script */
 		script->freq = script_freq;
-		g_timeout_add_seconds
-			(script_freq, na_spawn_script, script);
+		/* postpone scheduling at i seconds */
+		g_timeout_add_seconds (i, na_schedule_script, script);
 		script_list = g_list_prepend(script_list, script);
+		++i;
 
 	}
 	g_dir_close(dir);
