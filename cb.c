@@ -71,18 +71,27 @@ void menu_item_on_about(GtkMenuItem* instance, gpointer app_data)
 {
 }
 
-/* convenience script spawn from menu */
-void glist_spawn_script (gpointer s, gpointer unused) {
-	gboolean ret;
-	ret = na_spawn_script(s);
-}
-
-/* handler for the "Schedule" menu item */
+/* handler for the "Schedule" menu item (mutex) */
 void menu_item_on_schedule(GtkMenuItem* instance, gpointer app_data)
 {
+	int i = 0;
 	gpointer* d = (gpointer*) app_data;
 	GList* script_list = (GList*) d[LIST];
+	static GStaticMutex schedule_mutex = G_STATIC_MUTEX_INIT;
 
-	g_list_foreach (script_list, glist_spawn_script, NULL);
+	/* how to shade the menu item ? */
+	g_static_mutex_lock (&schedule_mutex);
+	while (script_list) {
+		g_timeout_add_seconds
+			(i, na_schedule_script_once, script_list->data);
+#if 0
+		while (gtk_events_pending ())
+			gtk_main_iteration ();
+#endif
+
+		++i;
+		script_list = script_list->next;
+	}
+	g_static_mutex_unlock (&schedule_mutex);
 }
 

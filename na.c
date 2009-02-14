@@ -72,11 +72,18 @@ gint script_freq_cmp (gconstpointer a, gconstpointer b)
 }
 
 /* schedule a script given its frequency (script->freq) */
-gboolean na_schedule_script (gpointer script)
+gboolean na_schedule_script_freq (gpointer script)
 {
 	Script* s = (Script*)script;
 
 	g_timeout_add_seconds (s->freq, na_spawn_script, s);
+	return FALSE; /* FALSE is required here */
+}
+
+/* schedule a script once */
+gboolean na_schedule_script_once (gpointer script)
+{
+	na_spawn_script(script);
 	return FALSE; /* FALSE is required here */
 }
 
@@ -140,7 +147,7 @@ GList* na_register_scripts (gchar* path)
 		/* register script */
 		script->freq = script_freq;
 		/* postpone scheduling at i seconds */
-		g_timeout_add_seconds (i, na_schedule_script, script);
+		g_timeout_add_seconds (i, na_schedule_script_freq, script);
 		script_list = g_list_prepend(script_list, script);
 		++i;
 
