@@ -146,7 +146,7 @@ GList* na_register_scripts (gchar* path)
 		}
 		/* register script */
 		script->freq = script_freq;
-		/* postpone scheduling at i seconds */
+		/* postpone scheduling in i seconds */
 		g_timeout_add_seconds (i, na_schedule_script_freq, script);
 		script_list = g_list_prepend(script_list, script);
 		++i;
@@ -179,8 +179,23 @@ gboolean na_spawn_script(gpointer script)
 		(NULL, argv, NULL, 0, NULL, NULL, 
 		&s->pid, &s->in, &s->out, &s->err, &s->error);
 
-	/* read() blocks until s->out gives EOF (child hanged up) */
+	/* fork may have been long, let some cpu to gtk */
+	while (gtk_events_pending ())
+		gtk_main_iteration ();
+
+#if 1 /* FIXME: the following code is a crappy thing,
+       * we must use a callback on child death, instead */
+
+	/* read() blocks until s->out gives EOF (child may have hanged up) */
+
 	nread = read(s->out, s->buf, BUFSIZ);
+
+	/* read may have been very long, let some cpu to gtk */
+	while (gtk_events_pending ())
+		gtk_main_iteration ();
+
+#endif /* End of crappy code */
+
 	if (nread < BUFSIZ)
 		s->buf[nread]='\0';
 	if(ret == FALSE || s->error) {
