@@ -1,5 +1,5 @@
 /* 
- * cb.c Copyright © 2008 by Benoît Rouits <brouits@free.fr>
+ * cb.c Copyright © 2008-2009 by Benoît Rouits <brouits@free.fr>
  * Published under the terms of the GNU General Public License v2 (GPLv2).
  * 
  ***************************************************** 
@@ -21,8 +21,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, 
  * Boston, MA  02110-1301, USA.
  * 
- * see the COPYING file included in the csv2latex package or
- * http://www.gnu.org/licenses/gpl.txt for the full licence
+ * see the COPYING file included in the nall package or
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt for the full licence
  * 
  */
 
