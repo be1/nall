@@ -1,13 +1,19 @@
 		nall: notify everything in a discrete tooltip
 			http://brouits.free.fr/nall/
 
+2009-02-18 version 0.2
+really improved responsiveness, reading childs output asynchrounously.
+
+2009-02-17 version 0.1
+1. added the "About" popup. and the Copyright stuff.
+2. license is GPL v2
+
 2009-02-14
 improved scheduling policy:
 * delay scheduling initialization to one init per second (async)
 * delay manual schedule to one script per second (async)
 
 2009-02-11
-This version has new features:
 1. added menu popup on right-button click, with:
   * schedule => re-schedule immediately
   * rescan => re-scan script directory
