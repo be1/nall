@@ -32,7 +32,7 @@ about_create (const gchar* name, const gchar* version, const gchar* copyright,
 #endif
 	gtk_about_dialog_set_authors (GTK_ABOUT_DIALOG (aboutdialog), authors);
 	gtk_about_dialog_set_logo_icon_name (GTK_ABOUT_DIALOG (aboutdialog), logo_name);
-	/* will call about_on_response(aboutdialog, gint RESP_ID, NULL) on button-press */
+	/* call about_on_response on [Close] button-press */
 	g_signal_connect(aboutdialog, "response", G_CALLBACK(about_on_response), NULL);
 	return GTK_ABOUT_DIALOG(aboutdialog);
 }

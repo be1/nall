@@ -69,7 +69,7 @@ void menu_item_on_rescan(GtkMenuItem* instance, gpointer app_data)
 }
 
 /* handler for the "About" menu item (see version.h) */
-void menu_item_on_about(GtkMenuItem* instance, gpointer app_data)
+void menu_item_on_about(GtkMenuItem* instance, gpointer unused)
 {
 	GtkAboutDialog* about;
 	const gchar* authors [] = {

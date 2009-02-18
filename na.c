@@ -33,26 +33,10 @@
 #ifdef EBUG
 #include <time.h>
 #endif
-#ifdef TRASHCODE
-#include <sys/stat.h>
-#include <sys/types.h>
-#endif
 #include <string.h>
 #include <glib.h>
 #include <gtk/gtk.h>
 #include "na.h"
-
-#ifdef TRASHCODE
-/* check if path is a file */
-static int is_file (const char* path)
-{
-	struct stat st;
-
-	if(stat(path, &st) == -1)
-		return 0;
-	return S_ISREG(st.st_mode);
-}
-#endif
 
 /* check if path is an executable file */
 static int is_exe_file (const char* path)
@@ -160,12 +144,44 @@ GList* na_register_scripts (gchar* path)
 	return script_list;
 }
 
+/* read child output on child termination event */
+void na_on_sigchld (GPid pid, gint status, gpointer script)
+{
+	Script* s = (Script*)script;
+	ssize_t nread;
+
+	nread = read(s->out, s->buf, BUFSIZ);
+	if (nread < BUFSIZ)
+		s->buf[nread]='\0';
+
+	close(s->in);
+	close(s->out);
+	close(s->err);
+	g_spawn_close_pid(s->pid);
+
+	/* FIXME: could handle status code (as nagios does) */
+
+	/* could also output to dbus from here... */
+
+#ifdef EBUG
+	if(s->dbg) {
+		time_t t;
+		gchar* name;
+
+		t = time(NULL);
+		name = g_path_get_basename(s->cmd);
+		g_message("%s[%d]\t%s (%d) %s", ctime(&t), status, name, pid, s->buf);
+		g_free(name);
+	}
+#endif
+}
+
 /* spawn a registered script */
 gboolean na_spawn_script(gpointer script)
 {
 	gchar* argv [2] = { NULL, NULL };
-	gboolean ret;
-	ssize_t nread;
+	gboolean ret; /* spawn success */
+	guint tag; /* child watcher source tag */
 
 	Script* s = (Script*)script;
 
@@ -178,51 +194,20 @@ gboolean na_spawn_script(gpointer script)
 	} else
 		return FALSE; /* do not reschedule */
 
+	/* FIXME: set any working directory ? ($HOME or /tmp) */
 	ret = g_spawn_async_with_pipes
-		(NULL, argv, NULL, 0, NULL, NULL, 
+		(NULL, argv, NULL, G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, 
 		&s->pid, &s->in, &s->out, &s->err, &s->error);
-
-	/* fork may have been long, let some cpu to gtk */
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
-
-#if 1 /* FIXME: the following code is a crappy thing,
-       * we must use a callback on child death, instead */
-
-	/* read() blocks until s->out gives EOF (child may have hanged up) */
-
-	nread = read(s->out, s->buf, BUFSIZ);
-
-	/* read may have been very long, let some cpu to gtk */
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
-
-#endif /* End of crappy code */
-
-	if (nread < BUFSIZ)
-		s->buf[nread]='\0';
 	if(ret == FALSE || s->error) {
 		g_warning("na_spawn_script: %s\n", s->error->message);
 		g_error_free(s->error);
 		s->error=NULL;
 	}
-	close(s->in);
-	close(s->out);
-	close(s->err);
-	g_spawn_close_pid(s->pid);
+	/* set the child watcher */
+	tag = g_child_watch_add (s->pid, na_on_sigchld, s);
 
-	/* could also output to dbus from here... */
-#ifdef EBUG
-	if(s->dbg) {
-		time_t t;
-		gchar* info;
+	/* FIXME: when to use g_source_remove (tag) ? */
 
-		t = time(NULL);
-		info = g_path_get_basename(s->cmd);
-		g_message("%s\t%s [%d] %s", ctime(&t), info, s->pid, s->buf);
-		g_free(info);
-	}
-#endif
 	return TRUE; /* we want it re-scheduled */
 }
 
