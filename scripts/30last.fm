@@ -4,5 +4,5 @@
 # need: telnet and a lastfm account (see http://last.fm)
 #
 USERNAME=example
-{ echo GET /1.0/user/$USERNAME/recenttracks.txt HTTP/1.1 ; echo Host: ws.audioscrobbler.com ; echo Connection: Close; echo ; sleep 1; } | telnet ws.audioscrobbler.com 80 | tail -10 | head -1 | sed -e "s/[0-9]*,//"
+{ echo GET /1.0/user/$USERNAME/recenttracks.txt HTTP/1.1 ; echo Host: ws.audioscrobbler.com ; echo Connection: Close; echo ; sleep 1; } | telnet ws.audioscrobbler.com 80 2>/dev/null | grep -v "^Trying .*\.\.\.$" | grep -v "^Connected to ws\.audioscrobbler\.com\.$" | grep -v "Escape character is '\^\]'\." | tail -10 | head -1 | sed -e "s/[0-9]*,//"
 

@@ -4,5 +4,6 @@
 # need: ssh (and an ssh authorized public key on the remote host)
 #
 HOST=example.com
+LOGIN=root
 PART=/
-ssh $HOST "df -P" $PART "| tail -1 | awk '{ print "'$5'"}'"
+ssh $LOGIN@$HOST "df -P" $PART "| tail -1 | awk '{ print "'$5'"}'"
