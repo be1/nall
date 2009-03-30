@@ -1,12 +1,12 @@
 #!/bin/sh
 # probe for nall (see http://brouits.free.fr/nall)
-# tell the global number of alive machines (icmp echo)
+# tell the global number of alive machines
 # need: fping
 #
-HOSTNAMES="example.com example.org example.net"
+HOSTNAMES="www.example.com www.example.org www.example.net ftp.example.net"
 
 NUM_TOTAL=`echo $HOSTNAMES|wc -w`
-NUM_ALIVE=`fping -a $HOSTNAMES | wc -l`
+NUM_ALIVE=`fping -a $HOSTNAMES 2>/dev/null | wc -l`
 
 if [ $NUM_ALIVE -le 1 ]
 then
