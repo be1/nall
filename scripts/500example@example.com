@@ -32,7 +32,7 @@ then
 fi
 if [ $RECENT -eq 0 -a $UNSEEN -eq 0 ]
 then
- echo no mail
+ echo no recent mail
 elif [ $RECENT -gt 0 ]
 then
  echo $RECENT recent mail
