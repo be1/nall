@@ -26,8 +26,7 @@ fi
 #
 if [ "X$RECENT" = "X" ]
 then
- echo no server response
- exit 1
+ RECENT=0
 fi
 if echo "$UNSEEN" | grep -v "^[0-9][0-9]*$" >/dev/null 2>&1
 then
