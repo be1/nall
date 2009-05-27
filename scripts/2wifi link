@@ -1,0 +1,16 @@
+#!/bin/sh
+# re-actvate wifi access-point when lost the link.
+# need sudo without password
+
+WIFACE=wlan0
+
+iwconfig $WIFACE | grep 'Access Point: [0-9].*' >/dev/null 2>&1
+ASSOCIATED=$?
+#shoud be 0 for an association
+if [ $ASSOCIATED -ne 0 ]
+then
+ echo "lost wifi link, re-activating"
+ sudo iwconfig $WIFACE ap any >/dev/null 2>&1
+else
+ echo Wifi Link OK
+fi
