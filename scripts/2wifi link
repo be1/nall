@@ -4,7 +4,7 @@
 
 WIFACE=wlan0
 
-iwconfig $WIFACE | grep 'Access Point: [0-9].*' >/dev/null 2>&1
+iwconfig $WIFACE | grep 'Access Point: [:alnum:]*' >/dev/null 2>&1
 ASSOCIATED=$?
 #shoud be 0 for an association
 if [ $ASSOCIATED -ne 0 ]
