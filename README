@@ -1,6 +1,10 @@
 		nall: notify everything in a discrete tooltip
 			http://brouits.free.fr/nall/
 
+2009-06-14
+1. added install, uninstall make targets (defaults to usr/local)
+2. added desktop entry for freedesktops
+
 2009-02-18 version 0.2
 really improved responsiveness, reading childs output asynchrounously.
 

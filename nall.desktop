@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Nall!
+Name[fr]=Nall!
+Comment=Display your scripts notifications
+Comment[fr]=Affichez des notifications de vos scripts
+Exec=nall
+Icon=nall.png
+StartupNotify=false
+Terminal=false
+Type=Application
+Categories=GNOME;GTK;System;
+X-Ubuntu-Gettext-Domain=nall
