@@ -1,6 +1,10 @@
 		nall: notify everything in a discrete tooltip
 			http://brouits.free.fr/nall/
 
+2009-06-14 version 0.3
+1. fallback buffer refresh to 1 second
+2. fallback launch to 10 seconds (if not specified in the filename)
+
 2009-06-14
 1. added install, uninstall make targets (defaults to usr/local)
 2. added desktop entry for freedesktops
