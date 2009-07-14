@@ -54,6 +54,7 @@ void tray_icon_on_menu(GtkStatusIcon* instance, guint button, guint activate_tim
 void menu_item_on_quit(GtkMenuItem* instance, gpointer app_data)
 {
 	na_quit(app_data);
+	instance = NULL; /* useless but does not warn at compile time */
 }
 
 /* handler for the "Rescan" menu item */
@@ -66,6 +67,7 @@ void menu_item_on_rescan(GtkMenuItem* instance, gpointer app_data)
 	na_unregister_scripts(script_list);
 	script_list = na_register_scripts(script_path);
 	d[LIST] = (gpointer) script_list;
+	instance = NULL; /* avoid compiler warnings */
 }
 
 /* handler for the "About" menu item (see version.h) */
@@ -81,6 +83,8 @@ void menu_item_on_about(GtkMenuItem* instance, gpointer unused)
 				NALL_COMMENT, NALL_LICENSE, NALL_WEBSITE,
 				authors, GTK_STOCK_INFO);
 	about_show(about);
+	unused = NULL; /* avoid compiler warnings */
+	instance = NULL; /* _ */
 	return;
 }
 
@@ -102,5 +106,6 @@ void menu_item_on_schedule(GtkMenuItem* instance, gpointer app_data)
 		script_list = script_list->next;
 	}
 	g_static_mutex_unlock (&schedule_mutex);
+	instance = NULL; /* avoid compiler warnings */
 }
 

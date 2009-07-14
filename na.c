@@ -157,9 +157,10 @@ void na_on_sigchld (GPid pid, gint status, gpointer script)
 	close(s->in);
 	close(s->out);
 	close(s->err);
-	g_spawn_close_pid(s->pid);
+	g_spawn_close_pid(pid); /* or s->pid */
 
 	/* FIXME: could handle status code (as nagios does) */
+	status = 0;
 
 	/* could also output to dbus from here... */
 
@@ -216,6 +217,7 @@ void na_script_purge(gpointer script, gpointer unused)
 {
 	Script* s = (Script*)script;
 
+	unused=NULL;
 	g_source_remove (s->tag);
 	g_free(s->cmd);
 	s->cmd=NULL;

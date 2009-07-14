@@ -3,6 +3,7 @@
 /* destroy the about window on response GTK_RESPONSE_CANCEL */
 void about_on_response (GtkDialog* dialog, gint response_id, gpointer unused)
 {
+	unused = NULL;
 	if (response_id == GTK_RESPONSE_CANCEL) {
 		gtk_widget_hide(GTK_WIDGET(dialog));
 		gtk_widget_destroy(GTK_WIDGET(dialog));
