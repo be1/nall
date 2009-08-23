@@ -1,5 +1,7 @@
 		nall: notify everything in a discrete tooltip
 			http://brouits.free.fr/nall/
+2009-08-23
+* bugfix in wifi link script
 
 2009-07-14 version 0.3
 * avoid all compiler warnings, no functional change.
