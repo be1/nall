@@ -9,13 +9,13 @@ all:
 	$(CC) -Wall -Wextra $(SRC) -o $(PRGNAME) $(CFLAGS) $(LDFLAGS) && echo Have Fun!
 
 install:
-	install nall $(DESTDIR)/$(PREFIX)/bin/
-	install nall.desktop $(DESTDIR)/$(PREFIX)/share/applications/
-	install nall.png $(DESTDIR)/$(PREFIX)/share/icons/
+	install $(PRGNAME) $(DESTDIR)/$(PREFIX)/bin/
+	install $(PRGNAME).desktop $(DESTDIR)/$(PREFIX)/share/applications/
+	install $(PRGNAME).png $(DESTDIR)/$(PREFIX)/share/icons/
 
 uninstall:
-	$(RM) $(DESTDIR)/$(PREFIX)/bin/nall 
-	$(RM) $(DESTDIR)/$(PREFIX)/share/applications/nall.desktop
+	$(RM) $(DESTDIR)/$(PREFIX)/bin/$(PRGNAME) 
+	$(RM) $(DESTDIR)/$(PREFIX)/share/applications/$(PRGNAME).desktop
 
 clean:
 	$(RM) $(PRGNAME)
