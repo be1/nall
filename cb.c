@@ -64,10 +64,11 @@ void menu_item_on_rescan(GtkMenuItem* instance, gpointer app_data)
 	gchar* script_path = (gchar*) d[PATH];
 	GList* script_list = (GList*) d[LIST];
 	
+	gtk_widget_set_sensitive(GTK_WIDGET(instance), FALSE);
 	na_unregister_scripts(script_list);
 	script_list = na_register_scripts(script_path);
 	d[LIST] = (gpointer) script_list;
-	instance = NULL; /* avoid compiler warnings */
+	gtk_widget_set_sensitive(GTK_WIDGET(instance), TRUE);
 }
 
 /* handler for the "About" menu item (see version.h) */
@@ -96,8 +97,8 @@ void menu_item_on_schedule(GtkMenuItem* instance, gpointer app_data)
 	GList* script_list = (GList*) d[LIST];
 	static GStaticMutex schedule_mutex = G_STATIC_MUTEX_INIT;
 
-	/* how to shade the menu item ? */
 	g_static_mutex_lock (&schedule_mutex);
+	gtk_widget_set_sensitive(GTK_WIDGET(instance), FALSE);
 	while (script_list) {
 		g_timeout_add_seconds
 			(i, na_schedule_script_once, script_list->data);
@@ -105,6 +106,7 @@ void menu_item_on_schedule(GtkMenuItem* instance, gpointer app_data)
 		++i;
 		script_list = script_list->next;
 	}
+	gtk_widget_set_sensitive(GTK_WIDGET(instance), TRUE);
 	g_static_mutex_unlock (&schedule_mutex);
 	instance = NULL; /* avoid compiler warnings */
 }

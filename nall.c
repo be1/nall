@@ -132,9 +132,9 @@ int main(int argc, char **argv)
 	main_menu = menu_create();
 
 	/* and its item callbacks */
-	menu_append_item(main_menu, "Schedule", G_CALLBACK(menu_item_on_schedule), app_data);
-	menu_append_item(main_menu, "Rescan", G_CALLBACK(menu_item_on_rescan), app_data);
-	menu_append_item(main_menu, "About", G_CALLBACK(menu_item_on_about), app_data);
+	menu_append_item(main_menu, "Reschedule", G_CALLBACK(menu_item_on_schedule), app_data);
+	menu_append_item(main_menu, "Reload all", G_CALLBACK(menu_item_on_rescan), app_data);
+	menu_append_item(main_menu, "About ...", G_CALLBACK(menu_item_on_about), app_data);
 	menu_append_item(main_menu, "Quit", G_CALLBACK(menu_item_on_quit), app_data);
 
 	app_data[MENU]=(gpointer)main_menu;

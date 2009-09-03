@@ -2,7 +2,7 @@
 #define VERSION_H
 
 #define NALL_NAME "Nall!"
-#define NALL_VERSION "0.3"
+#define NALL_VERSION "0.3.1"
 #define NALL_AUTHOR0 "Benoît Rouits"
 #define NALL_COPYRIGHT "Copyright © 2008-2009 Benoît Rouits <brouits@free.fr>"
 #define NALL_WEBSITE "http://brouits.free.fr/nall/"

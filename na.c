@@ -186,14 +186,14 @@ gboolean na_spawn_script(gpointer script)
 
 	Script* s = (Script*)script;
 
-	if (!s) /* do not reschedule */
+	if (!s) /* do not reschedule if no probe */
 		return FALSE;
 
 	if (s->cmd) {
 		argv[0] = (gchar*) s->cmd;
 		argv[1] = NULL;
-	} else
-		return FALSE; /* do not reschedule */
+	} else /* do not reshedule if no probe command */
+		return FALSE;
 
 	/* FIXME: set any working directory ? ($HOME or /tmp) */
 	ret = g_spawn_async_with_pipes
@@ -207,7 +207,8 @@ gboolean na_spawn_script(gpointer script)
 	/* set the child watcher */
 	tag = g_child_watch_add (s->pid, na_on_sigchld, s);
 
-	/* FIXME: when to use g_source_remove (tag) ? */
+	/* WARN: when to use g_source_remove (tag) ? */
+	/* maybe GLib use it before the callback */
 
 	return TRUE; /* we want it re-scheduled */
 }
