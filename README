@@ -1,5 +1,10 @@
 		nall: notify everything in a discrete tooltip
 			http://brouits.free.fr/nall/
+2009-09-4 version 0.3.1
+* again bugfix in wifi link script
+* cosmetic on menuitems labels
+* set menuitem insensitive on rescan and reschedule
+ 
 2009-08-23
 * bugfix in wifi link script
 
