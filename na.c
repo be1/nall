@@ -273,7 +273,7 @@ void na_script_append_out(gpointer script, gpointer tooltip_buffer)
 /* reap each script output and refresh the tooltip buffer (mutex) */
 gboolean na_reap(gpointer app_data)
 {
-	gchar temp_buffer[BUFSIZ]; /* WARN: same size as tooltip_buffer */
+	gchar temp_buffer[BUFSIZ]; /* must be same size as tooltip_buffer */
 	gpointer* d = (gpointer*)app_data;
 	gchar* tooltip_buffer = (gchar*)d[TIP];
 	GList* script_list = (GList*)d[LIST];

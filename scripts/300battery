@@ -1,0 +1,5 @@
+#!/bin/sh
+# probe for nall (see http://brouits.free.fr)
+# tell the battery usage
+# need: acpi
+acpi -b | sed 's/.*:\(.*\),.*/\1/'
