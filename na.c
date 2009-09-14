@@ -292,7 +292,7 @@ gboolean na_reap(gpointer app_data)
 	/* blink on message changes */
 	if (strncmp(tooltip_buffer, temp_buffer, BUFSIZ))
 			gtk_status_icon_set_blinking (tray_icon, TRUE);
-	else	/* remove blink on second pass (REAP_FREQ) */
+	else	/* remove blink on second pass (REFRESH_FREQ) */
 			gtk_status_icon_set_blinking (tray_icon, FALSE);
 
 	g_static_mutex_unlock (&reap_mutex);

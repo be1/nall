@@ -68,8 +68,8 @@ GtkStatusIcon* tray_icon_create(void)
 /* cli usage message */
 void usage(char* prog, int exitcode) {
 	fprintf(stderr, "%s version %s\n", NALL_NAME, NALL_VERSION);
-	fprintf(stderr, "Usage: %s [-r REAP_FREQ] (buffer reap: defaults to %d second(s))\n",
-			basename(prog), NA_FALLBACK_REAP_FREQ);
+	fprintf(stderr, "Usage: %s [-r REFERSH_FREQ] (buffer refresh: defaults to %d second(s))\n",
+			basename(prog), NA_FALLBACK_REFRESH_FREQ);
 	exit(exitcode);
 }
 
@@ -77,7 +77,7 @@ void usage(char* prog, int exitcode) {
 int main(int argc, char **argv)
 {
 	gchar* script_path = NULL;
-	gint reap = NA_FALLBACK_REAP_FREQ;
+	gint reap = NA_FALLBACK_REFRESH_FREQ;
 
 	GtkStatusIcon* main_tray_icon = NULL;
 	GtkMenu* main_menu = NULL;

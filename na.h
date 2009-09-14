@@ -30,7 +30,7 @@
 #define _NA_H
 #include <gtk/gtk.h>
 
-#define NA_FALLBACK_REAP_FREQ 1
+#define NA_FALLBACK_REFRESH_FREQ 1
 #define NA_FALLBACK_SCRIPT_FREQ 10
 
 struct _script {
