@@ -153,6 +153,7 @@ void na_on_sigchld (GPid pid, gint status, gpointer script)
 	nread = read(s->out, s->buf, BUFSIZ);
 	if (nread < BUFSIZ)
 		s->buf[nread]='\0';
+	else s->buf[BUFSIZ-1]='\0';
 
 	close(s->in);
 	close(s->out);
