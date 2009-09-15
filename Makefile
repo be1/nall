@@ -10,12 +10,17 @@ all: $(SRC) *.h
 	$(CC) -Wall -Wextra $(SRC) -o $(PRGNAME) $(CFLAGS) $(LDFLAGS)
 
 install:
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
+	mkdir -p $(DESTDIR)$(PREFIX)/share/icons
+
 	install $(PRGNAME) $(DESTDIR)$(PREFIX)/bin/
 	install $(PRGNAME).desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install $(PRGNAME).png $(DESTDIR)$(PREFIX)/share/icons/
 
 uninstall:
 	$(RM) $(DESTDIR)$(PREFIX)/bin/$(PRGNAME) 
+	$(RM) $(DESTDIR)$(PREFIX)/share/icons/$(PRGNAME).png 
 	$(RM) $(DESTDIR)$(PREFIX)/share/applications/$(PRGNAME).desktop
 
 clean:
