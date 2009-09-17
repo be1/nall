@@ -1,6 +1,6 @@
 # Contributor: Benoit Rouits <brouits@free.fr>
 pkgname=nall
-pkgver=0.6
+pkgver=__VERSION__
 pkgrel=1
 pkgdesc="a user script-based everything notifier on the systray"
 arch=(i686)

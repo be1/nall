@@ -1,5 +1,11 @@
 		nall: notify everything in a discrete tooltip
 			http://brouits.free.fr/nall/
+2009-09-18 version 0.6
+* fixed bug in passing app_data
+* better Makefile
+* added warning dialog message if no script
+* added PKGBUILD for Arch Linux
+
 2009-09-4 version 0.3.1
 * again bugfix in wifi link script
 * cosmetic on menuitems labels
