@@ -23,4 +23,3 @@ build() {
   make PREFIX=/usr || return 1
   make DESTDIR="$pkgdir" PREFIX=/usr install
 }
-md5sums=('1f675b4d9fc82e38cc7201cac0bef3b2')
