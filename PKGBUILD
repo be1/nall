@@ -1,6 +1,6 @@
 # Contributor: Benoit Rouits <brouits@free.fr>
 pkgname=nall
-pkgver=0.4
+pkgver=0.5
 pkgrel=1
 pkgdesc="a user script-based everything notifier on the systray"
 arch=(i686)
@@ -20,7 +20,7 @@ noextract=()
 build() {
   cd "$srcdir/$pkgname-$pkgver"
 
-  make || return 1
-  make DESTDIR="$pkgdir" install
+  make PREFIX=/usr || return 1
+  make DESTDIR="$pkgdir" PREFIX=/usr install
 }
 md5sums=('1f675b4d9fc82e38cc7201cac0bef3b2')

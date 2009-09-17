@@ -13,15 +13,17 @@ install:
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	mkdir -p $(DESTDIR)$(PREFIX)/share/icons
+	mkdir -p $(DESTDIR)$(PREFIX)/share/doc/nall/examples
 
 	install $(PRGNAME) $(DESTDIR)$(PREFIX)/bin/
 	install $(PRGNAME).desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install $(PRGNAME).png $(DESTDIR)$(PREFIX)/share/icons/
+	install scripts/* $(DESTDIR)$(PREFIX)/share/doc/nall/examples
 
 uninstall:
 	$(RM) $(DESTDIR)$(PREFIX)/bin/$(PRGNAME) 
 	$(RM) $(DESTDIR)$(PREFIX)/share/icons/$(PRGNAME).png 
 	$(RM) $(DESTDIR)$(PREFIX)/share/applications/$(PRGNAME).desktop
-
+	$(RM) -r $(DESTDIR)$(PREFIX)/share/doc/nall
 clean:
 	$(RM) $(PRGNAME) $(PRGNAME).desktop *~

@@ -39,6 +39,17 @@
 #include "cb.h"
 #include "version.h"
 
+/* message dialog creator */
+GtkWidget* warning_message_create(GtkWindow* parent, const gchar* message) {
+	GtkWidget* window;
+
+	window = gtk_message_dialog_new(parent, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK, "%s", "Warning:");
+	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(window), "%s", message);
+	g_signal_connect_swapped (window, "response", G_CALLBACK (gtk_widget_destroy), window);
+	gtk_widget_show(GTK_WIDGET(window));
+	return window;
+}
+
 /* Gtkmenu creator */
 GtkMenu* menu_create(void)
 {
@@ -88,20 +99,6 @@ int main(int argc, char **argv)
 	gpointer app_data [5]; /* WARN: must be as enum{} in na.h */
 
 /*
- * scan $HOME/.nall for scripts
- */ 
-	script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
-	app_data[PATH]=(void*)script_path;
-
-	main_script_list = na_register_scripts(script_path);
-
-	if (!main_script_list) {
-		g_message("no script to run: aborting");
-		exit(EXIT_SUCCESS);
-	}
-	app_data[LIST]=(void*)main_script_list;
-
-/*
  * cli argument parsing
  */ 
 	gtk_init(&argc, &argv);
@@ -149,6 +146,19 @@ int main(int argc, char **argv)
                          G_CALLBACK(tray_icon_on_click), app_data);
 
 	app_data[ICON]=(gpointer)main_tray_icon;
+
+/*
+ * scan $HOME/.nall for scripts
+ */ 
+	script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
+	app_data[PATH]=(void*)script_path;
+
+	main_script_list = na_register_scripts(script_path);
+
+	if (!main_script_list) {
+		warning_message_create(NULL, "No script found in ~/.nall directory.\nPlease provide one or more scripts to schedule and rescan.\nSee examples in the documentation directory.");
+	}
+	app_data[LIST]=(void*)main_script_list;
 
 /* 
  * run
