@@ -220,7 +220,7 @@ void na_script_purge(gpointer script, gpointer unused)
 	Script* s = (Script*)script;
 
 	unused=NULL;
-	g_source_remove (s->tag);
+/*	g_source_remove (s->tag); this one is handled by GLib */
 	g_free(s->cmd);
 	s->cmd=NULL;
 	g_free(s->name);
