@@ -96,7 +96,10 @@ int main(int argc, char **argv)
 	gchar main_tooltip_buffer [BUFSIZ];
 
 	/* application data for callbacks: icon, menu, list, tip... */
-	gpointer app_data [5]; /* WARN: must be as enum{} in na.h */
+	gpointer* app_data; 
+	
+	/* WARN: must be as enum{} in na.h */
+	app_data = (gpointer*)malloc(APP_DATA*sizeof(gpointer));
 
 /*
  * cli argument parsing
@@ -119,6 +122,19 @@ int main(int argc, char **argv)
 		default:
 			usage(argv[0], EXIT_FAILURE);
 	}
+/*
+ * scan $HOME/.nall for scripts
+ */ 
+	script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
+	app_data[PATH]=(gpointer)script_path;
+
+	main_script_list = na_register_scripts(script_path);
+
+	if (!main_script_list) {
+		warning_message_create(NULL, "No script found in ~/.nall directory.\nPlease provide one or more scripts to schedule and rescan.\nSee examples in the documentation directory.");
+	} 
+	app_data[LIST]=(gpointer)main_script_list;
+
 
 /*
  * initialisation
@@ -147,19 +163,6 @@ int main(int argc, char **argv)
 
 	app_data[ICON]=(gpointer)main_tray_icon;
 
-/*
- * scan $HOME/.nall for scripts
- */ 
-	script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
-	app_data[PATH]=(void*)script_path;
-
-	main_script_list = na_register_scripts(script_path);
-
-	if (!main_script_list) {
-		warning_message_create(NULL, "No script found in ~/.nall directory.\nPlease provide one or more scripts to schedule and rescan.\nSee examples in the documentation directory.");
-	}
-	app_data[LIST]=(void*)main_script_list;
-
 /* 
  * run
  */
@@ -168,6 +171,7 @@ int main(int argc, char **argv)
 
         gtk_main();
 	g_free(script_path);
+	free(app_data);
         exit(EXIT_SUCCESS);
 }
 

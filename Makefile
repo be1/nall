@@ -6,7 +6,7 @@ CFLAGS=`pkg-config --cflags glib-2.0` `pkg-config --cflags gtk+-2.0`
 LDFLAGS=`pkg-config --libs glib-2.0` `pkg-config --libs gtk+-2.0`
 
 all: $(SRC) *.h
-	sed -e "s#__PREFIX__#$(DESTDIR)$(PREFIX)#" $(PRGNAME).desktop.in > $(PRGNAME).desktop
+	sed -e "s#__PREFIX__#$(PREFIX)#" $(PRGNAME).desktop.in > $(PRGNAME).desktop
 	$(CC) -Wall -Wextra $(SRC) -o $(PRGNAME) $(CFLAGS) $(LDFLAGS)
 
 install:

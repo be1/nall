@@ -91,7 +91,7 @@ GList* na_register_scripts (gchar* path)
 		return NULL;
 	}
 
-	dir = g_dir_open(path,0,NULL);
+	dir = g_dir_open(path, 0, NULL);
 	while ((entry = g_dir_read_name(dir))) {
 		/* store script path */
 		script_path = g_build_path("/", path, entry, NULL);

@@ -49,7 +49,7 @@ struct _script {
 
 typedef struct _script Script;
 
-enum {ICON, MENU, LIST, TIP, PATH};
+enum {ICON, MENU, LIST, TIP, PATH, APP_DATA}; /* APP_DATA must e the last */
 
 GList* na_register_scripts (gchar* path);
 
