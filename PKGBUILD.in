@@ -8,6 +8,7 @@ url="http://brouits.free.fr/nall"
 license=('GPL')
 groups=()
 depends=('gtk2')
+optdepends('nagios-plugins' 'telnet' 'ssh')
 makedepends=('make' 'gcc' 'pkgconfig')
 provides=()
 conflicts=()
