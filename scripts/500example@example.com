@@ -15,7 +15,7 @@ imap () {
 #escape the begining * by a shell comment because of telnet output evaluation
 INBOX=`imap|telnet $HOSTNAME 143|sed 's/^\*/#/'`
 RECENT=`echo $INBOX | grep RECENT | sed 's/.*\([0-9][0-9]*\) RECENT.*/\1/'`
-UNSEEN=`echo $INBOX | grep uNSEEN | sed 's/.*UNSEEN \([0-9][0-9]*\).*/\1/'`
+UNSEEN=`echo $INBOX | grep UNSEEN | sed 's/.*UNSEEN \([0-9][0-9]*\).*/\1/'`
 
 #test login fail
 if echo "$INBOX" | grep -i "LOGIN failed" >/dev/null 2>&1
