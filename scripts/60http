@@ -1,0 +1,22 @@
+#!/bin/sh
+# probe for nall (see http://brouits.free.fr/nall)
+# tell the global number of HTTP alive machines
+# need: nagios-plugins
+#
+PLUGIN_PATH=/usr/share/nagios/libexec
+HOSTNAMES="example.com example.net example.org"
+NUM_ALIVE=0
+NUM_TOTAL=`echo $HOSTNAMES|wc -w`
+for H in $HOSTNAMES
+do
+ ALIVE=`$PLUGIN_PATH/check_http -H $H | grep OK | wc -l`
+ NUM_ALIVE=`expr $NUM_ALIVE + $ALIVE`
+done
+
+if [ $NUM_ALIVE -le 1 ]
+then
+ ALIVE_MACHINES="alive machine"
+else
+ ALIVE_MACHINES="alive machines"
+fi
+echo "$NUM_ALIVE/$NUM_TOTAL $ALIVE_MACHINES"
