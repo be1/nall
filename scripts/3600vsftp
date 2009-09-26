@@ -1,0 +1,15 @@
+#!/bin/bash
+# takes remotly (ssh) last ftp ok login (from vsftpd) on the last hour
+# need remote sudo with NOPASSWD activated
+
+HOST=192.168.0.1
+
+LOGGED=$(echo 'LANG=C DATE=$(date +"%a %b %d %H"); LANG=C YEAR=$(date +%Y); sudo tail -1 /var/log/vsftpd.log | grep "^$DATE:[0-9][0-9]:[0-9][0-9] $YEAR" | grep LOGIN | sed -e "s/^.*\(\[[a-z]*\]\) OK LOGIN:.*$/\1/"' | ssh $HOST 2>/dev/null)
+
+if [ "X$LOGGED" = "X" ]
+then
+ echo "no recent login"
+else
+ echo "$LOGGED logged in"
+fi
+
