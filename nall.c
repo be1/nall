@@ -32,18 +32,21 @@
 #include <string.h>
 #include <ctype.h>
 #include <libgen.h>
+#include <libintl.h>
+#include <locale.h>
 #include <glib.h>
 #include <gtk/gtk.h>
 #include "na.h"
 #include "menu.h"
 #include "cb.h"
 #include "version.h"
+#define _(string) gettext(string)
 
 /* message dialog creator */
 GtkWidget* warning_message_create(GtkWindow* parent, const gchar* message) {
 	GtkWidget* window;
 
-	window = gtk_message_dialog_new(parent, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK, "%s", "Warning:");
+	window = gtk_message_dialog_new(parent, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK, "%s", _("Warning:"));
 	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(window), "%s", message);
 	g_signal_connect_swapped (window, "response", G_CALLBACK (gtk_widget_destroy), window);
 	gtk_widget_show(GTK_WIDGET(window));
@@ -101,6 +104,11 @@ int main(int argc, char **argv)
 	/* WARN: must be as enum{} in na.h */
 	app_data = (gpointer*)malloc(APP_DATA*sizeof(gpointer));
 
+	/*  internationalization */
+	setlocale ( LC_ALL, "" );
+	bindtextdomain ("nall", LOCALEDIR);
+	textdomain ( "nall" );
+
 /*
  * cli argument parsing
  */ 
@@ -131,7 +139,7 @@ int main(int argc, char **argv)
 	main_script_list = na_register_scripts(script_path);
 
 	if (!main_script_list) {
-		warning_message_create(NULL, "No script found in ~/.nall directory.\nPlease provide one or more scripts to schedule and rescan.\nSee examples in the documentation directory.");
+		warning_message_create(NULL, _("No script found in ~/.nall directory.\nPlease provide one or more scripts to schedule and rescan.\nSee examples in the documentation directory."));
 	} 
 	app_data[LIST]=(gpointer)main_script_list;
 
@@ -145,8 +153,8 @@ int main(int argc, char **argv)
 	main_menu = menu_create();
 
 	/* and its item callbacks */
-	menu_append_item(main_menu, "Reschedule", G_CALLBACK(menu_item_on_schedule), app_data);
-	menu_append_item(main_menu, "Reload all", G_CALLBACK(menu_item_on_rescan), app_data);
+	menu_append_item(main_menu, _("Reschedule"), G_CALLBACK(menu_item_on_schedule), app_data);
+	menu_append_item(main_menu, _("Reload all"), G_CALLBACK(menu_item_on_rescan), app_data);
 	menu_append_item(main_menu, "About ...", G_CALLBACK(menu_item_on_about), app_data);
 	menu_append_item(main_menu, "Quit", G_CALLBACK(menu_item_on_quit), app_data);
 
