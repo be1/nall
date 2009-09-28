@@ -65,3 +65,18 @@ void menu_hide(GtkMenu* menu)
 	gtk_menu_popdown(GTK_MENU(menu));
 	return;
 }
+
+/* append a stock imageitem to the menu, and connect its callback on "activate" event */
+GtkMenuItem* menu_append_image_item(GtkMenu* menu, const gchar* stock_id, GCallback callback, gpointer cb_data)
+{
+	GtkWidget* item;
+
+	item = gtk_image_menu_item_new_from_stock(stock_id, NULL);
+	gtk_menu_shell_append ((GtkMenuShell*) (menu), item);
+	if (callback)
+		g_signal_connect (G_OBJECT(item), "activate", G_CALLBACK(callback), cb_data);
+	gtk_widget_show (item);
+
+	return GTK_MENU_ITEM(item);
+}
+

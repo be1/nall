@@ -155,8 +155,8 @@ int main(int argc, char **argv)
 	/* and its item callbacks */
 	menu_append_item(main_menu, _("Reschedule"), G_CALLBACK(menu_item_on_schedule), app_data);
 	menu_append_item(main_menu, _("Reload all"), G_CALLBACK(menu_item_on_rescan), app_data);
-	menu_append_item(main_menu, "About ...", G_CALLBACK(menu_item_on_about), app_data);
-	menu_append_item(main_menu, "Quit", G_CALLBACK(menu_item_on_quit), app_data);
+	menu_append_image_item(main_menu, GTK_STOCK_ABOUT, G_CALLBACK(menu_item_on_about), app_data);
+	menu_append_image_item(main_menu, GTK_STOCK_QUIT, G_CALLBACK(menu_item_on_quit), app_data);
 
 	app_data[MENU]=(gpointer)main_menu;
 
