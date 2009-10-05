@@ -1,4 +1,7 @@
 #!/usr/bin/python
+# probe for nall (see http://brouits.free.fr)
+# tell the latest news
+# need: python, feedparser
 import feedparser
 import sys
 # choose your URL:
