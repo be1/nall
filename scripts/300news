@@ -1,0 +1,8 @@
+#!/usr/bin/python
+import feedparser
+import sys
+# choose your URL:
+rss = "http://newsrss.bbc.co.uk/rss/newsonline_world_edition/asia-pacific/rss.xml"
+items = feedparser.parse(rss)
+last_title = items.entries[0].title.encode("utf-8")
+sys.stdout.write (last_title + "\n")
