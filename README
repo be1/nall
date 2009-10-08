@@ -1,5 +1,5 @@
 		nall: notify everything in a discrete tooltip
-			http://brouits.free.fr/nall/
+			http://herewe.servebeer.com/nall/
 2009-09-18 version 0.6
 * fixed bug in passing app_data
 * better Makefile
@@ -60,7 +60,7 @@ All given scripts are released into the public domain
 You must modify them in order to fit your needs (HOSTNAME, etc..)
 Then you can move them into ~/.nall/ and chmod them as 0700 in order
 to not let other people to see your (probable) passwords used in them.
-To make a script, read the introduction at http://brouits.free.fr/nall
+To make a script, read the introduction at http://herewe.servebeer.com/nall
 and don't forget the script filename is important to nall (NNtitle)
 
 2008-10-16
