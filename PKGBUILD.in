@@ -4,7 +4,7 @@ pkgver=__VERSION__
 pkgrel=1
 pkgdesc="a user script-based everything notifier on the systray"
 arch=(i686)
-url="http://brouits.free.fr/nall"
+url="http://herewe.servebeer.com/nall"
 license=('GPL')
 groups=()
 depends=('gtk2' 'glib')
@@ -15,7 +15,7 @@ conflicts=()
 replaces=()
 backup=()
 install=
-source=(http://brouits.free.fr/nall/releases/$pkgname-$pkgver.tar)
+source=(http://herewe.servebeer.com/nall/releases/$pkgname-$pkgver.tar)
 noextract=()
 
 build() {
