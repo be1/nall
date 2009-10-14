@@ -6,17 +6,10 @@ pkgdesc="a user script-based everything notifier on the systray"
 arch=(i686)
 url="http://herewe.servebeer.com/nall"
 license=('GPL')
-groups=()
-depends=('gtk2' 'glib')
+depends=('gtk2' 'glib2')
 optdepends=('nagios-plugins' 'telnet' 'ssh')
 makedepends=('make' 'gcc' 'pkgconfig')
-provides=()
-conflicts=()
-replaces=()
-backup=()
-install=
 source=(http://herewe.servebeer.com/nall/releases/$pkgname-$pkgver.tar)
-noextract=()
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
