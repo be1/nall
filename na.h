@@ -39,8 +39,9 @@ struct _script {
 	gint freq;		/* program frequency (s) */
 	gint in;		/* program stdin */
 	gint out;		/* program stdout */
-	gint err;		/* progream stderr */
+	gint err;		/* program stderr */
 	gchar buf[BUFSIZ];	/* program relevant out */
+	gint status;		/* program exit code */
 	gboolean dbg;		/* debug (verbose) mode */
 	GPid pid;		/* program Glib pid */
 	guint tag;		/* program Glib source id */

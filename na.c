@@ -160,8 +160,7 @@ void na_on_sigchld (GPid pid, gint status, gpointer script)
 	close(s->err);
 	g_spawn_close_pid(pid); /* or s->pid */
 
-	/* FIXME: could handle status code (as nagios does) */
-	status = 0;
+	s->status = status;
 
 	/* could also output to dbus from here... */
 
@@ -251,13 +250,20 @@ void na_script_append_out(gpointer script, gpointer tooltip_buffer)
 	gchar* p = tooltip_buffer;
 	gchar* b = tooltip_buffer;
 	guint rst;
+	char name[32];
 
 	while(*p)
 		p++;
 	rst = b + BUFSIZ - p;
-	if (strlen(s->name) < rst)
-		p = g_stpcpy(p, s->name);
-	if (strlen(s->name) + strlen(": ") + strlen(s->buf) >= rst){
+
+	if (s->status != 0)
+		snprintf(name, sizeof(name), "%s(%d)", s->name, s->status);
+	else
+		snprintf(name, sizeof(name), "%s", s->name);
+
+	if (strlen(name) < rst)
+		p = g_stpcpy(p, name);
+	if (strlen(name) + strlen(": ") + strlen(s->buf) >= rst){
 		p = g_stpcpy(p, "too long!");
 	} else {
 		p = g_stpcpy(p, ": ");
@@ -271,12 +277,21 @@ void na_script_append_out(gpointer script, gpointer tooltip_buffer)
 	return;
 }
 
+void na_script_collect_status(gpointer script, gpointer status_ptr)
+{
+	Script* s = (Script*)script;
+	gint* status = status_ptr;
+	if (*status == 0 && s->status != 0)
+		*status = s->status;
+}
+
 /* reap each script output and refresh the tooltip buffer (mutex) */
 gboolean na_reap(gpointer app_data)
 {
 	gchar temp_buffer[BUFSIZ]; /* must be same size as tooltip_buffer */
 	gpointer* d = (gpointer*)app_data;
 	gchar* tooltip_buffer = (gchar*)d[TIP];
+	gint status;
 	GList* script_list = (GList*)d[LIST];
 	GtkStatusIcon* tray_icon = GTK_STATUS_ICON(d[ICON]);
 	static GStaticMutex reap_mutex = G_STATIC_MUTEX_INIT;
@@ -288,6 +303,11 @@ gboolean na_reap(gpointer app_data)
 	g_list_foreach(script_list, na_script_append_out, tooltip_buffer);
 	tooltip_buffer[strlen(tooltip_buffer)-1]='\0';
         gtk_status_icon_set_tooltip(tray_icon, tooltip_buffer);
+
+	status = 0;
+	g_list_foreach(script_list, na_script_collect_status, &status);
+	const gchar* icon = (status == 0) ? GTK_STOCK_INFO : GTK_STOCK_DIALOG_WARNING;
+        gtk_status_icon_set_from_icon_name(tray_icon, icon);
 
 	/* blink on message changes */
 	if (strncmp(tooltip_buffer, temp_buffer, BUFSIZ))
