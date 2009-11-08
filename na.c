@@ -34,6 +34,7 @@
 #include <time.h>
 #endif
 #include <string.h>
+#include <sys/wait.h>
 #include <glib.h>
 #include <gtk/gtk.h>
 #include "na.h"
@@ -256,8 +257,10 @@ void na_script_append_out(gpointer script, gpointer tooltip_buffer)
 		p++;
 	rst = b + BUFSIZ - p;
 
-	if (s->status != 0)
-		snprintf(name, sizeof(name), "%s(%d)", s->name, s->status);
+	if (WIFSIGNALED(s->status))
+		snprintf(name, sizeof(name), "%s(sig%d)", s->name, WTERMSIG(s->status));
+	else if (WIFEXITED(s->status) && WEXITSTATUS(s->status) != 0)
+		snprintf(name, sizeof(name), "%s(%d)", s->name, WEXITSTATUS(s->status));
 	else
 		snprintf(name, sizeof(name), "%s", s->name);
 
