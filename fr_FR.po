@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nall 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-28 21:43+0200\n"
+"POT-Creation-Date: 2009-11-08 16:55+0100\n"
 "PO-Revision-Date: 2009-09-28 21:43+0200\n"
 "Last-Translator: Benoît Rouits <brouits@free.fr>\n"
 "Language-Team: \n"
@@ -21,7 +21,8 @@ msgid ""
 "No script found in ~/.nall directory.\n"
 "Please provide one or more scripts to schedule and rescan.\n"
 "See examples in the documentation directory."
-msgstr "Aucun script n'a été trouvé dans le répertoire ~/.nall.\n"
+msgstr ""
+"Aucun script n'a été trouvé dans le répertoire ~/.nall.\n"
 "Veuillez fournir un ou plusieurs script à ordonnancer puis rechargerz.\n"
 "Vous pouvez voir des exemples dans le réperoitre de dcumentation."
 
@@ -36,3 +37,8 @@ msgstr "Ré-ordonancer"
 #: nall.c:49
 msgid "Warning:"
 msgstr "Attention :"
+
+#: version.h:13
+msgid "a simple, non-intrusive, everything notifier in the system tray"
+msgstr "un outil de notifiaction extensible pour le systray"
+
