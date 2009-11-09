@@ -1,6 +1,6 @@
 # vim:ts=4:sw=4:noexpandtab:autoindent
 PRGNAME=nall
-VERSION=0.7
+VERSION=0.8
 PREFIX=/usr/local
 SRC=$(PRGNAME).c na.c menu.c about.c cb.c
 LANGS=fr_FR de
@@ -53,4 +53,4 @@ uninstall:
 dist:
 	cd ..; cp -a $(PRGNAME) $(PRGNAME)-$(VERSION); $(RM) -r $(PRGNAME)-$(VERSION)/.git; tar cvf $(PRGNAME)-$(VERSION).tar $(PRGNAME)-$(VERSION); $(RM) -r $(PRGNAME)-$(VERSION); cd -
 clean:
-	$(RM) $(PRGNAME) $(MO) $(PRGNAME).desktop version.h PKGBUILD *~
+	$(RM) $(PRGNAME) $(MO) $(PRGNAME).desktop $(PRGNAME).pot version.h PKGBUILD *~
