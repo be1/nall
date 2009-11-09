@@ -22,7 +22,6 @@ nall.desktop
 PKGBUILD
 stamp-h1
 po/*.gmo
-po/*.sed
 po/.intltool-merge-cache
 po/Makefile.in.in
 po/nall.pot
