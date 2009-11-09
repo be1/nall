@@ -27,6 +27,7 @@
  */
 
 #include <gtk/gtk.h>
+#include <config.h>
 #include "na.h"
 #include "menu.h"
 #include "about.h"
@@ -81,7 +82,7 @@ void menu_item_on_about(GtkMenuItem* instance, gpointer unused)
 		NULL
 	};
 
-	about = about_create (NALL_NAME, NALL_VERSION, NALL_COPYRIGHT,
+	about = about_create (PACKAGE_NAME, PACKAGE_VERSION, NALL_COPYRIGHT,
 				NALL_COMMENT, NALL_LICENSE, NALL_WEBSITE,
 				authors, GTK_STOCK_INFO);
 	about_show(about);

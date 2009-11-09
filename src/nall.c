@@ -36,6 +36,7 @@
 #include <locale.h>
 #include <glib.h>
 #include <gtk/gtk.h>
+#include "config.h"
 #include "na.h"
 #include "menu.h"
 #include "cb.h"
@@ -81,7 +82,7 @@ GtkStatusIcon* tray_icon_create(void)
 
 /* cli usage message */
 void usage(char* prog, int exitcode) {
-	fprintf(stderr, "%s version %s\n", NALL_NAME, NALL_VERSION);
+	fprintf(stderr, "%s\n", PACKAGE_VERSION);
 	fprintf(stderr, "Usage: %s [-r REFERSH_FREQ] (buffer refresh: defaults to %d second(s))\n",
 			basename(prog), NA_FALLBACK_REFRESH_FREQ);
 	exit(exitcode);
@@ -105,7 +106,6 @@ int main(int argc, char **argv)
 	app_data = (gpointer*)malloc(APP_DATA*sizeof(gpointer));
 
 	/*  internationalization */
-	setlocale ( LC_ALL, "" );
 	bindtextdomain ("nall", LOCALEDIR);
 	textdomain ( "nall" );
 
