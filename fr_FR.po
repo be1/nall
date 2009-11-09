@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: nall 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-08 16:55+0100\n"
+"POT-Creation-Date: 2009-11-09 23:00+0100\n"
 "PO-Revision-Date: 2009-09-28 21:43+0200\n"
 "Last-Translator: Benoît Rouits <brouits@free.fr>\n"
 "Language-Team: \n"
@@ -38,7 +37,6 @@ msgstr "Ré-ordonancer"
 msgid "Warning:"
 msgstr "Attention :"
 
-#: version.h:13
+#: version.h:14
 msgid "a simple, non-intrusive, everything notifier in the system tray"
 msgstr "un outil de notifiaction extensible pour le systray"
-

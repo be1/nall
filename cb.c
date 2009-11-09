@@ -77,6 +77,7 @@ void menu_item_on_about(GtkMenuItem* instance, gpointer unused)
 	GtkAboutDialog* about;
 	const gchar* authors [] = {
 		NALL_AUTHOR0,
+		NALL_AUTHOR1,
 		NULL
 	};
 
