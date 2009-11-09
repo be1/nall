@@ -1,5 +1,11 @@
 		nall: notify everything in a discrete tooltip
 			http://herewe.servebeer.com/nall/
+
+2009-09-18 version 0.7
+* pulled from ingo's version, added as author
+* german tanslation
+* return code taken in account
+
 2009-09-18 version 0.6
 * fixed bug in passing app_data
 * better Makefile
