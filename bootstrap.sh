@@ -1,7 +1,4 @@
 #! /bin/sh
 git log > ChangeLog
+autoreconf -i
 intltoolize
-aclocal
-autoheader
-autoconf
-automake --add-missing
