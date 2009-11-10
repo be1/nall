@@ -38,5 +38,6 @@ AC_CONFIG_FILES([
 	po/Makefile.in
 	data/Makefile
 	data/nall.desktop.in
+	examples/Makefile
 ])
 AC_OUTPUT

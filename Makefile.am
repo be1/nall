@@ -1,6 +1,4 @@
-SUBDIRS = src po data
-
-ACLOCAL_AMFLAGS = -I m4
+SUBDIRS = src po data examples
 
 INTLTOOL_FILES = intltool-extract.in \
 		 intltool-merge.in \

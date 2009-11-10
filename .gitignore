@@ -18,9 +18,10 @@ intltool-*.in
 Makefile.in
 Makefile
 missing
-nall.desktop
 PKGBUILD
 stamp-h1
+data/nall.desktop.in
+data/nall.desktop
 po/*.gmo
 po/.intltool-merge-cache
 po/Makefile.in.in
