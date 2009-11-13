@@ -54,16 +54,6 @@ GtkWidget* warning_message_create(GtkWindow* parent, const gchar* message) {
 	return window;
 }
 
-/* Gtkmenu creator */
-GtkMenu* menu_create(void)
-{
-	GtkMenu* menu;
-
-	menu = menu_new();
-
-	return GTK_MENU(menu);
-}
-
 /* GtkStatusIcon creator */
 GtkStatusIcon* tray_icon_create(void)
 {
@@ -91,20 +81,16 @@ void usage(char* prog, int exitcode) {
 /* here we are */
 int main(int argc, char **argv)
 {
-	gchar* script_path = NULL;
 	gint reap = NA_FALLBACK_REFRESH_FREQ;
 
 	GtkStatusIcon* main_tray_icon = NULL;
 	GtkMenu* main_menu = NULL;
 	GList* main_script_list = NULL;
-	gchar main_tooltip_buffer [BUFSIZ];
 
 	/* application data for callbacks: icon, menu, list, tip... */
-	gpointer* app_data; 
+	app_data_t app_data;
+	memset(&app_data, 0, sizeof(app_data));
 	
-	/* WARN: must be as enum{} in na.h */
-	app_data = (gpointer*)malloc(APP_DATA*sizeof(gpointer));
-
 	/*  internationalization */
 	bindtextdomain ("nall", LOCALEDIR);
 	textdomain ( "nall" );
@@ -133,53 +119,47 @@ int main(int argc, char **argv)
 /*
  * scan $HOME/.nall for scripts
  */ 
-	script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
-	app_data[PATH]=(gpointer)script_path;
+	app_data.script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
 
-	main_script_list = na_register_scripts(script_path);
-
-	if (!main_script_list) {
+	app_data.script_list = na_register_scripts(app_data.script_path);
+	if (!app_data.script_list) {
 		warning_message_create(NULL, _("No script found in ~/.nall directory.\nPlease provide one or more scripts to schedule and rescan.\nSee examples in the documentation directory."));
 	} 
-	app_data[LIST]=(gpointer)main_script_list;
 
 
 /*
  * initialisation
  */
-	app_data[TIP]=(gpointer)main_tooltip_buffer;
-
 	/* create the main menu */
-	main_menu = menu_create();
+	main_menu = menu_new();
 
 	/* and its item callbacks */
-	menu_append_item(main_menu, _("Reschedule"), G_CALLBACK(menu_item_on_schedule), app_data);
-	menu_append_item(main_menu, _("Reload all"), G_CALLBACK(menu_item_on_rescan), app_data);
-	menu_append_image_item(main_menu, GTK_STOCK_ABOUT, G_CALLBACK(menu_item_on_about), app_data);
-	menu_append_image_item(main_menu, GTK_STOCK_QUIT, G_CALLBACK(menu_item_on_quit), app_data);
+	menu_append_item(main_menu, _("Reschedule"), G_CALLBACK(menu_item_on_schedule), &app_data);
+	menu_append_item(main_menu, _("Reload all"), G_CALLBACK(menu_item_on_rescan), &app_data);
+	menu_append_image_item(main_menu, GTK_STOCK_ABOUT, G_CALLBACK(menu_item_on_about), &app_data);
+	menu_append_image_item(main_menu, GTK_STOCK_QUIT, G_CALLBACK(menu_item_on_quit), &app_data);
 
-	app_data[MENU]=(gpointer)main_menu;
+	app_data.menu = main_menu;
 
 	/* the tray icon */
 	main_tray_icon = tray_icon_create();
 
 	/* and its callbacks */
 	g_signal_connect(G_OBJECT(main_tray_icon), "popup-menu",
-                         G_CALLBACK(tray_icon_on_menu), app_data);
+                         G_CALLBACK(tray_icon_on_menu), &app_data);
         g_signal_connect(G_OBJECT(main_tray_icon), "activate", 
-                         G_CALLBACK(tray_icon_on_click), app_data);
+                         G_CALLBACK(tray_icon_on_click), &app_data);
 
-	app_data[ICON]=(gpointer)main_tray_icon;
+	app_data.icon = (gpointer)main_tray_icon;
 
 /* 
  * run
  */
 	/* schedule the buffers reaper */
-	na_init_reaper(reap, app_data);
+	na_init_reaper(reap, &app_data);
 
         gtk_main();
-	g_free(script_path);
-	free(app_data);
+	g_free(app_data.script_path);
         exit(EXIT_SUCCESS);
 }
 

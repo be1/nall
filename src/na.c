@@ -101,14 +101,8 @@ GList* na_register_scripts (gchar* path)
 			continue;
 		}
 		/* build script environment */
-		script = malloc (sizeof(Script));
+		script = calloc(1, sizeof(Script));
 		script->cmd = script_path;
-		script->in = 0;
-		script->out = 0;
-		script->err = 0;
-		script->pid = 0;
-		script->buf[0] = '\0';
-		script->error = NULL;
 #ifdef EBUG
 		script->dbg = TRUE;
 #else
@@ -289,54 +283,49 @@ void na_script_collect_status(gpointer script, gpointer status_ptr)
 }
 
 /* reap each script output and refresh the tooltip buffer (mutex) */
-gboolean na_reap(gpointer app_data)
+gboolean na_reap(gpointer arg)
 {
-	gchar temp_buffer[BUFSIZ]; /* must be same size as tooltip_buffer */
-	gpointer* d = (gpointer*)app_data;
-	gchar* tooltip_buffer = (gchar*)d[TIP];
+	app_data_t *app_data = arg;
+	gchar temp_buffer[sizeof(app_data->tooltip_buffer)];
+	gchar* tooltip_buffer = app_data->tooltip_buffer;
 	gint status;
-	GList* script_list = (GList*)d[LIST];
-	GtkStatusIcon* tray_icon = GTK_STATUS_ICON(d[ICON]);
 	static GStaticMutex reap_mutex = G_STATIC_MUTEX_INIT;
 
 	g_static_mutex_lock (&reap_mutex);
 
-	strncpy(temp_buffer, tooltip_buffer, BUFSIZ);
+	strncpy(temp_buffer, tooltip_buffer, sizeof(temp_buffer));
 	tooltip_buffer[0] = '\0';
-	g_list_foreach(script_list, na_script_append_out, tooltip_buffer);
+	g_list_foreach(app_data->script_list, na_script_append_out, tooltip_buffer);
 	tooltip_buffer[strlen(tooltip_buffer)-1]='\0';
-        gtk_status_icon_set_tooltip(tray_icon, tooltip_buffer);
+	gtk_status_icon_set_tooltip(app_data->icon, tooltip_buffer);
 
 	status = 0;
-	g_list_foreach(script_list, na_script_collect_status, &status);
+	g_list_foreach(app_data->script_list, na_script_collect_status, &status);
 	const gchar* icon = (status == 0) ? GTK_STOCK_INFO : GTK_STOCK_DIALOG_WARNING;
-        gtk_status_icon_set_from_icon_name(tray_icon, icon);
+	gtk_status_icon_set_from_icon_name(app_data->icon, icon);
 
 	/* blink on message changes */
-	if (strncmp(tooltip_buffer, temp_buffer, BUFSIZ))
-			gtk_status_icon_set_blinking (tray_icon, TRUE);
+	if (strncmp(tooltip_buffer, temp_buffer, sizeof(temp_buffer)))
+			gtk_status_icon_set_blinking (app_data->icon, TRUE);
 	else	/* remove blink on second pass (REFRESH_FREQ) */
-			gtk_status_icon_set_blinking (tray_icon, FALSE);
+			gtk_status_icon_set_blinking (app_data->icon, FALSE);
 
 	g_static_mutex_unlock (&reap_mutex);
 	return TRUE;
 }
 
 /* add the na_reap into the main G loop */
-guint na_init_reaper (gint reap_freq, void** app_data)
+guint na_init_reaper (gint reap_freq, app_data_t *app_data)
 {
 	return g_timeout_add_seconds(reap_freq, na_reap, (gpointer)app_data);
 	
 }
 
 /* quit nall */
-void na_quit(gpointer app_data)
+void na_quit(app_data_t *app_data)
 {
-	gpointer* d = (gpointer*) app_data;
-	GList* script_list = (GList*)d[LIST];
-
-	na_unregister_scripts(script_list);
-	g_list_free(script_list);
+	na_unregister_scripts(app_data->script_list);
+	g_list_free(app_data->script_list);
 	gtk_main_quit();
 }
 

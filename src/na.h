@@ -50,7 +50,13 @@ struct _script {
 
 typedef struct _script Script;
 
-enum {ICON, MENU, LIST, TIP, PATH, APP_DATA}; /* APP_DATA must e the last */
+typedef struct {
+    GtkStatusIcon *icon;
+    GtkMenu *menu;
+    GList *script_list;
+    gchar tooltip_buffer[BUFSIZ];
+    gchar *script_path;
+} app_data_t;
 
 GList* na_register_scripts (gchar* path);
 
@@ -62,9 +68,9 @@ gboolean na_schedule_script_once(gpointer script); /* always return FALSE */
 
 gboolean na_schedule_script_freq(gpointer script); /* always return FALSE */
 
-guint na_init_reaper(gint reap_freq, void** app_data);
+guint na_init_reaper(gint reap_freq, app_data_t* app_data);
 
-gboolean na_reap(gpointer app_data);
+gboolean na_reap(gpointer arg);
 
-void na_quit(gpointer app_data);
+void na_quit(app_data_t *app_data);
 #endif /* _NA_H */

@@ -42,33 +42,26 @@ void tray_icon_on_click(GtkStatusIcon* instance, gpointer app_data)
 }
 
 /* handler for right-button click */
-void tray_icon_on_menu(GtkStatusIcon* instance, guint button, guint activate_time, gpointer app_data)
+void tray_icon_on_menu(GtkStatusIcon* instance, guint button, guint activate_time, app_data_t *app_data)
 {
-	gpointer* d = (gpointer*) app_data;
-
 	gtk_status_icon_set_blinking(instance, FALSE);
 	if (app_data)
-		menu_show(GTK_MENU(d[MENU]), button, activate_time);
+		menu_show(app_data->menu, button, activate_time);
 }
 
 /* handler for the "Quit" menu item */
-void menu_item_on_quit(GtkMenuItem* instance, gpointer app_data)
+void menu_item_on_quit(GtkMenuItem* instance, app_data_t *app_data)
 {
 	na_quit(app_data);
 	instance = NULL; /* useless but does not warn at compile time */
 }
 
 /* handler for the "Rescan" menu item */
-void menu_item_on_rescan(GtkMenuItem* instance, gpointer app_data)
+void menu_item_on_rescan(GtkMenuItem* instance, app_data_t *app_data)
 {
-	gpointer* d = (gpointer*) app_data;
-	gchar* script_path = (gchar*) d[PATH];
-	GList* script_list = (GList*) d[LIST];
-	
 	gtk_widget_set_sensitive(GTK_WIDGET(instance), FALSE);
-	na_unregister_scripts(script_list);
-	script_list = na_register_scripts(script_path);
-	d[LIST] = (gpointer) script_list;
+	na_unregister_scripts(app_data->script_list);
+	app_data->script_list = na_register_scripts(app_data->script_path);
 	gtk_widget_set_sensitive(GTK_WIDGET(instance), TRUE);
 }
 
@@ -92,11 +85,10 @@ void menu_item_on_about(GtkMenuItem* instance, gpointer unused)
 }
 
 /* handler for the "Schedule" menu item (mutex) */
-void menu_item_on_schedule(GtkMenuItem* instance, gpointer app_data)
+void menu_item_on_schedule(GtkMenuItem* instance, app_data_t *app_data)
 {
 	int i = 0;
-	gpointer* d = (gpointer*) app_data;
-	GList* script_list = (GList*) d[LIST];
+	GList *script_list = app_data->script_list;
 	static GStaticMutex schedule_mutex = G_STATIC_MUTEX_INIT;
 
 	g_static_mutex_lock (&schedule_mutex);
