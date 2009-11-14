@@ -84,15 +84,12 @@ void menu_item_on_about(GtkMenuItem* instance, gpointer unused)
 	return;
 }
 
-/* handler for the "Schedule" menu item (mutex) */
+/* handler for the "Schedule" menu item */
 void menu_item_on_schedule(GtkMenuItem* instance, app_data_t* app_data)
 {
 	int i = 0;
 	GList *script_list = app_data->script_list;
-	static GStaticMutex schedule_mutex = G_STATIC_MUTEX_INIT;
 
-	g_static_mutex_lock (&schedule_mutex);
-	gtk_widget_set_sensitive(GTK_WIDGET(instance), FALSE);
 	while (script_list) {
 		g_timeout_add_seconds
 			(i, na_schedule_script_once, script_list->data);
@@ -100,8 +97,6 @@ void menu_item_on_schedule(GtkMenuItem* instance, app_data_t* app_data)
 		++i;
 		script_list = script_list->next;
 	}
-	gtk_widget_set_sensitive(GTK_WIDGET(instance), TRUE);
-	g_static_mutex_unlock (&schedule_mutex);
 	instance = NULL; /* avoid compiler warnings */
 }
 

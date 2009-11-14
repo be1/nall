@@ -277,16 +277,13 @@ void na_script_collect_status(gpointer script, gpointer status_ptr)
 		*status = s->status;
 }
 
-/* reap each script output and refresh the tooltip buffer (mutex) */
+/* reap each script output and refresh the tooltip buffer */
 gboolean na_reap(gpointer arg)
 {
 	app_data_t* app_data = arg;
 	gchar temp_buffer[sizeof(app_data->tooltip_buffer)];
 	gchar* tooltip_buffer = app_data->tooltip_buffer;
 	gint status;
-	static GStaticMutex reap_mutex = G_STATIC_MUTEX_INIT;
-
-	g_static_mutex_lock (&reap_mutex);
 
 	strncpy(temp_buffer, tooltip_buffer, sizeof(temp_buffer));
 	tooltip_buffer[0] = '\0';
@@ -305,7 +302,6 @@ gboolean na_reap(gpointer arg)
 	else	/* remove blink on second pass (REFRESH_FREQ) */
 			gtk_status_icon_set_blinking (app_data->icon, FALSE);
 
-	g_static_mutex_unlock (&reap_mutex);
 	return TRUE;
 }
 
