@@ -59,13 +59,6 @@ void menu_show(GtkMenu* menu, guint button, guint activate_time)
 	return;
 }
 
-/* hide the menu */
-void menu_hide(GtkMenu* menu)
-{
-	gtk_menu_popdown(GTK_MENU(menu));
-	return;
-}
-
 /* append a stock imageitem to the menu, and connect its callback on "activate" event */
 GtkMenuItem* menu_append_image_item(GtkMenu* menu, const gchar* stock_id, GCallback callback, gpointer cb_data)
 {

@@ -44,7 +44,7 @@
 #define _(string) gettext(string)
 
 /* message dialog creator */
-GtkWidget* warning_message_create(GtkWindow* parent, const gchar* message) {
+static GtkWidget* warning_message_create(GtkWindow* parent, const gchar* message) {
 	GtkWidget* window;
 
 	window = gtk_message_dialog_new(parent, GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK, "%s", _("Warning:"));
@@ -55,7 +55,7 @@ GtkWidget* warning_message_create(GtkWindow* parent, const gchar* message) {
 }
 
 /* GtkStatusIcon creator */
-GtkStatusIcon* tray_icon_create(void)
+static GtkStatusIcon* tray_icon_create(void)
 {
         GtkStatusIcon* tray_icon;
 
@@ -71,7 +71,7 @@ GtkStatusIcon* tray_icon_create(void)
 }
 
 /* cli usage message */
-void usage(char* prog, int exitcode) {
+static void usage(char* prog, int exitcode) {
 	fprintf(stderr, "%s\n", PACKAGE_VERSION);
 	fprintf(stderr, "Usage: %s [-r REFERSH_FREQ] (buffer refresh: defaults to %d second(s))\n",
 			basename(prog), NA_FALLBACK_REFRESH_FREQ);

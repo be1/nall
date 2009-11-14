@@ -39,6 +39,8 @@
 #include <gtk/gtk.h>
 #include "na.h"
 
+static gboolean na_spawn_script(gpointer script); /* return TRUE if script exist */
+
 /* check if path is an executable file */
 static int is_exe_file (const char* path)
 {
@@ -46,7 +48,7 @@ static int is_exe_file (const char* path)
 }
 
 /* compare order of 2 scripts based on their freq (for sorting) */
-gint script_freq_cmp (gconstpointer a, gconstpointer b)
+static gint script_freq_cmp (gconstpointer a, gconstpointer b)
 {
 	Script* s1, *s2;
 	if ((!a) || (!b))
@@ -57,7 +59,7 @@ gint script_freq_cmp (gconstpointer a, gconstpointer b)
 }
 
 /* schedule a script given its frequency (script->freq) */
-gboolean na_schedule_script_freq (gpointer script)
+static gboolean na_schedule_script_freq (gpointer script)
 {
 	Script* s = (Script*)script;
 	guint tag;
@@ -140,7 +142,7 @@ GList* na_register_scripts (gchar* path)
 }
 
 /* read child output on child termination event */
-void na_on_sigchld (GPid pid, gint status, gpointer script)
+static void na_on_sigchld (GPid pid, gint status, gpointer script)
 {
 	Script* s = (Script*)script;
 	ssize_t nread;
@@ -173,7 +175,7 @@ void na_on_sigchld (GPid pid, gint status, gpointer script)
 }
 
 /* spawn a registered script */
-gboolean na_spawn_script(gpointer script)
+static gboolean na_spawn_script(gpointer script)
 {
 	gchar* argv [2] = { NULL, NULL };
 	gboolean ret; /* spawn success */
@@ -209,7 +211,7 @@ gboolean na_spawn_script(gpointer script)
 }
 
 /*  remove script periodic spawn, and free data members */
-void na_script_purge(gpointer script, gpointer unused)
+static void na_script_purge(gpointer script, gpointer unused)
 {
 	Script* s = (Script*)script;
 
@@ -234,7 +236,7 @@ void na_unregister_scripts (GList* script_list)
 }
 
 /* append a script output into the tooltip buffer */
-void na_script_append_out(gpointer script, gpointer tooltip_buffer)
+static void na_script_append_out(gpointer script, gpointer tooltip_buffer)
 {
 	Script* s = (Script*)script;
 	gchar* p = tooltip_buffer;
@@ -269,7 +271,7 @@ void na_script_append_out(gpointer script, gpointer tooltip_buffer)
 	return;
 }
 
-void na_script_collect_status(gpointer script, gpointer status_ptr)
+static void na_script_collect_status(gpointer script, gpointer status_ptr)
 {
 	Script* s = (Script*)script;
 	gint* status = status_ptr;

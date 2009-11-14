@@ -62,11 +62,7 @@ GList* na_register_scripts (gchar* path);
 
 void na_unregister_scripts (GList* script_list);
 
-gboolean na_spawn_script(gpointer script); /* return TRUE if script exist */
-
 gboolean na_schedule_script_once(gpointer script); /* always return FALSE */
-
-gboolean na_schedule_script_freq(gpointer script); /* always return FALSE */
 
 guint na_init_reaper(gint reap_freq, app_data_t* app_data);
 
