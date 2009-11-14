@@ -216,18 +216,14 @@ void na_script_purge(gpointer script, gpointer unused)
 	unused=NULL;
 /*	g_source_remove (s->tag); this one is handled by GLib */
 	g_free(s->cmd);
-	s->cmd=NULL;
 	g_free(s->name);
-	s->name=NULL;
 	close(s->in);
 	close(s->out);
 	close(s->err);
 	g_spawn_close_pid(s->pid);
-	if (s->error) {
+	if (s->error)
 		g_error_free(s->error);
-		s->error=NULL;
-	}
-	return;
+	free(s);
 }
 
 /* unregister scripts and free the script_list */
@@ -235,7 +231,6 @@ void na_unregister_scripts (GList* script_list)
 {
 	g_list_foreach(script_list, na_script_purge, NULL);
 	g_list_free(script_list);
-	return;
 }
 
 /* append a script output into the tooltip buffer */
