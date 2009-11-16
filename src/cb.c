@@ -37,8 +37,6 @@
 void tray_icon_on_click(GtkStatusIcon* instance, gpointer app_data)
 {
 	gtk_status_icon_set_blinking(instance, FALSE);
-	if (app_data)
-		na_reap(app_data);
 }
 
 /* handler for right-button click */
@@ -59,10 +57,10 @@ void menu_item_on_quit(GtkMenuItem* instance, app_data_t* app_data)
 /* handler for the "Rescan" menu item */
 void menu_item_on_rescan(GtkMenuItem* instance, app_data_t* app_data)
 {
-	gtk_widget_set_sensitive(GTK_WIDGET(instance), FALSE);
 	na_unregister_scripts(app_data->script_list);
-	app_data->script_list = na_register_scripts(app_data->script_path);
-	gtk_widget_set_sensitive(GTK_WIDGET(instance), TRUE);
+	app_data->script_list = na_register_scripts(app_data);
+	if (app_data->script_list)
+		na_schedule_all(app_data);
 }
 
 /* handler for the "About" menu item (see version.h) */
@@ -87,16 +85,6 @@ void menu_item_on_about(GtkMenuItem* instance, gpointer unused)
 /* handler for the "Schedule" menu item */
 void menu_item_on_schedule(GtkMenuItem* instance, app_data_t* app_data)
 {
-	int i = 0;
-	GList *script_list = app_data->script_list;
-
-	while (script_list) {
-		g_timeout_add_seconds
-			(i, na_schedule_script_once, script_list->data);
-		/* na_schedule_script_once must always return FALSE */
-		++i;
-		script_list = script_list->next;
-	}
-	instance = NULL; /* avoid compiler warnings */
+	na_schedule_all(app_data);
 }
 

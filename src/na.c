@@ -39,7 +39,7 @@
 #include <gtk/gtk.h>
 #include "na.h"
 
-static gboolean na_spawn_script(gpointer script); /* return TRUE if script exist */
+static gboolean na_spawn_script(gpointer script);
 
 /* check if path is an executable file */
 static int is_exe_file (const char* path)
@@ -58,32 +58,14 @@ static gint script_freq_cmp (gconstpointer a, gconstpointer b)
 	return (s1->freq > s2->freq);
 }
 
-/* schedule a script given its frequency (script->freq) */
-static gboolean na_schedule_script_freq (gpointer script)
-{
-	Script* s = (Script*)script;
-	guint tag;
-
-	tag = g_timeout_add_seconds (s->freq, na_spawn_script, s);
-	s->tag = tag; /* this tag represents the Glib source id */
-	return FALSE; /* FALSE is required here */
-}
-
-/* schedule a script once */
-gboolean na_schedule_script_once (gpointer script)
-{
-	na_spawn_script(script);
-	return FALSE; /* FALSE is required here */
-}
-
 /* registering scripts from 'path' to launch into the main G loop */
-GList* na_register_scripts (gchar* path)
+GList* na_register_scripts (app_data_t* app_data)
 {
+	const gchar* path = app_data->script_path;
 	GDir* dir = NULL;
 	const gchar* entry;
 	char* script_path = NULL;
 	int script_freq = 0;
-	int i = 0;
 	char buf [BUFSIZ];
 	Script* script = NULL;
 	GList* script_list = NULL;
@@ -104,12 +86,8 @@ GList* na_register_scripts (gchar* path)
 		}
 		/* build script environment */
 		script = calloc(1, sizeof(Script));
+		script->app_data = app_data;
 		script->cmd = script_path;
-#ifdef EBUG
-		script->dbg = TRUE;
-#else
-		script->dbg = FALSE;
-#endif
 		/* store script freq (in seconds) */
 		if (!isdigit(entry[0])) {
 			script_freq = NA_FALLBACK_SCRIPT_FREQ;
@@ -129,85 +107,11 @@ GList* na_register_scripts (gchar* path)
 		}
 		/* register script */
 		script->freq = script_freq;
-		/* postpone scheduling in i seconds */
-		g_timeout_add_seconds (i, na_schedule_script_freq, script);
-		/* na_schedule_script_freq must always return FALSE */
 		script_list = g_list_prepend(script_list, script);
-		++i;
-
 	}
 	g_dir_close(dir);
 	script_list = g_list_sort(script_list, script_freq_cmp);
 	return script_list;
-}
-
-/* read child output on child termination event */
-static void na_on_sigchld (GPid pid, gint status, gpointer script)
-{
-	Script* s = (Script*)script;
-	ssize_t nread;
-
-	nread = read(s->out, s->buf, BUFSIZ);
-	if (nread < BUFSIZ)
-		s->buf[nread]='\0';
-	else s->buf[BUFSIZ-1]='\0';
-
-	close(s->in);
-	close(s->out);
-	close(s->err);
-	g_spawn_close_pid(pid); /* or s->pid */
-
-	s->status = status;
-
-	/* could also output to dbus from here... */
-
-#ifdef EBUG
-	if(s->dbg) {
-		time_t t;
-		gchar* name;
-
-		t = time(NULL);
-		name = g_path_get_basename(s->cmd);
-		g_message("%s[%d]\t%s (%d) %s", ctime(&t), status, name, pid, s->buf);
-		g_free(name);
-	}
-#endif
-}
-
-/* spawn a registered script */
-static gboolean na_spawn_script(gpointer script)
-{
-	gchar* argv [2] = { NULL, NULL };
-	gboolean ret; /* spawn success */
-	guint tag; /* child watcher source tag */
-
-	Script* s = (Script*)script;
-
-	if (!s) /* do not reschedule if no probe */
-		return FALSE;
-
-	if (s->cmd) {
-		argv[0] = (gchar*) s->cmd;
-		argv[1] = NULL;
-	} else /* do not reshedule if no probe command */
-		return FALSE;
-
-	/* FIXME: set any working directory ? ($HOME or /tmp) */
-	ret = g_spawn_async_with_pipes
-		(NULL, argv, NULL, G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, 
-		&s->pid, &s->in, &s->out, &s->err, &s->error);
-	if(ret == FALSE || s->error) {
-		g_warning("na_spawn_script: %s\n", s->error->message);
-		g_error_free(s->error);
-		s->error=NULL;
-	}
-	/* set the child watcher */
-	tag = g_child_watch_add (s->pid, na_on_sigchld, s);
-
-	/* WARN: when to use g_source_remove (tag) ? */
-	/* maybe GLib use it before the callback */
-
-	return TRUE; /* we want it re-scheduled */
 }
 
 /*  remove script periodic spawn, and free data members */
@@ -216,12 +120,15 @@ static void na_script_purge(gpointer script, gpointer unused)
 	Script* s = (Script*)script;
 
 	unused=NULL;
-/*	g_source_remove (s->tag); this one is handled by GLib */
+	if (s->running) {
+		close(s->in);
+		close(s->out);
+		close(s->err);
+	}
+	if (s->tag)
+		g_source_remove(s->tag);
 	g_free(s->cmd);
 	g_free(s->name);
-	close(s->in);
-	close(s->out);
-	close(s->err);
 	g_spawn_close_pid(s->pid);
 	if (s->error)
 		g_error_free(s->error);
@@ -279,10 +186,17 @@ static void na_script_collect_status(gpointer script, gpointer status_ptr)
 		*status = s->status;
 }
 
-/* reap each script output and refresh the tooltip buffer */
-gboolean na_reap(gpointer arg)
+static gboolean na_stop_blinking(gpointer _app_data)
 {
-	app_data_t* app_data = arg;
+	app_data_t* app_data = _app_data;
+	app_data->stop_blink_tag = 0;
+	gtk_status_icon_set_blinking(app_data->icon, FALSE);
+	return FALSE;
+}
+
+/* reap each script output and refresh the tooltip buffer */
+static void na_update_tooltip(app_data_t* app_data)
+{
 	gchar temp_buffer[sizeof(app_data->tooltip_buffer)];
 	gchar* tooltip_buffer = app_data->tooltip_buffer;
 	gint status;
@@ -299,19 +213,97 @@ gboolean na_reap(gpointer arg)
 	gtk_status_icon_set_from_icon_name(app_data->icon, icon);
 
 	/* blink on message changes */
-	if (strncmp(tooltip_buffer, temp_buffer, sizeof(temp_buffer)))
-			gtk_status_icon_set_blinking (app_data->icon, TRUE);
-	else	/* remove blink on second pass (REFRESH_FREQ) */
-			gtk_status_icon_set_blinking (app_data->icon, FALSE);
-
-	return TRUE;
+	if (strncmp(tooltip_buffer, temp_buffer, sizeof(temp_buffer))) {
+		gtk_status_icon_set_blinking (app_data->icon, TRUE);
+		if (app_data->stop_blink_tag)
+			g_source_remove(app_data->stop_blink_tag);
+		app_data->stop_blink_tag = g_timeout_add_seconds(NA_BLINK_DURATION, na_stop_blinking, app_data);
+	}
 }
 
-/* add the na_reap into the main G loop */
-guint na_init_reaper (gint reap_freq, app_data_t* app_data)
+/* read child output on child termination event */
+static void na_reap_child (GPid pid, gint status, gpointer script)
 {
-	return g_timeout_add_seconds(reap_freq, na_reap, (gpointer)app_data);
-	
+	Script* s = (Script*)script;
+	ssize_t nread;
+
+	nread = read(s->out, s->buf, BUFSIZ);
+	if (nread < BUFSIZ)
+		s->buf[nread]='\0';
+	else s->buf[BUFSIZ-1]='\0';
+
+	close(s->in);
+	close(s->out);
+	close(s->err);
+	g_spawn_close_pid(pid); /* or s->pid */
+
+	s->running = FALSE;
+	s->status = status;
+
+	na_update_tooltip(s->app_data);
+
+	/* re-schedule */
+	s->tag = g_timeout_add_seconds(s->freq, na_spawn_script, s);
+
+	/* could also output to dbus from here... */
+
+#ifdef EBUG
+	time_t t;
+	gchar* name;
+
+	t = time(NULL);
+	name = g_path_get_basename(s->cmd);
+	g_message("%s[%d]\t%s (%d) %s", ctime(&t), status, name, pid, s->buf);
+	g_free(name);
+#endif
+}
+
+/* spawn a registered script */
+static gboolean na_spawn_script(gpointer script)
+{
+	gchar* argv[2];
+	gboolean ret; /* spawn success */
+
+	Script* s = (Script*)script;
+	s->tag = 0;
+
+	if (!s || !s->cmd)
+		return FALSE;
+
+	argv[0] = (gchar*) s->cmd;
+	argv[1] = NULL;
+
+	/* FIXME: set any working directory ? ($HOME or /tmp) */
+	ret = g_spawn_async_with_pipes
+		(NULL, argv, NULL, G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, 
+		&s->pid, &s->in, &s->out, &s->err, &s->error);
+	if(ret == FALSE || s->error) {
+		g_warning("na_spawn_script: %s\n", s->error->message);
+		g_error_free(s->error);
+		s->error=NULL;
+	} else {
+		/* set the child watcher */
+		g_child_watch_add (s->pid, na_reap_child, s);
+		s->running = TRUE;
+	}
+
+	return FALSE;
+}
+
+void na_schedule_all(app_data_t* app_data)
+{
+	int i = 0;
+	GList* script_list = app_data->script_list;
+
+	while (script_list) {
+		Script* s = script_list->data;
+		if (!s->running) {
+			if (s->tag)
+				g_source_remove(s->tag);
+			s->tag = g_timeout_add_seconds(i++, na_spawn_script, s);
+			script_list = script_list->next;
+		}
+	}
 }
 
 /* quit nall */

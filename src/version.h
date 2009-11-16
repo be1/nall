@@ -5,7 +5,7 @@
 #define _(string) gettext(string)
 
 #define NALL_AUTHOR0 "Benoît Rouits"
-#define NALL_AUTHOR1 "Ingo Van Lil"
+#define NALL_AUTHOR1 "Ingo van Lil"
 #define NALL_COPYRIGHT "Copyright © 2008-2009 Benoît Rouits <brouits@free.fr>"
 #define NALL_WEBSITE "http://herewe.servebeer.com/nall"
 #define NALL_ICON GTK_STOCK_INFO

@@ -70,19 +70,9 @@ static GtkStatusIcon* tray_icon_create(void)
         return tray_icon;
 }
 
-/* cli usage message */
-static void usage(char* prog, int exitcode) {
-	fprintf(stderr, "%s\n", PACKAGE_VERSION);
-	fprintf(stderr, "Usage: %s [-r REFERSH_FREQ] (buffer refresh: defaults to %d second(s))\n",
-			basename(prog), NA_FALLBACK_REFRESH_FREQ);
-	exit(exitcode);
-}
-
 /* here we are */
 int main(int argc, char **argv)
 {
-	gint reap = NA_FALLBACK_REFRESH_FREQ;
-
 	GtkStatusIcon* main_tray_icon = NULL;
 	GtkMenu* main_menu = NULL;
 	GList* main_script_list = NULL;
@@ -95,34 +85,17 @@ int main(int argc, char **argv)
 	bindtextdomain ("nall", LOCALEDIR);
 	textdomain ( "nall" );
 
-/*
- * cli argument parsing
- */ 
 	gtk_init(&argc, &argv);
-	switch (argc) {
-		case 1:
-			break;
-		case 2:
-			usage(argv[0], EXIT_FAILURE);
-		case 3:
-			if (!strcmp(argv[1], "-r")) {
-				if (isdigit(argv[2][0])) {
-					reap = atoi(argv[2]);
-					break;
-				}
-				usage(argv[0], EXIT_FAILURE);
-			}
-			usage(argv[0], EXIT_FAILURE);
-		default:
-			usage(argv[0], EXIT_FAILURE);
-	}
+
 /*
  * scan $HOME/.nall for scripts
  */ 
 	app_data.script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
 
-	app_data.script_list = na_register_scripts(app_data.script_path);
-	if (!app_data.script_list) {
+	app_data.script_list = na_register_scripts(&app_data);
+	if (app_data.script_list) {
+		na_schedule_all(&app_data);
+	} else {
 		warning_message_create(NULL, _("No script found in ~/.nall directory.\nPlease provide one or more scripts to schedule and rescan.\nSee examples in the documentation directory."));
 	} 
 
@@ -155,9 +128,6 @@ int main(int argc, char **argv)
 /* 
  * run
  */
-	/* schedule the buffers reaper */
-	na_init_reaper(reap, &app_data);
-
         gtk_main();
 	g_free(app_data.script_path);
         exit(EXIT_SUCCESS);

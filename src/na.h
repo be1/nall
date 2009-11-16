@@ -30,10 +30,13 @@
 #define _NA_H
 #include <gtk/gtk.h>
 
-#define NA_FALLBACK_REFRESH_FREQ 1
 #define NA_FALLBACK_SCRIPT_FREQ 10
+#define NA_BLINK_DURATION 3
+
+typedef struct app_data app_data_t;
 
 struct _script {
+	app_data_t* app_data;
 	gchar* cmd;		/* full program path */
 	gchar* name;		/* program name */
 	gint freq;		/* program frequency (s) */
@@ -42,31 +45,29 @@ struct _script {
 	gint err;		/* program stderr */
 	gchar buf[BUFSIZ];	/* program relevant out */
 	gint status;		/* program exit code */
-	gboolean dbg;		/* debug (verbose) mode */
 	GPid pid;		/* program Glib pid */
 	guint tag;		/* program Glib source id */
+	gboolean running;	/* program currently running */
 	GError* error;		/* program start error */
 };
 
 typedef struct _script Script;
 
-typedef struct {
+struct app_data {
 	GtkStatusIcon* icon;
 	GtkMenu* menu;
 	GList* script_list;
 	gchar tooltip_buffer[BUFSIZ];
 	gchar* script_path;
-} app_data_t;
+	guint stop_blink_tag;
+};
 
-GList* na_register_scripts (gchar* path);
+GList* na_register_scripts (app_data_t* app_data);
 
 void na_unregister_scripts (GList* script_list);
 
-gboolean na_schedule_script_once(gpointer script); /* always return FALSE */
+void na_schedule_all (app_data_t* app_data);
 
-guint na_init_reaper(gint reap_freq, app_data_t* app_data);
+void na_quit (app_data_t* app_data);
 
-gboolean na_reap(gpointer arg);
-
-void na_quit(app_data_t* app_data);
 #endif /* _NA_H */
