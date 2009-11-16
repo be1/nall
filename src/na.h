@@ -51,11 +51,11 @@ struct _script {
 typedef struct _script Script;
 
 typedef struct {
-    GtkStatusIcon *icon;
-    GtkMenu *menu;
-    GList *script_list;
-    gchar tooltip_buffer[BUFSIZ];
-    gchar *script_path;
+	GtkStatusIcon* icon;
+	GtkMenu* menu;
+	GList* script_list;
+	gchar tooltip_buffer[BUFSIZ];
+	gchar* script_path;
 } app_data_t;
 
 GList* na_register_scripts (gchar* path);
@@ -72,5 +72,5 @@ guint na_init_reaper(gint reap_freq, app_data_t* app_data);
 
 gboolean na_reap(gpointer arg);
 
-void na_quit(app_data_t *app_data);
+void na_quit(app_data_t* app_data);
 #endif /* _NA_H */

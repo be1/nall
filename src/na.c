@@ -285,7 +285,7 @@ void na_script_collect_status(gpointer script, gpointer status_ptr)
 /* reap each script output and refresh the tooltip buffer (mutex) */
 gboolean na_reap(gpointer arg)
 {
-	app_data_t *app_data = arg;
+	app_data_t* app_data = arg;
 	gchar temp_buffer[sizeof(app_data->tooltip_buffer)];
 	gchar* tooltip_buffer = app_data->tooltip_buffer;
 	gint status;
@@ -315,14 +315,14 @@ gboolean na_reap(gpointer arg)
 }
 
 /* add the na_reap into the main G loop */
-guint na_init_reaper (gint reap_freq, app_data_t *app_data)
+guint na_init_reaper (gint reap_freq, app_data_t* app_data)
 {
 	return g_timeout_add_seconds(reap_freq, na_reap, (gpointer)app_data);
 	
 }
 
 /* quit nall */
-void na_quit(app_data_t *app_data)
+void na_quit(app_data_t* app_data)
 {
 	na_unregister_scripts(app_data->script_list);
 	g_list_free(app_data->script_list);
