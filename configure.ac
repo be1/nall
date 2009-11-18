@@ -18,9 +18,25 @@ AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"],
 		                      [The domain to use with gettext])
 AM_GLIB_GNU_GETTEXT
 
+# Optional features
+AC_ARG_ENABLE(notifications,
+	[AC_HELP_STRING([--disable-notifications], [compile without libnotify support])],
+	enable_notifications="$enableval", enable_notifications="yes")
+
 # Checks for libraries.
 AM_PATH_GLIB_2_0([2.0.0],,[AC_MSG_ERROR([glib 2.0 or newer is required])])
 AM_PATH_GTK_2_0([2.0.0],,[AC_MSG_ERROR([gtk+ 2.0 or newer is required])])
+
+# Check for libnotify
+if test "x$enable_notifications" = "xyes"; then
+	PKG_CHECK_MODULES(LIBNOTIFY, libnotify >= 0.3.2,
+		[ AC_DEFINE(HAVE_LIBNOTIFY, 1, [Define to 1 if libnotify has been found.]) ],
+		[ AC_MSG_ERROR([libnotify headers not found.
+Use --disable-notifications to disable desktop notifications.]) ]
+	)
+	AC_SUBST(LIBNOTIFY_CFLAGS)
+	AC_SUBST(LIBNOTIFY_LIBS)
+fi
 
 # Checks for header files.
 AC_CHECK_HEADERS([libintl.h locale.h stdlib.h string.h unistd.h])

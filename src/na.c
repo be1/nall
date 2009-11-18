@@ -38,6 +38,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include "na.h"
+#include "notify.h"
 
 static gboolean na_spawn_script(gpointer script);
 
@@ -197,11 +198,9 @@ static gboolean na_stop_blinking(gpointer _app_data)
 /* reap each script output and refresh the tooltip buffer */
 static void na_update_tooltip(app_data_t* app_data)
 {
-	gchar temp_buffer[sizeof(app_data->tooltip_buffer)];
 	gchar* tooltip_buffer = app_data->tooltip_buffer;
 	gint status;
 
-	strncpy(temp_buffer, tooltip_buffer, sizeof(temp_buffer));
 	tooltip_buffer[0] = '\0';
 	g_list_foreach(app_data->script_list, na_script_append_out, tooltip_buffer);
 	tooltip_buffer[strlen(tooltip_buffer)-1]='\0';
@@ -212,25 +211,21 @@ static void na_update_tooltip(app_data_t* app_data)
 	const gchar* icon = (status == 0) ? GTK_STOCK_INFO : GTK_STOCK_DIALOG_WARNING;
 	gtk_status_icon_set_from_icon_name(app_data->icon, icon);
 
-	/* blink on message changes */
-	if (strncmp(tooltip_buffer, temp_buffer, sizeof(temp_buffer))) {
-		gtk_status_icon_set_blinking (app_data->icon, TRUE);
-		if (app_data->stop_blink_tag)
-			g_source_remove(app_data->stop_blink_tag);
-		app_data->stop_blink_tag = g_timeout_add_seconds(NA_BLINK_DURATION, na_stop_blinking, app_data);
-	}
+	gtk_status_icon_set_blinking (app_data->icon, TRUE);
+	if (app_data->stop_blink_tag)
+		g_source_remove(app_data->stop_blink_tag);
+	app_data->stop_blink_tag = g_timeout_add_seconds(NA_BLINK_DURATION, na_stop_blinking, app_data);
 }
 
 /* read child output on child termination event */
 static void na_reap_child (GPid pid, gint status, gpointer script)
 {
 	Script* s = (Script*)script;
+	gchar buf[sizeof(s->buf)];
 	ssize_t nread;
 
-	nread = read(s->out, s->buf, BUFSIZ);
-	if (nread < BUFSIZ)
-		s->buf[nread]='\0';
-	else s->buf[BUFSIZ-1]='\0';
+	nread = read(s->out, buf, sizeof(s->buf)-1);
+	buf[nread]='\0';
 
 	close(s->in);
 	close(s->out);
@@ -240,7 +235,12 @@ static void na_reap_child (GPid pid, gint status, gpointer script)
 	s->running = FALSE;
 	s->status = status;
 
-	na_update_tooltip(s->app_data);
+	if (strcmp(s->buf, buf)) {
+		/* program output has changed */
+		strncpy(s->buf, buf, sizeof(buf));
+		na_update_tooltip(s->app_data);
+		nall_notify(s->name, s->buf, s->status);
+	}
 
 	/* re-schedule */
 	s->tag = g_timeout_add_seconds(s->freq, na_spawn_script, s);

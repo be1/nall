@@ -40,6 +40,7 @@
 #include "na.h"
 #include "menu.h"
 #include "cb.h"
+#include "notify.h"
 #include "version.h"
 #define _(string) gettext(string)
 
@@ -86,6 +87,7 @@ int main(int argc, char **argv)
 	textdomain ( "nall" );
 
 	gtk_init(&argc, &argv);
+	nall_notify_init();
 
 /*
  * scan $HOME/.nall for scripts
