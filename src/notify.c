@@ -10,10 +10,10 @@ void nall_notify_init(void)
 	notify_init("nall");
 }
 
-void nall_notify(const gchar *program, const gchar *output, int status)
+void nall_notify(Script* s)
 {
-	NotifyNotification* notification = notify_notification_new(program, output, NULL, NULL);
-	if (status == 0)
+	NotifyNotification* notification = notify_notification_new(s->name, s->buf, NULL, NULL);
+	if (s->status == 0)
 		notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
 	else
 		notify_notification_set_urgency(notification, NOTIFY_URGENCY_CRITICAL);
@@ -24,6 +24,6 @@ void nall_notify(const gchar *program, const gchar *output, int status)
 #else
 
 void nall_notify_init(void) {}
-void nall_notify(const gchar *program, const gchar *output, int status) {}
+void nall_notify(Script* s) {}
 
 #endif

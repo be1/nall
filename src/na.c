@@ -239,7 +239,7 @@ static void na_reap_child (GPid pid, gint status, gpointer script)
 		/* program output has changed */
 		strncpy(s->buf, buf, sizeof(buf));
 		na_update_tooltip(s->app_data);
-		nall_notify(s->name, s->buf, s->status);
+		nall_notify(s);
 	}
 
 	/* re-schedule */
