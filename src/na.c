@@ -239,8 +239,10 @@ static void na_reap_child (GPid pid, gint status, gpointer script)
 		/* program output has changed */
 		strncpy(s->buf, buf, sizeof(buf));
 		na_update_tooltip(s->app_data);
-		nall_notify(s);
+		if (!s->firstrun)
+			nall_notify(s);
 	}
+	s->firstrun = FALSE;
 
 	/* re-schedule */
 	s->tag = g_timeout_add_seconds(s->freq, na_spawn_script, s);
@@ -298,6 +300,7 @@ void na_schedule_all(app_data_t* app_data)
 	while (script_list) {
 		Script* s = script_list->data;
 		if (!s->running) {
+			s->firstrun = TRUE;
 			if (s->tag)
 				g_source_remove(s->tag);
 			s->tag = g_timeout_add_seconds(i++, na_spawn_script, s);

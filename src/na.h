@@ -47,6 +47,7 @@ struct _script {
 	gint status;		/* program exit code */
 	GPid pid;		/* program Glib pid */
 	guint tag;		/* program Glib source id */
+	gboolean firstrun;	/* true till the first update */
 	gboolean running;	/* program currently running */
 	GError* error;		/* program start error */
 };
