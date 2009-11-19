@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nall 0.7\n"
 "Report-Msgid-Bugs-To: brouits@free.fr\n"
-"POT-Creation-Date: 2009-11-09 23:42+0100\n"
+"POT-Creation-Date: 2009-11-19 23:53+0100\n"
 "PO-Revision-Date: 2009-11-08 15:48+0200\n"
 "Last-Translator: Ingo van Lil <inguin@gmx.de>\n"
 "Language-Team: \n"
@@ -15,34 +15,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/nall.c:50
+#: ../src/nall.c:53
 msgid "Warning:"
 msgstr "Warnung:"
 
-#: ../src/nall.c:142
-msgid ""
-"No script found in ~/.nall directory.\n"
-"Please provide one or more scripts to schedule and rescan.\n"
-"See examples in the documentation directory."
-msgstr ""
-"Es wurden keine Scripte im Verzeichnis ~/.nall gefunden.\n"
-"Bitte legen Sie dort ein oder mehrere Scripte ab und wählen Sie dann 'Alle "
-"Neu Laden'.\n"
-"Sie finden einige Beispiele im Dokumentations-Verzeichnis."
-
 #. and its item callbacks
-#: ../src/nall.c:156
+#: ../src/nall.c:107
 msgid "Reschedule"
 msgstr "Aktualisieren"
 
-#: ../src/nall.c:157
-msgid "Reload all"
-msgstr "Alle Neu Laden"
+#: ../src/nall.c:108
+msgid "Reload Config"
+msgstr "Konfiguration Neu Laden"
 
-#: ../src/version.h:11
+#: ../src/version.h:12
 msgid "a simple, non-intrusive, everything notifier in the system tray"
 msgstr "Eigene Benachrichtigungen für alles in der Kontrollleiste"
 
-#: ../data/nall.desktop.in.h:1
+#: ../data/nall.desktop.in.in.h:1
 msgid "Display your scripts notifications"
 msgstr "Eigene Benachrichtigungen für alles in der Kontrollleiste"

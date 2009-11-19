@@ -39,8 +39,8 @@ void tray_icon_on_menu(GtkStatusIcon* instance, guint button, guint activate_tim
 /* handler for the "Schedule" menu item */
 void menu_item_on_schedule(GtkMenuItem* instance, gpointer app_data);
 
-/* handler for the "Rescan" menu item */
-void menu_item_on_rescan(GtkMenuItem* instance, gpointer app_data);
+/* handler for the "Reload Config" menu item */
+void menu_item_on_reload(GtkMenuItem* instance, gpointer app_data);
 
 /* handler for the "About" menu item */
 void menu_item_on_about(GtkMenuItem* instance, gpointer app_data);

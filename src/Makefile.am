@@ -5,6 +5,8 @@ nall_SOURCES = \
 	about.h \
 	cb.c \
 	cb.h \
+	cfgfile.c \
+	cfgfile.h \
 	menu.c \
 	menu.h \
 	na.c \

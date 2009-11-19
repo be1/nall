@@ -31,6 +31,7 @@
 #include "na.h"
 #include "menu.h"
 #include "about.h"
+#include "cfgfile.h"
 #include "version.h"
 
 /* handler for left-button click */
@@ -54,11 +55,11 @@ void menu_item_on_quit(GtkMenuItem* instance, app_data_t* app_data)
 	instance = NULL; /* useless but does not warn at compile time */
 }
 
-/* handler for the "Rescan" menu item */
-void menu_item_on_rescan(GtkMenuItem* instance, app_data_t* app_data)
+/* handler for the "Reload Config" menu item */
+void menu_item_on_reload(GtkMenuItem* instance, app_data_t* app_data)
 {
 	na_unregister_scripts(app_data->script_list);
-	app_data->script_list = na_register_scripts(app_data);
+	app_data->script_list = nall_read_cfg(app_data);
 	if (app_data->script_list)
 		na_schedule_all(app_data);
 }

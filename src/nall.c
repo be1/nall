@@ -40,10 +40,12 @@
 #include "na.h"
 #include "menu.h"
 #include "cb.h"
+#include "cfgfile.h"
 #include "notify.h"
 #include "version.h"
 #define _(string) gettext(string)
 
+#if 0
 /* message dialog creator */
 static GtkWidget* warning_message_create(GtkWindow* parent, const gchar* message) {
 	GtkWidget* window;
@@ -54,6 +56,7 @@ static GtkWidget* warning_message_create(GtkWindow* parent, const gchar* message
 	gtk_widget_show(GTK_WIDGET(window));
 	return window;
 }
+#endif
 
 /* GtkStatusIcon creator */
 static GtkStatusIcon* tray_icon_create(void)
@@ -76,7 +79,6 @@ int main(int argc, char **argv)
 {
 	GtkStatusIcon* main_tray_icon = NULL;
 	GtkMenu* main_menu = NULL;
-	GList* main_script_list = NULL;
 
 	/* application data for callbacks: icon, menu, list, tip... */
 	app_data_t app_data;
@@ -89,18 +91,11 @@ int main(int argc, char **argv)
 	gtk_init(&argc, &argv);
 	nall_notify_init();
 
-/*
- * scan $HOME/.nall for scripts
- */ 
 	app_data.script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
-
-	app_data.script_list = na_register_scripts(&app_data);
+	app_data.script_list = nall_read_cfg(&app_data);
 	if (app_data.script_list) {
 		na_schedule_all(&app_data);
-	} else {
-		warning_message_create(NULL, _("No script found in ~/.nall directory.\nPlease provide one or more scripts to schedule and rescan.\nSee examples in the documentation directory."));
 	} 
-
 
 /*
  * initialisation
@@ -110,7 +105,7 @@ int main(int argc, char **argv)
 
 	/* and its item callbacks */
 	menu_append_item(main_menu, _("Reschedule"), G_CALLBACK(menu_item_on_schedule), &app_data);
-	menu_append_item(main_menu, _("Reload all"), G_CALLBACK(menu_item_on_rescan), &app_data);
+	menu_append_item(main_menu, _("Reload Config"), G_CALLBACK(menu_item_on_reload), &app_data);
 	menu_append_image_item(main_menu, GTK_STOCK_ABOUT, G_CALLBACK(menu_item_on_about), &app_data);
 	menu_append_image_item(main_menu, GTK_STOCK_QUIT, G_CALLBACK(menu_item_on_quit), &app_data);
 

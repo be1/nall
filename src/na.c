@@ -42,79 +42,6 @@
 
 static gboolean na_spawn_script(gpointer script);
 
-/* check if path is an executable file */
-static int is_exe_file (const char* path)
-{
-	return !access(path,F_OK|X_OK);
-}
-
-/* compare order of 2 scripts based on their freq (for sorting) */
-static gint script_freq_cmp (gconstpointer a, gconstpointer b)
-{
-	Script* s1, *s2;
-	if ((!a) || (!b))
-		return 0;
-	s1 = (Script*)a;
-	s2 = (Script*)b;
-	return (s1->freq > s2->freq);
-}
-
-/* registering scripts from 'path' to launch into the main G loop */
-GList* na_register_scripts (app_data_t* app_data)
-{
-	const gchar* path = app_data->script_path;
-	GDir* dir = NULL;
-	const gchar* entry;
-	char* script_path = NULL;
-	int script_freq = 0;
-	char buf [BUFSIZ];
-	Script* script = NULL;
-	GList* script_list = NULL;
-	
-	if (access(path, R_OK|X_OK))
-	{
-		g_warning("cannot acces to %s\n", path);
-		return NULL;
-	}
-
-	dir = g_dir_open(path, 0, NULL);
-	while ((entry = g_dir_read_name(dir))) {
-		/* store script path */
-		script_path = g_build_path("/", path, entry, NULL);
-		if (!is_exe_file(script_path)) {
-			g_free(script_path);
-			continue;
-		}
-		/* build script environment */
-		script = calloc(1, sizeof(Script));
-		script->app_data = app_data;
-		script->cmd = script_path;
-		/* store script freq (in seconds) */
-		if (!isdigit(entry[0])) {
-			script_freq = NA_FALLBACK_SCRIPT_FREQ;
-			script->name = g_strdup(entry);
-		} else { /* scan the frequency */
-			unsigned int i;
-			for (i=0; i<strlen(entry); i++) {
-				if(!isdigit(entry[i])) {
-					buf[i]='\0';
-					break;
-				} else {
-					buf[i] = entry[i];
-				}
-			}
-			script_freq = atoi(buf);
-			script->name = g_strdup(entry+i);
-		}
-		/* register script */
-		script->freq = script_freq;
-		script_list = g_list_prepend(script_list, script);
-	}
-	g_dir_close(dir);
-	script_list = g_list_sort(script_list, script_freq_cmp);
-	return script_list;
-}
-
 /*  remove script periodic spawn, and free data members */
 static void na_script_purge(gpointer script, gpointer unused)
 {
@@ -277,7 +204,7 @@ static gboolean na_spawn_script(gpointer script)
 
 	/* FIXME: set any working directory ? ($HOME or /tmp) */
 	ret = g_spawn_async_with_pipes
-		(NULL, argv, NULL, G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL, 
+		(NULL, argv, NULL, G_SPAWN_SEARCH_PATH | G_SPAWN_DO_NOT_REAP_CHILD, NULL, NULL,
 		&s->pid, &s->in, &s->out, &s->err, &s->error);
 	if(ret == FALSE || s->error) {
 		g_warning("na_spawn_script: %s\n", s->error->message);
