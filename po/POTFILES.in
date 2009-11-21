@@ -5,4 +5,5 @@ src/menu.c
 src/na.c
 src/nall.c
 src/version.h
+[type: gettext/glade]src/nall-dialogs.ui
 data/nall.desktop.in.in

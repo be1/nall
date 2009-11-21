@@ -38,6 +38,7 @@
 #include <gtk/gtk.h>
 #include "config.h"
 #include "na.h"
+#include "manage.h"
 #include "menu.h"
 #include "cb.h"
 #include "cfgfile.h"
@@ -106,6 +107,7 @@ int main(int argc, char **argv)
 	/* and its item callbacks */
 	menu_append_item(main_menu, _("Reschedule"), G_CALLBACK(menu_item_on_schedule), &app_data);
 	menu_append_item(main_menu, _("Reload Config"), G_CALLBACK(menu_item_on_reload), &app_data);
+	menu_append_item(main_menu, _("Manage Scripts"), G_CALLBACK(menu_item_on_manage), &app_data);
 	menu_append_image_item(main_menu, GTK_STOCK_ABOUT, G_CALLBACK(menu_item_on_about), &app_data);
 	menu_append_image_item(main_menu, GTK_STOCK_QUIT, G_CALLBACK(menu_item_on_quit), &app_data);
 

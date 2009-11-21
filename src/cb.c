@@ -29,6 +29,7 @@
 #include <gtk/gtk.h>
 #include <config.h>
 #include "na.h"
+#include "manage.h"
 #include "menu.h"
 #include "about.h"
 #include "cfgfile.h"
@@ -62,6 +63,13 @@ void menu_item_on_reload(GtkMenuItem* instance, app_data_t* app_data)
 	app_data->script_list = nall_read_cfg(app_data);
 	if (app_data->script_list)
 		na_schedule_all(app_data);
+}
+
+/* handler for the "Manage Scripts" menu item */
+void menu_item_on_manage(GtkMenuItem* instance, gpointer app_data)
+{
+	(void)instance;
+	manage_dialog_present(app_data);
 }
 
 /* handler for the "About" menu item (see version.h) */
