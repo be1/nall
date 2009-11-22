@@ -5,8 +5,6 @@ nall_SOURCES = \
 	about.h \
 	cb.c \
 	cb.h \
-	cfgfile.c \
-	cfgfile.h \
 	manage.c \
 	manage.h \
 	menu.c \
@@ -16,6 +14,8 @@ nall_SOURCES = \
 	notify.c \
 	notify.h \
 	nall.c \
+	script_list.c \
+	script_list.h \
 	version.h
 nall_LDFLAGS = -export-dynamic
 

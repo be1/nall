@@ -41,8 +41,8 @@
 #include "manage.h"
 #include "menu.h"
 #include "cb.h"
-#include "cfgfile.h"
 #include "notify.h"
+#include "script_list.h"
 #include "version.h"
 #define _(string) gettext(string)
 
@@ -93,10 +93,8 @@ int main(int argc, char **argv)
 	nall_notify_init();
 
 	app_data.script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
-	app_data.script_list = nall_read_cfg(&app_data);
-	if (app_data.script_list) {
-		na_schedule_all(&app_data);
-	} 
+	app_data.script_list = script_list_load();
+	na_schedule_all(&app_data);
 
 /*
  * initialisation

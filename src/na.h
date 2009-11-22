@@ -35,8 +35,9 @@
 
 typedef struct app_data app_data_t;
 
-struct _script {
-	app_data_t* app_data;
+/* Management data used when running a script */
+typedef struct {
+	app_data_t* app_data;	/* Application global data */
 	gchar* cmd;		/* full program path */
 	gchar* name;		/* program name */
 	gint freq;		/* program frequency (s) */
@@ -49,25 +50,24 @@ struct _script {
 	guint tag;		/* program Glib source id */
 	gboolean firstrun;	/* true till the first update */
 	gboolean running;	/* program currently running */
-	GError* error;		/* program start error */
-};
-
-typedef struct _script Script;
+} run_data_t;
 
 struct app_data {
 	GtkStatusIcon* icon;
 	GtkMenu* menu;
-	GList* script_list;
+	GtkListStore* script_list;
 	gchar tooltip_buffer[BUFSIZ];
 	gchar* script_path;
 	guint stop_blink_tag;
 };
 
-GList* na_register_scripts (app_data_t* app_data);
+void na_schedule_script(GtkTreeModel* tree, GtkTreeIter* iter, int when, app_data_t* app_data);
 
-void na_unregister_scripts (GList* script_list);
+void na_schedule_all(app_data_t* app_data);
 
-void na_schedule_all (app_data_t* app_data);
+void na_cancel_script(GtkTreeModel* tree, GtkTreeIter* iter);
+
+void na_cancel_all(app_data_t* app_data);
 
 void na_quit (app_data_t* app_data);
 

@@ -32,7 +32,7 @@
 #include "manage.h"
 #include "menu.h"
 #include "about.h"
-#include "cfgfile.h"
+#include "script_list.h"
 #include "version.h"
 
 /* handler for left-button click */
@@ -59,10 +59,12 @@ void menu_item_on_quit(GtkMenuItem* instance, app_data_t* app_data)
 /* handler for the "Reload Config" menu item */
 void menu_item_on_reload(GtkMenuItem* instance, app_data_t* app_data)
 {
-	na_unregister_scripts(app_data->script_list);
-	app_data->script_list = nall_read_cfg(app_data);
-	if (app_data->script_list)
-		na_schedule_all(app_data);
+	(void)instance;
+	(void)app_data;
+	na_cancel_all(app_data);
+	// FIXME: memleak!
+	app_data->script_list = script_list_load();
+	na_schedule_all(app_data);
 }
 
 /* handler for the "Manage Scripts" menu item */
@@ -94,6 +96,9 @@ void menu_item_on_about(GtkMenuItem* instance, gpointer unused)
 /* handler for the "Schedule" menu item */
 void menu_item_on_schedule(GtkMenuItem* instance, app_data_t* app_data)
 {
+	(void)instance;
+	(void)app_data;
+	na_cancel_all(app_data);
 	na_schedule_all(app_data);
 }
 

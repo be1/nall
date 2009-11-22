@@ -10,7 +10,7 @@ void nall_notify_init(void)
 	notify_init("nall");
 }
 
-void nall_notify(Script* s)
+void nall_notify(run_data_t* s)
 {
 	NotifyNotification* notification = notify_notification_new(s->name, s->buf, NULL, NULL);
 	if (s->status == 0)
@@ -24,6 +24,6 @@ void nall_notify(Script* s)
 #else
 
 void nall_notify_init(void) {}
-void nall_notify(Script* s) {}
+void nall_notify(run_data_t* s) {}
 
 #endif

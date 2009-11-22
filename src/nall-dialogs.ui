@@ -4,12 +4,18 @@
   <!-- interface-naming-policy project-wide -->
   <object class="GtkListStore" id="list_store_scripts">
     <columns>
-      <!-- column-name Enabled -->
-      <column type="gboolean"/>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
       <!-- column-name Description -->
       <column type="gchararray"/>
-      <!-- column-name Update -->
+      <!-- column-name Command -->
+      <column type="gchararray"/>
+      <!-- column-name Interval -->
       <column type="gint"/>
+      <!-- column-name Enabled -->
+      <column type="gboolean"/>
+      <!-- column-name RunData -->
+      <column type="gpointer"/>
     </columns>
   </object>
   <object class="GtkDialog" id="nall_manage_dialog">
@@ -29,7 +35,7 @@
           <object class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
             <child>
-              <object class="GtkTreeView" id="treeview1">
+              <object class="GtkTreeView" id="manage_treeview">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="model">list_store_scripts</property>
@@ -40,7 +46,7 @@
                     <child>
                       <object class="GtkCellRendererToggle" id="cellrenderertoggle1"/>
                       <attributes>
-                        <attribute name="active">0</attribute>
+                        <attribute name="active">4</attribute>
                       </attributes>
                     </child>
                   </object>
@@ -63,7 +69,7 @@
                     <child>
                       <object class="GtkCellRendererText" id="cellrenderertext2"/>
                       <attributes>
-                        <attribute name="text">2</attribute>
+                        <attribute name="text">3</attribute>
                       </attributes>
                     </child>
                   </object>
