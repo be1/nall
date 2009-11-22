@@ -59,6 +59,9 @@ static void edit_dialog_on_response(GtkWidget *dialog, gint response, gpointer d
 			gtk_list_store_append(store, &iter);
 		}
 
+		if (edit_dialog.add_mode)
+			gtk_list_store_set(store, &iter, COLUMN_ENABLED, FALSE, -1);
+
 		gtk_list_store_set(store, &iter,
 			COLUMN_NAME, name,
 			COLUMN_DESCRIPTION, description,
@@ -157,10 +160,35 @@ static void manage_dialog_on_response(GtkWidget *dialog, gint response, gpointer
 	manage_dialog = NULL;
 }
 
+static void manage_dialog_on_enabled_toggled(GtkCellRendererToggle* cell, gchar* path, gpointer data)
+{
+	GtkTreePath* tree_path = gtk_tree_path_new_from_string(path);
+	GtkTreeView* tree_view = GTK_TREE_VIEW(data);
+	GtkTreeModel* model = gtk_tree_view_get_model(tree_view);
+
+	GtkTreeIter iter;
+	gtk_tree_model_get_iter(model, &iter, tree_path);
+
+	gboolean enabled;
+	gtk_tree_model_get(model, &iter, COLUMN_ENABLED, &enabled, -1);
+	gtk_list_store_set(GTK_LIST_STORE(model), &iter, COLUMN_ENABLED, !enabled, -1);
+	if (enabled)
+		na_cancel_script(model, &iter);
+	else
+		na_schedule_script(model, &iter, 1);
+
+	gtk_tree_path_free(tree_path);
+}
+
 void manage_dialog_on_selection_changed(GtkTreeSelection* selection, gpointer editbutton)
 {
 	gboolean sensitive = (gtk_tree_selection_count_selected_rows(selection) > 0);
 	gtk_widget_set_sensitive(GTK_WIDGET(editbutton), sensitive);
+}
+
+void manage_dialog_on_row_activated(GtkTreeView* tree_view, GtkTreePath* path, GtkTreeViewColumn* column, gpointer data)
+{
+	edit_dialog_open(tree_view, FALSE);
 }
 
 static void interval_cell_data_func(GtkTreeViewColumn* col, GtkCellRenderer* renderer, GtkTreeModel* model, GtkTreeIter* iter, gpointer data)
@@ -182,19 +210,21 @@ static void interval_cell_data_func(GtkTreeViewColumn* col, GtkCellRenderer* ren
 	}
 }
 
-
 static GtkDialog* manage_dialog_create(void)
 {
 	GtkBuilder* builder = nall_gtk_builder_new();
 	GtkDialog* dialog = GTK_DIALOG(gtk_builder_get_object(builder, "nall_manage_dialog"));
 	GtkTreeView* tree_view = GTK_TREE_VIEW(gtk_builder_get_object(builder, "manage_treeview"));
 	GtkTreeViewColumn* column_interval = GTK_TREE_VIEW_COLUMN(gtk_builder_get_object(builder, "treeview_column_interval"));
+	GtkCellRenderer* cell_enabled = GTK_CELL_RENDERER(gtk_builder_get_object(builder, "cellrenderertoggle_enabled"));
 	GtkCellRenderer* cell_interval = GTK_CELL_RENDERER(gtk_builder_get_object(builder, "cellrenderertext_interval"));
 	GtkButton* button_add = GTK_BUTTON(gtk_builder_get_object(builder, "manage_button_add"));
 	GtkButton* button_edit = GTK_BUTTON(gtk_builder_get_object(builder, "manage_button_edit"));
 	GtkButton* button_delete = GTK_BUTTON(gtk_builder_get_object(builder, "manage_button_delete"));
 	gtk_builder_connect_signals(builder, NULL);
 	g_object_unref(builder);
+
+	g_signal_connect(cell_enabled, "toggled", G_CALLBACK(manage_dialog_on_enabled_toggled), tree_view);
 
 	gtk_tree_view_set_model(tree_view, GTK_TREE_MODEL(nall_globals.script_list));
 	gtk_tree_view_column_set_cell_data_func(column_interval, cell_interval, interval_cell_data_func, NULL, NULL);
@@ -214,9 +244,4 @@ void manage_dialog_present(void)
 	if (!manage_dialog)
 		manage_dialog = manage_dialog_create();
 	gtk_window_present(GTK_WINDOW(manage_dialog));
-}
-
-void manage_dialog_on_row_activated(GtkTreeView* tree_view, GtkTreePath* path, GtkTreeViewColumn* column, gpointer data)
-{
-	edit_dialog_open(tree_view, FALSE);
 }
