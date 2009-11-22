@@ -177,7 +177,6 @@ static void na_reap_child (GPid pid, gint status, gpointer script)
 /* spawn a registered script */
 static gboolean na_spawn_script(gpointer script)
 {
-	gchar* argv[2];
 	gboolean ret; /* spawn success */
 	GError* error = NULL;
 
@@ -187,8 +186,7 @@ static gboolean na_spawn_script(gpointer script)
 	if (!s || !s->cmd)
 		return FALSE;
 
-	argv[0] = (gchar*) s->cmd;
-	argv[1] = NULL;
+	gchar* argv[] = { "sh", "-c", (gchar*) s->cmd, NULL };
 
 	/* FIXME: set any working directory ? ($HOME or /tmp) */
 	ret = g_spawn_async_with_pipes
