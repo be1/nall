@@ -151,7 +151,12 @@ static void manage_dialog_on_button_edit(GtkButton *button, gpointer tree_view_p
 
 static void manage_dialog_on_button_delete(GtkButton *button, gpointer tree_view_ptr)
 {
-	printf("Delete\n");
+	GtkTreeView* tree_view = GTK_TREE_VIEW(tree_view_ptr);
+	GtkListStore* model = GTK_LIST_STORE(gtk_tree_view_get_model(tree_view));
+	GtkTreeSelection* selection = gtk_tree_view_get_selection(tree_view);
+	GtkTreeIter iter;
+	if (gtk_tree_selection_get_selected(selection, NULL, &iter))
+		gtk_list_store_remove(model, &iter);
 }
 
 static void manage_dialog_on_response(GtkWidget *dialog, gint response, gpointer data)
