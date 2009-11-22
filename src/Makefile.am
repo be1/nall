@@ -31,3 +31,5 @@ AM_CFLAGS = -Wall
 if DEBUG
 AM_CFLAGS += -g -DEBUG
 endif
+
+EXTRA_DIST = $(ui_DATA)
