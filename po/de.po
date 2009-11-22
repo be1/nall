@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nall 0.7\n"
 "Report-Msgid-Bugs-To: brouits@free.fr\n"
-"POT-Creation-Date: 2009-11-21 18:44+0100\n"
+"POT-Creation-Date: 2009-11-22 12:48+0100\n"
 "PO-Revision-Date: 2009-11-08 15:48+0200\n"
 "Last-Translator: Ingo van Lil <inguin@gmx.de>\n"
 "Language-Team: \n"
@@ -15,26 +15,110 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: ../src/manage.c:24
+msgid "second"
+msgstr "Sekunde"
+
+#: ../src/manage.c:24
+msgid "seconds"
+msgstr "Sekunden"
+
+#: ../src/manage.c:25
+msgid "minute"
+msgstr "Minute"
+
+#: ../src/manage.c:25
+msgid "minutes"
+msgstr "Minuten"
+
+#: ../src/manage.c:26
+msgid "hour"
+msgstr "Stunde"
+
+#: ../src/manage.c:26
+msgid "hours"
+msgstr "Stunden"
+
+#: ../src/manage.c:27
+msgid "day"
+msgstr "Tag"
+
+#: ../src/manage.c:27
+msgid "days"
+msgstr "Tage"
+
 #: ../src/nall.c:54
 msgid "Warning:"
 msgstr "Warnung:"
 
 #. and its item callbacks
-#: ../src/nall.c:109
+#: ../src/nall.c:106
 msgid "Reschedule"
 msgstr "Aktualisieren"
 
-#: ../src/nall.c:110
+#: ../src/nall.c:107
 msgid "Reload Config"
 msgstr "Konfiguration Neu Laden"
 
-#: ../src/nall.c:111 ../src/nall-dialogs.ui.h:1
+#: ../src/nall.c:108 ../src/nall-dialogs.ui.h:5
 msgid "Manage Scripts"
 msgstr "Scripte Verwalten"
 
 #: ../src/version.h:12
 msgid "a simple, non-intrusive, everything notifier in the system tray"
 msgstr "Eigene Benachrichtigungen für alles in der Kontrollleiste"
+
+#: ../src/nall-dialogs.ui.h:1
+msgid "Blink Tray Icon:"
+msgstr "Blinkendes Icon:"
+
+#: ../src/nall-dialogs.ui.h:2
+msgid "Co_mmand:"
+msgstr "Kommando:"
+
+#: ../src/nall-dialogs.ui.h:3
+msgid "Days"
+msgstr "Tage"
+
+#: ../src/nall-dialogs.ui.h:4
+msgid "Hours"
+msgstr "Stunden"
+
+#: ../src/nall-dialogs.ui.h:6
+msgid "Minutes"
+msgstr "Minuten"
+
+#: ../src/nall-dialogs.ui.h:7
+msgid "Never"
+msgstr "Niemals"
+
+#: ../src/nall-dialogs.ui.h:8
+msgid "On Error"
+msgstr "Bei Fehlern"
+
+#: ../src/nall-dialogs.ui.h:9
+msgid "On Update"
+msgstr "Bei Änderung"
+
+#: ../src/nall-dialogs.ui.h:10
+msgid "Raise Notification:"
+msgstr "Benachrichtigung Anzeigen:"
+
+#: ../src/nall-dialogs.ui.h:11
+msgid "Seconds"
+msgstr "Sekunden"
+
+#: ../src/nall-dialogs.ui.h:12
+msgid "_Description:"
+msgstr "Beschreibung:"
+
+#: ../src/nall-dialogs.ui.h:13
+msgid "_Interval:"
+msgstr "Intervall:"
+
+#: ../src/nall-dialogs.ui.h:14
+msgid "_Name:"
+msgstr "Name:"
 
 #: ../data/nall.desktop.in.in.h:1
 msgid "Display your scripts notifications"

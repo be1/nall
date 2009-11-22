@@ -1,9 +1,25 @@
 #ifndef NALL_MANAGE_H
 #define NALL_MANAGE_H
 
+#include <glib-object.h>
+#include <gtk/gtk.h>
+
 #include "na.h"
 
-#define UI_FILENAME "nall-dialogs.ui"
+typedef struct _NallEditDialog NallEditDialog;
+
+struct _NallEditDialog {
+	GObject parent;
+
+	GtkTreeView* tree_view;
+	gboolean add_mode;
+
+	GtkEntry* entry_name;
+	GtkEntry* entry_description;
+	GtkEntry* entry_command;
+	GtkSpinButton* spin_interval;
+	GtkComboBox* combo_unit;
+};
 
 void manage_dialog_present(void);
 
