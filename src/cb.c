@@ -36,46 +36,41 @@
 #include "version.h"
 
 /* handler for left-button click */
-void tray_icon_on_click(GtkStatusIcon* instance, gpointer app_data)
+void tray_icon_on_click(GtkStatusIcon* instance, gpointer data)
 {
 	gtk_status_icon_set_blinking(instance, FALSE);
 }
 
 /* handler for right-button click */
-void tray_icon_on_menu(GtkStatusIcon* instance, guint button, guint activate_time, app_data_t* app_data)
+void tray_icon_on_menu(GtkStatusIcon* instance, guint button, guint activate_time, gpointer data)
 {
 	gtk_status_icon_set_blinking(instance, FALSE);
-	if (app_data)
-		menu_show(app_data->menu, button, activate_time);
+	menu_show(nall_globals.menu, button, activate_time);
 }
 
 /* handler for the "Quit" menu item */
-void menu_item_on_quit(GtkMenuItem* instance, app_data_t* app_data)
+void menu_item_on_quit(GtkMenuItem* instance, gpointer data)
 {
-	na_quit(app_data);
-	instance = NULL; /* useless but does not warn at compile time */
+	na_quit();
 }
 
 /* handler for the "Reload Config" menu item */
-void menu_item_on_reload(GtkMenuItem* instance, app_data_t* app_data)
+void menu_item_on_reload(GtkMenuItem* instance, gpointer data)
 {
-	(void)instance;
-	(void)app_data;
-	na_cancel_all(app_data);
+	na_cancel_all();
 	// FIXME: memleak!
-	app_data->script_list = script_list_load();
-	na_schedule_all(app_data);
+	nall_globals.script_list = script_list_load();
+	na_schedule_all();
 }
 
 /* handler for the "Manage Scripts" menu item */
-void menu_item_on_manage(GtkMenuItem* instance, gpointer app_data)
+void menu_item_on_manage(GtkMenuItem* instance, gpointer data)
 {
-	(void)instance;
-	manage_dialog_present(app_data);
+	manage_dialog_present();
 }
 
 /* handler for the "About" menu item (see version.h) */
-void menu_item_on_about(GtkMenuItem* instance, gpointer unused)
+void menu_item_on_about(GtkMenuItem* instance, gpointer data)
 {
 	GtkAboutDialog* about;
 	const gchar* authors [] = {
@@ -88,17 +83,13 @@ void menu_item_on_about(GtkMenuItem* instance, gpointer unused)
 				NALL_COMMENT, NALL_LICENSE, NALL_WEBSITE,
 				authors, GTK_STOCK_INFO);
 	about_show(about);
-	unused = NULL; /* avoid compiler warnings */
-	instance = NULL; /* _ */
 	return;
 }
 
 /* handler for the "Schedule" menu item */
-void menu_item_on_schedule(GtkMenuItem* instance, app_data_t* app_data)
+void menu_item_on_schedule(GtkMenuItem* instance, gpointer data)
 {
-	(void)instance;
-	(void)app_data;
-	na_cancel_all(app_data);
-	na_schedule_all(app_data);
+	na_cancel_all();
+	na_schedule_all();
 }
 

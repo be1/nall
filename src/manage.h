@@ -5,6 +5,6 @@
 
 #define UI_FILENAME "nall-dialogs.ui"
 
-void manage_dialog_present(app_data_t* app_data);
+void manage_dialog_present(void);
 
 #endif

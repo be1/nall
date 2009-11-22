@@ -46,6 +46,8 @@
 #include "version.h"
 #define _(string) gettext(string)
 
+nall_globals_t nall_globals;
+
 #if 0
 /* message dialog creator */
 static GtkWidget* warning_message_create(GtkWindow* parent, const gchar* message) {
@@ -82,8 +84,7 @@ int main(int argc, char **argv)
 	GtkMenu* main_menu = NULL;
 
 	/* application data for callbacks: icon, menu, list, tip... */
-	app_data_t app_data;
-	memset(&app_data, 0, sizeof(app_data));
+	memset(&nall_globals, 0, sizeof(nall_globals));
 	
 	/*  internationalization */
 	bindtextdomain ("nall", LOCALEDIR);
@@ -92,9 +93,9 @@ int main(int argc, char **argv)
 	gtk_init(&argc, &argv);
 	nall_notify_init();
 
-	app_data.script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
-	app_data.script_list = script_list_load();
-	na_schedule_all(&app_data);
+	nall_globals.script_path = g_build_path ("/", g_get_home_dir(), ".nall", NULL);
+	nall_globals.script_list = script_list_load();
+	na_schedule_all();
 
 /*
  * initialisation
@@ -103,30 +104,30 @@ int main(int argc, char **argv)
 	main_menu = menu_new();
 
 	/* and its item callbacks */
-	menu_append_item(main_menu, _("Reschedule"), G_CALLBACK(menu_item_on_schedule), &app_data);
-	menu_append_item(main_menu, _("Reload Config"), G_CALLBACK(menu_item_on_reload), &app_data);
-	menu_append_item(main_menu, _("Manage Scripts"), G_CALLBACK(menu_item_on_manage), &app_data);
-	menu_append_image_item(main_menu, GTK_STOCK_ABOUT, G_CALLBACK(menu_item_on_about), &app_data);
-	menu_append_image_item(main_menu, GTK_STOCK_QUIT, G_CALLBACK(menu_item_on_quit), &app_data);
+	menu_append_item(main_menu, _("Reschedule"), G_CALLBACK(menu_item_on_schedule), &nall_globals);
+	menu_append_item(main_menu, _("Reload Config"), G_CALLBACK(menu_item_on_reload), &nall_globals);
+	menu_append_item(main_menu, _("Manage Scripts"), G_CALLBACK(menu_item_on_manage), &nall_globals);
+	menu_append_image_item(main_menu, GTK_STOCK_ABOUT, G_CALLBACK(menu_item_on_about), &nall_globals);
+	menu_append_image_item(main_menu, GTK_STOCK_QUIT, G_CALLBACK(menu_item_on_quit), &nall_globals);
 
-	app_data.menu = main_menu;
+	nall_globals.menu = main_menu;
 
 	/* the tray icon */
 	main_tray_icon = tray_icon_create();
 
 	/* and its callbacks */
 	g_signal_connect(G_OBJECT(main_tray_icon), "popup-menu",
-                         G_CALLBACK(tray_icon_on_menu), &app_data);
+                         G_CALLBACK(tray_icon_on_menu), &nall_globals);
         g_signal_connect(G_OBJECT(main_tray_icon), "activate", 
-                         G_CALLBACK(tray_icon_on_click), &app_data);
+                         G_CALLBACK(tray_icon_on_click), &nall_globals);
 
-	app_data.icon = (gpointer)main_tray_icon;
+	nall_globals.icon = (gpointer)main_tray_icon;
 
 /* 
  * run
  */
         gtk_main();
-	g_free(app_data.script_path);
+	g_free(nall_globals.script_path);
         exit(EXIT_SUCCESS);
 }
 

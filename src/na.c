@@ -84,24 +84,23 @@ static void na_script_collect_status(run_data_t* s, gint* status_ptr)
 		*status = s->status;
 }
 
-static gboolean na_stop_blinking(gpointer _app_data)
+static gboolean na_stop_blinking(gpointer data)
 {
-	app_data_t* app_data = _app_data;
-	app_data->stop_blink_tag = 0;
-	gtk_status_icon_set_blinking(app_data->icon, FALSE);
+	nall_globals.stop_blink_tag = 0;
+	gtk_status_icon_set_blinking(nall_globals.icon, FALSE);
 	return FALSE;
 }
 
 /* reap each script output and refresh the tooltip buffer */
-static void na_update_tooltip(app_data_t* app_data)
+static void na_update_tooltip(void)
 {
-	gchar* tooltip_buffer = app_data->tooltip_buffer;
+	gchar* tooltip_buffer = nall_globals.tooltip_buffer;
 	gint status;
 
 	status = 0;
 	tooltip_buffer[0] = '\0';
 
-	GtkTreeModel* tree = GTK_TREE_MODEL(app_data->script_list);
+	GtkTreeModel* tree = GTK_TREE_MODEL(nall_globals.script_list);
 	GtkTreeIter iter;
 	gboolean valid = gtk_tree_model_get_iter_first(tree, &iter);
 	while (valid) {
@@ -121,15 +120,15 @@ static void na_update_tooltip(app_data_t* app_data)
 	int len = strlen(tooltip_buffer);
 	if (len > 0 && tooltip_buffer[len - 1] == '\n')
 		tooltip_buffer[len - 1]='\0';
-	gtk_status_icon_set_tooltip(app_data->icon, tooltip_buffer);
+	gtk_status_icon_set_tooltip(nall_globals.icon, tooltip_buffer);
 
 	const gchar* icon = (status == 0) ? GTK_STOCK_INFO : GTK_STOCK_DIALOG_WARNING;
-	gtk_status_icon_set_from_icon_name(app_data->icon, icon);
+	gtk_status_icon_set_from_icon_name(nall_globals.icon, icon);
 
-	gtk_status_icon_set_blinking (app_data->icon, TRUE);
-	if (app_data->stop_blink_tag)
-		g_source_remove(app_data->stop_blink_tag);
-	app_data->stop_blink_tag = g_timeout_add_seconds(NA_BLINK_DURATION, na_stop_blinking, app_data);
+	gtk_status_icon_set_blinking(nall_globals.icon, TRUE);
+	if (nall_globals.stop_blink_tag)
+		g_source_remove(nall_globals.stop_blink_tag);
+	nall_globals.stop_blink_tag = g_timeout_add_seconds(NA_BLINK_DURATION, na_stop_blinking, NULL);
 }
 
 /* read child output on child termination event */
@@ -153,7 +152,7 @@ static void na_reap_child (GPid pid, gint status, gpointer script)
 	if (strcmp(s->buf, buf)) {
 		/* program output has changed */
 		strncpy(s->buf, buf, sizeof(buf));
-		na_update_tooltip(s->app_data);
+		na_update_tooltip();
 		if (!s->firstrun)
 			nall_notify(s);
 	}
@@ -207,11 +206,10 @@ static gboolean na_spawn_script(gpointer script)
 	return FALSE;
 }
 
-static run_data_t* create_run_data(GtkTreeModel* tree, GtkTreeIter* iter, app_data_t* app_data)
+static run_data_t* create_run_data(GtkTreeModel* tree, GtkTreeIter* iter)
 {
 	run_data_t* s = g_malloc(sizeof(*s));
 	memset(s, 0, sizeof(*s));
-	s->app_data = app_data;
 	gtk_tree_model_get(tree, iter,
 		COLUMN_NAME, &s->name,
 		COLUMN_COMMAND, &s->cmd,
@@ -220,7 +218,7 @@ static run_data_t* create_run_data(GtkTreeModel* tree, GtkTreeIter* iter, app_da
 	return s;
 }
 
-void na_schedule_script(GtkTreeModel* tree, GtkTreeIter* iter, int when, app_data_t* app_data)
+void na_schedule_script(GtkTreeModel* tree, GtkTreeIter* iter, int when)
 {
 	gboolean enabled;
 	run_data_t* s;
@@ -230,7 +228,7 @@ void na_schedule_script(GtkTreeModel* tree, GtkTreeIter* iter, int when, app_dat
 		-1);
 	if (enabled) {
 		if (s == NULL) {
-			s = create_run_data(tree, iter, app_data);
+			s = create_run_data(tree, iter);
 			gtk_list_store_set(GTK_LIST_STORE(tree), iter, COLUMN_RUN_DATA, s, -1);
 		}
 		if (!s->running) {
@@ -242,14 +240,14 @@ void na_schedule_script(GtkTreeModel* tree, GtkTreeIter* iter, int when, app_dat
 	}
 }
 
-void na_schedule_all(app_data_t* app_data)
+void na_schedule_all(void)
 {
 	int i = 0;
-	GtkTreeModel* tree = GTK_TREE_MODEL(app_data->script_list);
+	GtkTreeModel* tree = GTK_TREE_MODEL(nall_globals.script_list);
 	GtkTreeIter iter;
 	gboolean valid = gtk_tree_model_get_iter_first(tree, &iter);
 	while (valid) {
-		na_schedule_script(tree, &iter, i++, app_data);
+		na_schedule_script(tree, &iter, i++);
 		valid = gtk_tree_model_iter_next(tree, &iter);
 	}
 }
@@ -274,9 +272,9 @@ void na_cancel_script(GtkTreeModel* tree, GtkTreeIter* iter)
 	}
 }
 
-void na_cancel_all(app_data_t* app_data)
+void na_cancel_all(void)
 {
-	GtkTreeModel* tree = GTK_TREE_MODEL(app_data->script_list);
+	GtkTreeModel* tree = GTK_TREE_MODEL(nall_globals.script_list);
 	GtkTreeIter iter;
 	gboolean valid = gtk_tree_model_get_iter_first(tree, &iter);
 	while (valid) {
@@ -286,9 +284,9 @@ void na_cancel_all(app_data_t* app_data)
 }
 
 /* quit nall */
-void na_quit(app_data_t* app_data)
+void na_quit(void)
 {
-	na_cancel_all(app_data);
+	na_cancel_all();
 	gtk_main_quit();
 }
 
