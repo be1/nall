@@ -105,3 +105,53 @@ GtkListStore* script_list_load(void)
 
 	return store;
 }
+
+gboolean script_list_save(GtkListStore* script_list, GError** error)
+{
+	gboolean ret = FALSE;
+	GtkTreeModel* model = GTK_TREE_MODEL(script_list);
+	GKeyFile* keyfile = g_key_file_new();
+
+	GtkTreeIter iter;
+	gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
+	while (valid) {
+		gchar* name;
+		gchar* description;
+		gchar* command;
+		gint interval;
+		gboolean enabled;
+
+		gtk_tree_model_get(model, &iter,
+			COLUMN_NAME, &name,
+			COLUMN_DESCRIPTION, &description,
+			COLUMN_COMMAND, &command,
+			COLUMN_INTERVAL, &interval,
+			COLUMN_ENABLED, &enabled,
+			-1);
+
+		g_key_file_set_string(keyfile, name, "description", description);
+		g_key_file_set_string(keyfile, name, "command", command);
+		g_key_file_set_integer(keyfile, name, "interval", interval);
+		g_key_file_set_boolean(keyfile, name, "enabled", enabled);
+
+		valid = gtk_tree_model_iter_next(model, &iter);
+	}
+
+	gsize length;
+	gchar* data = g_key_file_to_data(keyfile, &length, error);
+
+	if (data) {
+		gchar* nall_dir = g_build_path("/", g_get_home_dir(), ".nall", NULL);
+		g_mkdir_with_parents(nall_dir, 0755);
+
+		gchar* cfgfile = g_build_path("/", nall_dir, "nall.ini", NULL);
+		ret = g_file_set_contents(cfgfile, data, length, error);
+
+		g_free(cfgfile);
+		g_free(nall_dir);
+		g_free(data);
+	}
+
+	g_key_file_free(keyfile);
+	return ret;
+}

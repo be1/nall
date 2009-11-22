@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nall 0.7\n"
 "Report-Msgid-Bugs-To: brouits@free.fr\n"
-"POT-Creation-Date: 2009-11-22 12:48+0100\n"
+"POT-Creation-Date: 2009-11-22 16:49+0100\n"
 "PO-Revision-Date: 2009-09-28 21:43+0200\n"
 "Last-Translator: Benoît Rouits <brouits@free.fr>\n"
 "Language-Team: \n"
@@ -47,19 +47,14 @@ msgstr ""
 msgid "days"
 msgstr ""
 
-#: ../src/nall.c:54
+#: ../src/nall.c:56
 msgid "Warning:"
 msgstr "Attention :"
 
 #. and its item callbacks
-#: ../src/nall.c:106
+#: ../src/nall.c:107
 msgid "Reschedule"
 msgstr "Ré-ordonancer"
-
-#: ../src/nall.c:107
-#, fuzzy
-msgid "Reload Config"
-msgstr "Recharger tout"
 
 #: ../src/nall.c:108 ../src/nall-dialogs.ui.h:5
 msgid "Manage Scripts"

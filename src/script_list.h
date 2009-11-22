@@ -18,4 +18,6 @@ GtkBuilder* nall_gtk_builder_new(void);
 
 GtkListStore* script_list_load(void);
 
+gboolean script_list_save(GtkListStore* script_list, GError** error);
+
 #endif

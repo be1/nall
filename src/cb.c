@@ -54,15 +54,6 @@ void menu_item_on_quit(GtkMenuItem* instance, gpointer data)
 	na_quit();
 }
 
-/* handler for the "Reload Config" menu item */
-void menu_item_on_reload(GtkMenuItem* instance, gpointer data)
-{
-	na_cancel_all();
-	// FIXME: memleak!
-	nall_globals.script_list = script_list_load();
-	na_schedule_all();
-}
-
 /* handler for the "Manage Scripts" menu item */
 void menu_item_on_manage(GtkMenuItem* instance, gpointer data)
 {

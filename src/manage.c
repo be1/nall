@@ -158,6 +158,8 @@ static void manage_dialog_on_response(GtkWidget *dialog, gint response, gpointer
 {
 	gtk_widget_destroy(dialog);
 	manage_dialog = NULL;
+	// TODO: Error checking
+	script_list_save(nall_globals.script_list, NULL);
 }
 
 static void manage_dialog_on_enabled_toggled(GtkCellRendererToggle* cell, gchar* path, gpointer data)
