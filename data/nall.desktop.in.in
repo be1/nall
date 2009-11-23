@@ -2,7 +2,7 @@
 Name=Nall!
 _Comment=Display your scripts notifications
 Exec=nall
-Icon=nall.png
+Icon=nall
 StartupNotify=false
 Terminal=false
 Type=Application
