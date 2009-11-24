@@ -17,35 +17,35 @@ msgstr ""
 
 #: ../src/manage.c:24
 msgid "second"
-msgstr ""
+msgstr "seconde"
 
 #: ../src/manage.c:24
 msgid "seconds"
-msgstr ""
+msgstr "secondes"
 
 #: ../src/manage.c:25
 msgid "minute"
-msgstr ""
+msgstr "minute"
 
 #: ../src/manage.c:25
 msgid "minutes"
-msgstr ""
+msgstr "minutes"
 
 #: ../src/manage.c:26
 msgid "hour"
-msgstr ""
+msgstr "heure"
 
 #: ../src/manage.c:26
 msgid "hours"
-msgstr ""
+msgstr "heures"
 
 #: ../src/manage.c:27
 msgid "day"
-msgstr ""
+msgstr "jour"
 
 #: ../src/manage.c:27
 msgid "days"
-msgstr ""
+msgstr "jours"
 
 #: ../src/nall.c:56
 msgid "Warning:"
@@ -58,7 +58,7 @@ msgstr "_Ré-ordonancer"
 
 #: ../src/nall.c:108
 msgid "_Manage Scripts"
-msgstr ""
+msgstr "_Gérer les Scripts"
 
 #: ../src/version.h:12
 msgid "a simple, non-intrusive, everything notifier in the system tray"
@@ -66,59 +66,59 @@ msgstr "un outil de notifiaction extensible pour le systray"
 
 #: ../src/nall-dialogs.ui.h:1
 msgid "Co_mmand:"
-msgstr ""
+msgstr "Co_mmande:"
 
 #: ../src/nall-dialogs.ui.h:2
 msgid "Days"
-msgstr ""
+msgstr "Jours"
 
 #: ../src/nall-dialogs.ui.h:3
 msgid "Hours"
-msgstr ""
+msgstr "Heures"
 
 #: ../src/nall-dialogs.ui.h:4
 msgid "Manage Scripts"
-msgstr ""
+msgstr "Gérer les scripts"
 
 #: ../src/nall-dialogs.ui.h:5
 msgid "Minutes"
-msgstr ""
+msgstr "Minutes"
 
 #: ../src/nall-dialogs.ui.h:6
 msgid "Never"
-msgstr ""
+msgstr "Jamais"
 
 #: ../src/nall-dialogs.ui.h:7
 msgid "On Error"
-msgstr ""
+msgstr "Sur erreur"
 
 #: ../src/nall-dialogs.ui.h:8
 msgid "On Update"
-msgstr ""
+msgstr "Sur changement"
 
 #: ../src/nall-dialogs.ui.h:9
 msgid "Seconds"
-msgstr ""
+msgstr "Secondes"
 
 #: ../src/nall-dialogs.ui.h:10
 msgid "_Blink Tray Icon:"
-msgstr ""
+msgstr "_Clignoter:"
 
 #: ../src/nall-dialogs.ui.h:11
 msgid "_Description:"
-msgstr ""
+msgstr "_Description:"
 
 #: ../src/nall-dialogs.ui.h:12
 msgid "_Interval:"
-msgstr ""
+msgstr "_Intervalle:"
 
 #: ../src/nall-dialogs.ui.h:13
 msgid "_Name:"
-msgstr ""
+msgstr "_Nom:"
 
 #: ../src/nall-dialogs.ui.h:14
 msgid "_Raise Notification:"
-msgstr ""
+msgstr "_Lever une notification:"
 
 #: ../data/nall.desktop.in.in.h:1
 msgid "Display your scripts notifications"
