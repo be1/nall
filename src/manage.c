@@ -252,6 +252,8 @@ static GtkDialog* manage_dialog_create(void)
 	gtk_tree_view_set_model(tree_view, GTK_TREE_MODEL(nall_globals.script_list));
 	gtk_tree_view_column_set_cell_data_func(column_interval, cell_interval, interval_cell_data_func, NULL, NULL);
 	GtkTreeSelection* selection = gtk_tree_view_get_selection(tree_view);
+	gboolean sensitive = (gtk_tree_selection_count_selected_rows(selection) > 0);
+	gtk_widget_set_sensitive(GTK_WIDGET(button_edit), sensitive);
 	g_signal_connect(selection, "changed", G_CALLBACK(manage_dialog_on_selection_changed), button_edit);
 
 	g_signal_connect(button_add, "clicked", G_CALLBACK(manage_dialog_on_button_add), tree_view);
