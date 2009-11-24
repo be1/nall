@@ -58,13 +58,13 @@ static void edit_dialog_on_response(GtkWidget *dialog, gint response, gpointer d
 		GtkTreeIter iter;
 		if (gtk_tree_selection_get_selected(selection, NULL, &iter)) {
 			if (edit_dialog.add_mode)
-				gtk_list_store_insert_before(store, &iter, &iter);
+				gtk_list_store_insert_after(store, &iter, &iter);
 		} else {
 			gtk_list_store_append(store, &iter);
 		}
 
 		if (edit_dialog.add_mode)
-			gtk_list_store_set(store, &iter, COLUMN_ENABLED, FALSE, -1);
+			gtk_list_store_set(store, &iter, COLUMN_ENABLED, TRUE, -1);
 
 		gtk_list_store_set(store, &iter,
 			COLUMN_NAME, name,
@@ -99,9 +99,10 @@ static void edit_dialog_open(GtkTreeView* tree_view, gboolean add_mode)
 	gtk_builder_connect_signals(builder, NULL);
 	g_object_unref(builder);
 
-	if (add_mode)
+	if (add_mode) {
 		gtk_window_set_title(GTK_WINDOW(dialog), "Add New Script");
-	else {
+		gtk_spin_button_set_value(edit_dialog.spin_interval, 30);
+	} else {
 		gtk_window_set_title(GTK_WINDOW(dialog), "Script Properties");
 
 		gchar* name = NULL;
