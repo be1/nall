@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nall 0.7\n"
 "Report-Msgid-Bugs-To: brouits@free.fr\n"
-"POT-Creation-Date: 2009-11-22 16:49+0100\n"
+"POT-Creation-Date: 2009-11-24 20:55+0100\n"
 "PO-Revision-Date: 2009-09-28 21:43+0200\n"
 "Last-Translator: Benoît Rouits <brouits@free.fr>\n"
 "Language-Team: \n"
@@ -53,11 +53,11 @@ msgstr "Attention :"
 
 #. and its item callbacks
 #: ../src/nall.c:107
-msgid "Reschedule"
-msgstr "Ré-ordonancer"
+msgid "_Reschedule"
+msgstr "_Ré-ordonancer"
 
-#: ../src/nall.c:108 ../src/nall-dialogs.ui.h:5
-msgid "Manage Scripts"
+#: ../src/nall.c:108
+msgid "_Manage Scripts"
 msgstr ""
 
 #: ../src/version.h:12
@@ -65,55 +65,59 @@ msgid "a simple, non-intrusive, everything notifier in the system tray"
 msgstr "un outil de notifiaction extensible pour le systray"
 
 #: ../src/nall-dialogs.ui.h:1
-msgid "Blink Tray Icon:"
-msgstr ""
-
-#: ../src/nall-dialogs.ui.h:2
 msgid "Co_mmand:"
 msgstr ""
 
-#: ../src/nall-dialogs.ui.h:3
+#: ../src/nall-dialogs.ui.h:2
 msgid "Days"
 msgstr ""
 
-#: ../src/nall-dialogs.ui.h:4
+#: ../src/nall-dialogs.ui.h:3
 msgid "Hours"
 msgstr ""
 
-#: ../src/nall-dialogs.ui.h:6
+#: ../src/nall-dialogs.ui.h:4
+msgid "Manage Scripts"
+msgstr ""
+
+#: ../src/nall-dialogs.ui.h:5
 msgid "Minutes"
 msgstr ""
 
-#: ../src/nall-dialogs.ui.h:7
+#: ../src/nall-dialogs.ui.h:6
 msgid "Never"
 msgstr ""
 
-#: ../src/nall-dialogs.ui.h:8
+#: ../src/nall-dialogs.ui.h:7
 msgid "On Error"
 msgstr ""
 
-#: ../src/nall-dialogs.ui.h:9
+#: ../src/nall-dialogs.ui.h:8
 msgid "On Update"
 msgstr ""
 
-#: ../src/nall-dialogs.ui.h:10
-msgid "Raise Notification:"
-msgstr ""
-
-#: ../src/nall-dialogs.ui.h:11
+#: ../src/nall-dialogs.ui.h:9
 msgid "Seconds"
 msgstr ""
 
-#: ../src/nall-dialogs.ui.h:12
+#: ../src/nall-dialogs.ui.h:10
+msgid "_Blink Tray Icon:"
+msgstr ""
+
+#: ../src/nall-dialogs.ui.h:11
 msgid "_Description:"
 msgstr ""
 
-#: ../src/nall-dialogs.ui.h:13
+#: ../src/nall-dialogs.ui.h:12
 msgid "_Interval:"
 msgstr ""
 
-#: ../src/nall-dialogs.ui.h:14
+#: ../src/nall-dialogs.ui.h:13
 msgid "_Name:"
+msgstr ""
+
+#: ../src/nall-dialogs.ui.h:14
+msgid "_Raise Notification:"
 msgstr ""
 
 #: ../data/nall.desktop.in.in.h:1

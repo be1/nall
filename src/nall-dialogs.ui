@@ -230,6 +230,7 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">_Name:</property>
                 <property name="use_underline">True</property>
+                <property name="mnemonic_widget">edit_entry_name</property>
               </object>
               <packing>
                 <property name="x_options">GTK_FILL</property>
@@ -242,6 +243,7 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">_Description:</property>
                 <property name="use_underline">True</property>
+                <property name="mnemonic_widget">edit_entry_description</property>
               </object>
               <packing>
                 <property name="top_attach">1</property>
@@ -256,6 +258,7 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">Co_mmand:</property>
                 <property name="use_underline">True</property>
+                <property name="mnemonic_widget">edit_entry_command</property>
               </object>
               <packing>
                 <property name="top_attach">2</property>
@@ -270,6 +273,7 @@
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">_Interval:</property>
                 <property name="use_underline">True</property>
+                <property name="mnemonic_widget">edit_spin_interval</property>
               </object>
               <packing>
                 <property name="top_attach">3</property>
@@ -282,7 +286,9 @@
               <object class="GtkLabel" id="label5">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Blink Tray Icon:</property>
+                <property name="label" translatable="yes">_Blink Tray Icon:</property>
+                <property name="use_underline">True</property>
+		<property name="mnemonic_widget">edit_combo_blink_on</property>
               </object>
               <packing>
                 <property name="top_attach">4</property>
@@ -295,7 +301,9 @@
               <object class="GtkLabel" id="label6">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Raise Notification:</property>
+                <property name="label" translatable="yes">_Raise Notification:</property>
+                <property name="use_underline">True</property>
+                <property name="mnemonic_widget">edit_combo_notify_on</property>
               </object>
               <packing>
                 <property name="top_attach">5</property>
@@ -395,7 +403,7 @@
               <object class="GtkHBox" id="hbox3">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkComboBox" id="combobox2">
+                  <object class="GtkComboBox" id="edit_combo_blink_on">
                     <property name="visible">True</property>
                     <property name="model">script_events</property>
                     <property name="active">0</property>
@@ -425,7 +433,7 @@
               <object class="GtkHBox" id="hbox4">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkComboBox" id="combobox3">
+                  <object class="GtkComboBox" id="edit_combo_notify_on">
                     <property name="visible">True</property>
                     <property name="model">script_events</property>
                     <property name="active">1</property>

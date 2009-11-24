@@ -104,8 +104,8 @@ int main(int argc, char **argv)
 	main_menu = menu_new();
 
 	/* and its item callbacks */
-	menu_append_item(main_menu, _("Reschedule"), G_CALLBACK(menu_item_on_schedule), &nall_globals);
-	menu_append_item(main_menu, _("Manage Scripts"), G_CALLBACK(menu_item_on_manage), &nall_globals);
+	menu_append_item(main_menu, _("_Reschedule"), G_CALLBACK(menu_item_on_schedule), &nall_globals);
+	menu_append_item(main_menu, _("_Manage Scripts"), G_CALLBACK(menu_item_on_manage), &nall_globals);
 	menu_append_image_item(main_menu, GTK_STOCK_ABOUT, G_CALLBACK(menu_item_on_about), &nall_globals);
 	menu_append_image_item(main_menu, GTK_STOCK_QUIT, G_CALLBACK(menu_item_on_quit), &nall_globals);
 
