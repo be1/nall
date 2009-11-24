@@ -1,0 +1,125 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: nall 0.7\n"
+"Report-Msgid-Bugs-To: brouits@free.fr\n"
+"POT-Creation-Date: 2009-11-24 20:55+0100\n"
+"PO-Revision-Date: 2009-09-28 21:43+0200\n"
+"Last-Translator: Benoît Rouits <brouits@free.fr>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/manage.c:24
+msgid "second"
+msgstr "seconde"
+
+#: ../src/manage.c:24
+msgid "seconds"
+msgstr "secondes"
+
+#: ../src/manage.c:25
+msgid "minute"
+msgstr "minute"
+
+#: ../src/manage.c:25
+msgid "minutes"
+msgstr "minutes"
+
+#: ../src/manage.c:26
+msgid "hour"
+msgstr "heure"
+
+#: ../src/manage.c:26
+msgid "hours"
+msgstr "heures"
+
+#: ../src/manage.c:27
+msgid "day"
+msgstr "jour"
+
+#: ../src/manage.c:27
+msgid "days"
+msgstr "jours"
+
+#: ../src/nall.c:56
+msgid "Warning:"
+msgstr "Attention :"
+
+#. and its item callbacks
+#: ../src/nall.c:107
+msgid "_Reschedule"
+msgstr "_Ré-ordonancer"
+
+#: ../src/nall.c:108
+msgid "_Manage Scripts"
+msgstr "_Gérer les Scripts"
+
+#: ../src/version.h:12
+msgid "a simple, non-intrusive, everything notifier in the system tray"
+msgstr "un outil de notifiaction extensible pour le systray"
+
+#: ../src/nall-dialogs.ui.h:1
+msgid "Co_mmand:"
+msgstr "Co_mmande:"
+
+#: ../src/nall-dialogs.ui.h:2
+msgid "Days"
+msgstr "Jours"
+
+#: ../src/nall-dialogs.ui.h:3
+msgid "Hours"
+msgstr "Heures"
+
+#: ../src/nall-dialogs.ui.h:4
+msgid "Manage Scripts"
+msgstr "Gérer les scripts"
+
+#: ../src/nall-dialogs.ui.h:5
+msgid "Minutes"
+msgstr "Minutes"
+
+#: ../src/nall-dialogs.ui.h:6
+msgid "Never"
+msgstr "Jamais"
+
+#: ../src/nall-dialogs.ui.h:7
+msgid "On Error"
+msgstr "Sur erreur"
+
+#: ../src/nall-dialogs.ui.h:8
+msgid "On Update"
+msgstr "Sur changement"
+
+#: ../src/nall-dialogs.ui.h:9
+msgid "Seconds"
+msgstr "Secondes"
+
+#: ../src/nall-dialogs.ui.h:10
+msgid "_Blink Tray Icon:"
+msgstr "_Clignoter:"
+
+#: ../src/nall-dialogs.ui.h:11
+msgid "_Description:"
+msgstr "_Description:"
+
+#: ../src/nall-dialogs.ui.h:12
+msgid "_Interval:"
+msgstr "_Intervalle:"
+
+#: ../src/nall-dialogs.ui.h:13
+msgid "_Name:"
+msgstr "_Nom:"
+
+#: ../src/nall-dialogs.ui.h:14
+msgid "_Raise Notification:"
+msgstr "_Lever une notification:"
+
+#: ../data/nall.desktop.in.in.h:1
+msgid "Display your scripts notifications"
+msgstr "Affichez des notifications de vos scripts"

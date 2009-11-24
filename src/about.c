@@ -1,7 +1,7 @@
 #include <gtk/gtk.h>
 
 /* destroy the about window on response GTK_RESPONSE_CANCEL */
-void about_on_response (GtkDialog* dialog, gint response_id, gpointer unused)
+static void about_on_response (GtkDialog* dialog, gint response_id, gpointer unused)
 {
 	unused = NULL;
 	if (response_id == GTK_RESPONSE_CANCEL) {
@@ -42,14 +42,3 @@ void about_show (GtkAboutDialog* dialog)
 {
 	gtk_widget_show(GTK_WIDGET(dialog));
 }
-
-void about_hide (GtkAboutDialog* dialog)
-{
-	gtk_widget_hide(GTK_WIDGET(dialog));
-}
-
-void about_destroy (GtkAboutDialog* dialog)
-{
-	gtk_widget_destroy(GTK_WIDGET(dialog));
-}
-

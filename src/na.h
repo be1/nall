@@ -30,10 +30,13 @@
 #define _NA_H
 #include <gtk/gtk.h>
 
-#define NA_FALLBACK_REFRESH_FREQ 1
-#define NA_FALLBACK_SCRIPT_FREQ 10
+#include "script_list.h"
 
-struct _script {
+#define NA_FALLBACK_SCRIPT_FREQ 10
+#define NA_BLINK_DURATION 3
+
+/* Management data used when running a script */
+typedef struct {
 	gchar* cmd;		/* full program path */
 	gchar* name;		/* program name */
 	gint freq;		/* program frequency (s) */
@@ -42,29 +45,34 @@ struct _script {
 	gint err;		/* program stderr */
 	gchar buf[BUFSIZ];	/* program relevant out */
 	gint status;		/* program exit code */
-	gboolean dbg;		/* debug (verbose) mode */
 	GPid pid;		/* program Glib pid */
 	guint tag;		/* program Glib source id */
-	GError* error;		/* program start error */
-};
+	gboolean firstrun;	/* true till the first update */
+	gboolean running;	/* program currently running */
+	enum script_event blink_on;	/* blink on which events? */
+	enum script_event notify_on;	/* notify on which events? */
+} run_data_t;
 
-typedef struct _script Script;
+/* Global application data */
+typedef struct {
+	GtkStatusIcon* icon;
+	GtkMenu* menu;
+	GtkListStore* script_list;
+	gchar tooltip_buffer[BUFSIZ];
+	gchar* script_path;
+	guint stop_blink_tag;
+} nall_globals_t;
 
-enum {ICON, MENU, LIST, TIP, PATH, APP_DATA}; /* APP_DATA must e the last */
+extern nall_globals_t nall_globals;
 
-GList* na_register_scripts (gchar* path);
+void na_schedule_script(GtkTreeModel* tree, GtkTreeIter* iter, int when);
 
-void na_unregister_scripts (GList* script_list);
+void na_schedule_all(void);
 
-gboolean na_spawn_script(gpointer script); /* return TRUE if script exist */
+void na_cancel_script(GtkTreeModel* tree, GtkTreeIter* iter);
 
-gboolean na_schedule_script_once(gpointer script); /* always return FALSE */
+void na_cancel_all(void);
 
-gboolean na_schedule_script_freq(gpointer script); /* always return FALSE */
+void na_quit(void);
 
-guint na_init_reaper(gint reap_freq, void** app_data);
-
-gboolean na_reap(gpointer app_data);
-
-void na_quit(gpointer app_data);
 #endif /* _NA_H */

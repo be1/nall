@@ -43,6 +43,4 @@ GtkMenuItem* menu_append_image_item(GtkMenu* menu, const gchar* stock_id, GCallb
 /* show the menu */
 void menu_show(GtkMenu* menu, guint button, guint activate_time);
 
-/* hide the menu */
-void menu_hide(GtkMenu* menu);
 #endif /* _MENU_H */

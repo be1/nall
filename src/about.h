@@ -16,8 +16,3 @@ GtkAboutDialog* about_create (const gchar* name,
 			const gchar* logo_name);
 
 void about_show (GtkAboutDialog* dialog);
-
-void about_hide (GtkAboutDialog* dialog);
-
-void about_destroy (GtkAboutDialog* dialog);
-

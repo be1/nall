@@ -1,10 +1,4 @@
-		nall: notify everything in a discrete tooltip
-			http://herewe.servebeer.com/nall/
-
-2009-11-24
-* pulled from ingo's version
-
-2009-11-18 version 0.8
+2009-09-18 version 0.8
 * pulled from ingo's version, added as author
 * german tanslation
 * return code taken in account

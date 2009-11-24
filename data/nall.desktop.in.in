@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Nall!
+_Comment=Display your scripts notifications
+Exec=nall
+Icon=nall
+StartupNotify=false
+Terminal=false
+Type=Application
+Categories=GNOME;GTK;System;
+X-Ubuntu-Gettext-Domain=nall

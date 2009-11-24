@@ -43,7 +43,7 @@ void menu_append_item(GtkMenu* menu, gchar* label, GCallback callback, gpointer 
 {
 	GtkWidget* item;
 
-	item = gtk_menu_item_new_with_label (label);
+	item = gtk_menu_item_new_with_mnemonic(label);
 	gtk_menu_shell_append ((GtkMenuShell*) (menu), item);
 	if (callback)
 		g_signal_connect (G_OBJECT(item), "activate", G_CALLBACK(callback), cb_data);
@@ -56,13 +56,6 @@ void menu_append_item(GtkMenu* menu, gchar* label, GCallback callback, gpointer 
 void menu_show(GtkMenu* menu, guint button, guint activate_time)
 {
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, button, activate_time);
-	return;
-}
-
-/* hide the menu */
-void menu_hide(GtkMenu* menu)
-{
-	gtk_menu_popdown(GTK_MENU(menu));
 	return;
 }
 
