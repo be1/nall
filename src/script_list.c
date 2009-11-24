@@ -2,6 +2,12 @@
 
 #define UI_FILENAME "nall-dialogs.ui"
 
+static const char* event_str[] = {
+	[EVENT_ON_UPDATE] = "update",
+	[EVENT_ON_ERROR] = "error",
+	[EVENT_NEVER] = "never",
+};
+
 GtkBuilder* nall_gtk_builder_new(void)
 {
 	GtkBuilder* b = gtk_builder_new();
@@ -51,6 +57,34 @@ static void script_from_keyfile(GKeyFile* keyfile, const gchar* group, GtkListSt
 		interval = 60;
 	}
 
+	enum script_event blink_on;
+	gchar* blink_on_str = g_key_file_get_string(keyfile, group, "blink_on", NULL);
+	if (blink_on_str) {
+		for (blink_on = EVENT_ON_UPDATE; blink_on < EVENT_COUNT; blink_on++) {
+			if (!g_ascii_strcasecmp(blink_on_str, event_str[blink_on]))
+				break;
+		}
+		if (blink_on == EVENT_COUNT) {
+			g_warning("Invalid blink_on parameter ('%s') for %s\n", blink_on_str, group);
+			blink_on = EVENT_ON_UPDATE;
+		}
+		g_free(blink_on_str);
+	}
+
+	enum script_event notify_on;
+	gchar* notify_on_str = g_key_file_get_string(keyfile, group, "notify_on", NULL);
+	if (notify_on_str) {
+		for (notify_on = EVENT_ON_UPDATE; notify_on < EVENT_COUNT; notify_on++) {
+			if (!g_ascii_strcasecmp(notify_on_str, event_str[notify_on]))
+				break;
+		}
+		if (notify_on == EVENT_COUNT) {
+			g_warning("Invalid notify_on parameter ('%s') for %s\n", notify_on_str, group);
+			notify_on = EVENT_ON_ERROR;
+		}
+		g_free(notify_on_str);
+	}
+
 	GtkTreeIter it;
 	gtk_list_store_append(store, &it);
 	gtk_list_store_set(store, &it,
@@ -59,6 +93,8 @@ static void script_from_keyfile(GKeyFile* keyfile, const gchar* group, GtkListSt
 		COLUMN_COMMAND, command,
 		COLUMN_INTERVAL, interval,
 		COLUMN_ENABLED, enabled,
+		COLUMN_BLINK_ON, blink_on,
+		COLUMN_NOTIFY_ON, notify_on,
 		-1);
 
 #ifdef EBUG
@@ -68,6 +104,8 @@ static void script_from_keyfile(GKeyFile* keyfile, const gchar* group, GtkListSt
 	printf(" * Command: %s\n", command);
 	printf(" * Interval: %d\n", interval);
 	printf(" * Enabled: %s\n", enabled ? "yes" : "no");
+	printf(" * Blink On: %s\n", event_str[blink_on]);
+	printf(" * Notify On: %s\n", event_str[notify_on]);
 #endif
 
 	g_free(description);
@@ -120,6 +158,8 @@ gboolean script_list_save(GtkListStore* script_list, GError** error)
 		gchar* command;
 		gint interval;
 		gboolean enabled;
+		enum script_event blink_on;
+		enum script_event notify_on;
 
 		gtk_tree_model_get(model, &iter,
 			COLUMN_NAME, &name,
@@ -127,12 +167,18 @@ gboolean script_list_save(GtkListStore* script_list, GError** error)
 			COLUMN_COMMAND, &command,
 			COLUMN_INTERVAL, &interval,
 			COLUMN_ENABLED, &enabled,
+			COLUMN_BLINK_ON, &blink_on,
+			COLUMN_NOTIFY_ON, &notify_on,
 			-1);
 
 		g_key_file_set_string(keyfile, name, "description", description);
 		g_key_file_set_string(keyfile, name, "command", command);
 		g_key_file_set_integer(keyfile, name, "interval", interval);
 		g_key_file_set_boolean(keyfile, name, "enabled", enabled);
+		g_assert(blink_on < EVENT_COUNT);
+		g_key_file_set_string(keyfile, name, "blink_on", event_str[blink_on]);
+		g_assert(notify_on < EVENT_COUNT);
+		g_key_file_set_string(keyfile, name, "notify_on", event_str[notify_on]);
 
 		valid = gtk_tree_model_iter_next(model, &iter);
 	}

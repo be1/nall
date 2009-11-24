@@ -3,15 +3,22 @@
 
 #include <gtk/gtk.h>
 
-#include "na.h"
-
 enum script_column {
 	COLUMN_NAME,
 	COLUMN_DESCRIPTION,
 	COLUMN_COMMAND,
 	COLUMN_INTERVAL,
 	COLUMN_ENABLED,
+	COLUMN_BLINK_ON,
+	COLUMN_NOTIFY_ON,
 	COLUMN_RUN_DATA,
+};
+
+enum script_event {
+	EVENT_ON_UPDATE,
+	EVENT_ON_ERROR,
+	EVENT_NEVER,
+	EVENT_COUNT,
 };
 
 GtkBuilder* nall_gtk_builder_new(void);

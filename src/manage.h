@@ -19,6 +19,8 @@ struct _NallEditDialog {
 	GtkEntry* entry_command;
 	GtkSpinButton* spin_interval;
 	GtkComboBox* combo_unit;
+	GtkComboBox* combo_blink_on;
+	GtkComboBox* combo_notify_on;
 };
 
 void manage_dialog_present(void);

@@ -39,6 +39,8 @@ static void edit_dialog_on_response(GtkWidget *dialog, gint response, gpointer d
 		const gchar* command = gtk_entry_get_text(edit_dialog.entry_command);
 		gint interval = gtk_spin_button_get_value_as_int(edit_dialog.spin_interval);
 		gint unit = gtk_combo_box_get_active(edit_dialog.combo_unit);
+		enum script_event blink_on = gtk_combo_box_get_active(edit_dialog.combo_blink_on);
+		enum script_event notify_on = gtk_combo_box_get_active(edit_dialog.combo_notify_on);
 
 #ifdef EBUG
 		printf("New Properties:\n");
@@ -46,6 +48,8 @@ static void edit_dialog_on_response(GtkWidget *dialog, gint response, gpointer d
 		printf(" * Description: %s\n", description);
 		printf(" * Command: %s\n", command);
 		printf(" * Interval: %d %s\n", interval, interval == 1 ? unit_desc[unit].singular : unit_desc[unit].plural);
+		printf(" * Blink On: %d\n", blink_on);
+		printf(" * Notify On: %d\n", notify_on);
 #endif
 
 		GtkTreeModel* model = gtk_tree_view_get_model(edit_dialog.tree_view);
@@ -67,6 +71,8 @@ static void edit_dialog_on_response(GtkWidget *dialog, gint response, gpointer d
 			COLUMN_DESCRIPTION, description,
 			COLUMN_COMMAND, command,
 			COLUMN_INTERVAL, interval * unit_desc[unit].multiplier,
+			COLUMN_BLINK_ON, blink_on,
+			COLUMN_NOTIFY_ON, notify_on,
 			-1);
 
 		na_cancel_script(model, &iter);
@@ -88,6 +94,8 @@ static void edit_dialog_open(GtkTreeView* tree_view, gboolean add_mode)
 	edit_dialog.entry_command = GTK_ENTRY(gtk_builder_get_object(builder, "edit_entry_command"));
 	edit_dialog.spin_interval = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "edit_spin_interval"));
 	edit_dialog.combo_unit = GTK_COMBO_BOX(gtk_builder_get_object(builder, "edit_combo_interval_unit"));
+	edit_dialog.combo_blink_on = GTK_COMBO_BOX(gtk_builder_get_object(builder, "edit_combo_blink_on"));
+	edit_dialog.combo_notify_on = GTK_COMBO_BOX(gtk_builder_get_object(builder, "edit_combo_notify_on"));
 	gtk_builder_connect_signals(builder, NULL);
 	g_object_unref(builder);
 
@@ -100,6 +108,8 @@ static void edit_dialog_open(GtkTreeView* tree_view, gboolean add_mode)
 		gchar* description = NULL;
 		gchar* command = NULL;
 		gint interval;
+		enum script_event blink_on;
+		enum script_event notify_on;
 
 		GtkTreeModel* model = gtk_tree_view_get_model(tree_view);
 		GtkTreeSelection* selection = gtk_tree_view_get_selection(tree_view);
@@ -111,6 +121,8 @@ static void edit_dialog_open(GtkTreeView* tree_view, gboolean add_mode)
 			COLUMN_DESCRIPTION, &description,
 			COLUMN_COMMAND, &command,
 			COLUMN_INTERVAL, &interval,
+			COLUMN_BLINK_ON, &blink_on,
+			COLUMN_NOTIFY_ON, &notify_on,
 			-1);
 
 		gtk_entry_set_text(edit_dialog.entry_name, name);
@@ -131,6 +143,9 @@ static void edit_dialog_open(GtkTreeView* tree_view, gboolean add_mode)
 				break;
 			}
 		}
+
+		gtk_combo_box_set_active(edit_dialog.combo_blink_on, blink_on);
+		gtk_combo_box_set_active(edit_dialog.combo_notify_on, notify_on);
 	}
 
 	g_signal_connect(dialog, "response", G_CALLBACK(edit_dialog_on_response), NULL);

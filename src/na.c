@@ -91,6 +91,14 @@ static gboolean na_stop_blinking(gpointer data)
 	return FALSE;
 }
 
+static void na_start_blinking(void)
+{
+	gtk_status_icon_set_blinking(nall_globals.icon, TRUE);
+	if (nall_globals.stop_blink_tag)
+		g_source_remove(nall_globals.stop_blink_tag);
+	nall_globals.stop_blink_tag = g_timeout_add_seconds(NA_BLINK_DURATION, na_stop_blinking, NULL);
+}
+
 /* reap each script output and refresh the tooltip buffer */
 static void na_update_tooltip(void)
 {
@@ -124,11 +132,6 @@ static void na_update_tooltip(void)
 
 	const gchar* icon = (status == 0) ? GTK_STOCK_INFO : GTK_STOCK_DIALOG_WARNING;
 	gtk_status_icon_set_from_icon_name(nall_globals.icon, icon);
-
-	gtk_status_icon_set_blinking(nall_globals.icon, TRUE);
-	if (nall_globals.stop_blink_tag)
-		g_source_remove(nall_globals.stop_blink_tag);
-	nall_globals.stop_blink_tag = g_timeout_add_seconds(NA_BLINK_DURATION, na_stop_blinking, NULL);
 }
 
 /* read child output on child termination event */
@@ -147,14 +150,20 @@ static void na_reap_child (GPid pid, gint status, gpointer script)
 	g_spawn_close_pid(pid); /* or s->pid */
 
 	s->running = FALSE;
-	s->status = status;
 
-	if (strcmp(s->buf, buf)) {
+	if (strcmp(buf, s->buf) || status != s->status) {
 		/* program output has changed */
 		strncpy(s->buf, buf, sizeof(buf));
+		s->status = status;
 		na_update_tooltip();
-		if (!s->firstrun)
-			nall_notify(s);
+
+		if (s->blink_on == EVENT_ON_UPDATE ||
+		   (s->blink_on == EVENT_ON_ERROR && s->status != 0))
+			na_start_blinking();
+		if (s->notify_on == EVENT_ON_UPDATE ||
+		   (s->notify_on == EVENT_ON_ERROR && s->status != 0))
+			if (!s->firstrun)
+				nall_notify(s);
 	}
 	s->firstrun = FALSE;
 
@@ -212,6 +221,8 @@ static run_data_t* create_run_data(GtkTreeModel* tree, GtkTreeIter* iter)
 		COLUMN_NAME, &s->name,
 		COLUMN_COMMAND, &s->cmd,
 		COLUMN_INTERVAL, &s->freq,
+		COLUMN_BLINK_ON, &s->blink_on,
+		COLUMN_NOTIFY_ON, &s->notify_on,
 		-1);
 	return s;
 }

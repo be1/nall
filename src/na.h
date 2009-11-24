@@ -30,6 +30,8 @@
 #define _NA_H
 #include <gtk/gtk.h>
 
+#include "script_list.h"
+
 #define NA_FALLBACK_SCRIPT_FREQ 10
 #define NA_BLINK_DURATION 3
 
@@ -47,6 +49,8 @@ typedef struct {
 	guint tag;		/* program Glib source id */
 	gboolean firstrun;	/* true till the first update */
 	gboolean running;	/* program currently running */
+	enum script_event blink_on;	/* blink on which events? */
+	enum script_event notify_on;	/* notify on which events? */
 } run_data_t;
 
 /* Global application data */

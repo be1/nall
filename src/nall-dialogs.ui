@@ -51,6 +51,10 @@
       <column type="gint"/>
       <!-- column-name Enabled -->
       <column type="gboolean"/>
+      <!-- column-name BlinkOn -->
+      <column type="gint"/>
+      <!-- column-name NotifyOn -->
+      <column type="gint"/>
       <!-- column-name RunData -->
       <column type="gpointer"/>
     </columns>
