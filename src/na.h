@@ -65,6 +65,8 @@ typedef struct {
 
 extern nall_globals_t nall_globals;
 
+void na_update_tooltip(void);
+
 void na_schedule_script(GtkTreeModel* tree, GtkTreeIter* iter, int when);
 
 void na_schedule_all(void);

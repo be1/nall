@@ -58,6 +58,7 @@
       <!-- column-name RunData -->
       <column type="gpointer"/>
     </columns>
+    <signal name="row_deleted" handler="na_update_tooltip"/>
   </object>
   <object class="GtkDialog" id="nall_manage_dialog">
     <property name="border_width">5</property>

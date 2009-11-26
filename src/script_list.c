@@ -115,6 +115,7 @@ static void script_from_keyfile(GKeyFile* keyfile, const gchar* group, GtkListSt
 GtkListStore* script_list_load(void)
 {
 	GtkBuilder* builder = nall_gtk_builder_new();
+	gtk_builder_connect_signals(builder, NULL);
 	GtkListStore* store = GTK_LIST_STORE(gtk_builder_get_object(builder, "list_store_scripts"));
 	g_object_unref(builder);
 

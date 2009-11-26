@@ -100,7 +100,7 @@ static void na_start_blinking(void)
 }
 
 /* reap each script output and refresh the tooltip buffer */
-static void na_update_tooltip(void)
+void na_update_tooltip(void)
 {
 	gchar* tooltip_buffer = nall_globals.tooltip_buffer;
 	gint status;
