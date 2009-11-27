@@ -102,7 +102,7 @@ static void na_start_blinking(void)
 /* reap each script output and refresh the tooltip buffer */
 void na_update_tooltip(void)
 {
-	gchar* tooltip_buffer = nall_globals.tooltip_buffer;
+	gchar tooltip_buffer[BUFSIZ];
 	gint status;
 
 	status = 0;
@@ -118,7 +118,7 @@ void na_update_tooltip(void)
 			COLUMN_ENABLED, &enabled,
 			COLUMN_RUN_DATA, &s,
 			-1);
-		if (s && enabled) {
+		if (s->initialized && enabled) {
 			na_script_append_out(s, tooltip_buffer);
 			na_script_collect_status(s, &status);
 		}
@@ -149,7 +149,7 @@ static void na_reap_child (GPid pid, gint status, gpointer script)
 	close(s->err);
 	g_spawn_close_pid(pid); /* or s->pid */
 
-	s->running = FALSE;
+	s->child_tag = 0;
 
 	if (strcmp(buf, s->buf) || status != s->status) {
 		/* program output has changed */
@@ -168,7 +168,7 @@ static void na_reap_child (GPid pid, gint status, gpointer script)
 	s->firstrun = FALSE;
 
 	/* re-schedule */
-	s->tag = g_timeout_add_seconds(s->freq, na_spawn_script, s);
+	s->wait_tag = g_timeout_add_seconds(s->freq, na_spawn_script, s);
 
 	/* could also output to dbus from here... */
 
@@ -190,10 +190,7 @@ static gboolean na_spawn_script(gpointer script)
 	GError* error = NULL;
 
 	run_data_t* s = script;
-	s->tag = 0;
-
-	if (!s || !s->cmd)
-		return FALSE;
+	s->wait_tag = 0;
 
 	gchar* argv[] = { "sh", "-c", (gchar*) s->cmd, NULL };
 
@@ -206,25 +203,23 @@ static gboolean na_spawn_script(gpointer script)
 		g_error_free(error);
 	} else {
 		/* set the child watcher */
-		g_child_watch_add (s->pid, na_reap_child, s);
-		s->running = TRUE;
+		s->child_tag = g_child_watch_add(s->pid, na_reap_child, s);
 	}
 
 	return FALSE;
 }
 
-static run_data_t* create_run_data(GtkTreeModel* tree, GtkTreeIter* iter)
+void na_alloc_run_data(GtkTreeModel* tree, GtkTreeIter* iter)
 {
-	run_data_t* s = g_malloc(sizeof(*s));
-	memset(s, 0, sizeof(*s));
-	gtk_tree_model_get(tree, iter,
-		COLUMN_NAME, &s->name,
-		COLUMN_COMMAND, &s->cmd,
-		COLUMN_INTERVAL, &s->freq,
-		COLUMN_BLINK_ON, &s->blink_on,
-		COLUMN_NOTIFY_ON, &s->notify_on,
-		-1);
-	return s;
+	run_data_t* s = g_malloc0(sizeof(*s));
+	gtk_list_store_set(GTK_LIST_STORE(tree), iter, COLUMN_RUN_DATA, s, -1);
+}
+
+void na_free_run_data(GtkTreeModel* tree, GtkTreeIter* iter)
+{
+	run_data_t* s;
+	gtk_tree_model_get(tree, iter, COLUMN_RUN_DATA, &s, -1);
+	g_free(s);
 }
 
 void na_schedule_script(GtkTreeModel* tree, GtkTreeIter* iter, int when)
@@ -235,17 +230,21 @@ void na_schedule_script(GtkTreeModel* tree, GtkTreeIter* iter, int when)
 		COLUMN_ENABLED, &enabled,
 		COLUMN_RUN_DATA, &s,
 		-1);
-	if (enabled) {
-		if (s == NULL) {
-			s = create_run_data(tree, iter);
-			gtk_list_store_set(GTK_LIST_STORE(tree), iter, COLUMN_RUN_DATA, s, -1);
-		}
-		if (!s->running) {
-			s->firstrun = TRUE;
-			if (s->tag)
-				g_source_remove(s->tag);
-			s->tag = g_timeout_add_seconds(when, na_spawn_script, s);
-		}
+	if (!s->initialized) {
+		gtk_tree_model_get(tree, iter,
+			COLUMN_NAME, &s->name,
+			COLUMN_COMMAND, &s->cmd,
+			COLUMN_INTERVAL, &s->freq,
+			COLUMN_BLINK_ON, &s->blink_on,
+			COLUMN_NOTIFY_ON, &s->notify_on,
+			-1);
+		s->initialized = TRUE;
+	}
+	if (enabled && !s->child_tag) {
+		s->firstrun = TRUE;
+		if (s->wait_tag)
+			g_source_remove(s->wait_tag);
+		s->wait_tag = g_timeout_add_seconds(when, na_spawn_script, s);
 	}
 }
 
@@ -265,20 +264,19 @@ void na_cancel_script(GtkTreeModel* tree, GtkTreeIter* iter)
 {
 	run_data_t* s;
 	gtk_tree_model_get(tree, iter, COLUMN_RUN_DATA, &s, -1);
-	gtk_list_store_set(GTK_LIST_STORE(tree), iter, COLUMN_RUN_DATA, NULL, -1);
 
-	if (s) {
-		if (s->running) {
-			close(s->in);
-			close(s->out);
-			close(s->err);
-		}
-		if (s->tag)
-			g_source_remove(s->tag);
-		g_free(s->name);
-		g_free(s->cmd);
-		g_free(s);
+	if (s->child_tag) {
+		close(s->in);
+		close(s->out);
+		close(s->err);
+		g_source_remove(s->child_tag);
 	}
+	if (s->wait_tag)
+		g_source_remove(s->wait_tag);
+	g_free(s->name);
+	g_free(s->cmd);
+
+	memset(s, 0, sizeof(*s));
 }
 
 void na_cancel_all(void)

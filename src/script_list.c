@@ -1,4 +1,5 @@
 #include "script_list.h"
+#include "na.h"
 
 #define UI_FILENAME "nall-dialogs.ui"
 
@@ -96,6 +97,8 @@ static void script_from_keyfile(GKeyFile* keyfile, const gchar* group, GtkListSt
 		COLUMN_BLINK_ON, blink_on,
 		COLUMN_NOTIFY_ON, notify_on,
 		-1);
+
+	na_alloc_run_data(GTK_TREE_MODEL(store), &it);
 
 #ifdef EBUG
 	printf("Script:\n");
@@ -201,4 +204,40 @@ gboolean script_list_save(GtkListStore* script_list, GError** error)
 
 	g_key_file_free(keyfile);
 	return ret;
+}
+
+static gboolean save_config_cb(gpointer data)
+{
+	// TODO: Error checking
+	script_list_save(nall_globals.script_list, NULL);
+	nall_globals.save_config_tag = 0;
+	return FALSE;
+}
+
+static void schedule_save(void)
+{
+	if (nall_globals.save_config_tag)
+		g_source_remove(nall_globals.save_config_tag);
+	nall_globals.save_config_tag = g_timeout_add_seconds(1, save_config_cb, NULL);
+}
+
+void on_script_list_row_changed(GtkTreeModel *tree_model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
+{
+	if (nall_globals.script_list)
+		schedule_save();
+}
+
+void on_script_list_row_inserted(GtkTreeModel *tree_model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
+{
+	if (nall_globals.script_list)
+		schedule_save();
+}
+
+void on_script_list_row_deleted(GtkTreeModel *tree_model, GtkTreePath *path, gpointer data)
+{
+	if (nall_globals.script_list) {
+		/* in case list rows have been reordered using Drag&Drop */
+		na_update_tooltip();
+		schedule_save();
+	}
 }
