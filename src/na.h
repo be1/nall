@@ -37,6 +37,7 @@
 
 /* Management data used when running a script */
 typedef struct {
+	gboolean initialized;	/* run data structure valid? */
 	gchar* cmd;		/* full program path */
 	gchar* name;		/* program name */
 	gint freq;		/* program frequency (s) */
@@ -46,9 +47,9 @@ typedef struct {
 	gchar buf[BUFSIZ];	/* program relevant out */
 	gint status;		/* program exit code */
 	GPid pid;		/* program Glib pid */
-	guint tag;		/* program Glib source id */
+	guint wait_tag;		/* Source tag when waiting for next run */
+	guint child_tag;	/* Source tag for child process */
 	gboolean firstrun;	/* true till the first update */
-	gboolean running;	/* program currently running */
 	enum script_event blink_on;	/* blink on which events? */
 	enum script_event notify_on;	/* notify on which events? */
 } run_data_t;
@@ -58,12 +59,18 @@ typedef struct {
 	GtkStatusIcon* icon;
 	GtkMenu* menu;
 	GtkListStore* script_list;
-	gchar tooltip_buffer[BUFSIZ];
 	gchar* script_path;
 	guint stop_blink_tag;
+	guint save_config_tag;
 } nall_globals_t;
 
 extern nall_globals_t nall_globals;
+
+void na_update_tooltip(void);
+
+void na_alloc_run_data(GtkTreeModel* tree, GtkTreeIter* iter);
+
+void na_free_run_data(GtkTreeModel* tree, GtkTreeIter* iter);
 
 void na_schedule_script(GtkTreeModel* tree, GtkTreeIter* iter, int when);
 

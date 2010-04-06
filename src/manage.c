@@ -63,8 +63,10 @@ static void edit_dialog_on_response(GtkWidget *dialog, gint response, gpointer d
 			gtk_list_store_append(store, &iter);
 		}
 
-		if (edit_dialog.add_mode)
+		if (edit_dialog.add_mode) {
 			gtk_list_store_set(store, &iter, COLUMN_ENABLED, TRUE, -1);
+			na_alloc_run_data(GTK_TREE_MODEL(store), &iter);
+		}
 
 		gtk_list_store_set(store, &iter,
 			COLUMN_NAME, name,
@@ -171,16 +173,17 @@ static void manage_dialog_on_button_delete(GtkButton *button, gpointer tree_view
 	GtkListStore* model = GTK_LIST_STORE(gtk_tree_view_get_model(tree_view));
 	GtkTreeSelection* selection = gtk_tree_view_get_selection(tree_view);
 	GtkTreeIter iter;
-	if (gtk_tree_selection_get_selected(selection, NULL, &iter))
+	if (gtk_tree_selection_get_selected(selection, NULL, &iter)) {
+		na_cancel_script(GTK_TREE_MODEL(model), &iter);
+		na_free_run_data(GTK_TREE_MODEL(model), &iter);
 		gtk_list_store_remove(model, &iter);
+	}
 }
 
 static void manage_dialog_on_response(GtkWidget *dialog, gint response, gpointer data)
 {
 	gtk_widget_destroy(dialog);
 	manage_dialog = NULL;
-	// TODO: Error checking
-	script_list_save(nall_globals.script_list, NULL);
 }
 
 static void manage_dialog_on_enabled_toggled(GtkCellRendererToggle* cell, gchar* path, gpointer data)
@@ -195,9 +198,10 @@ static void manage_dialog_on_enabled_toggled(GtkCellRendererToggle* cell, gchar*
 	gboolean enabled;
 	gtk_tree_model_get(model, &iter, COLUMN_ENABLED, &enabled, -1);
 	gtk_list_store_set(GTK_LIST_STORE(model), &iter, COLUMN_ENABLED, !enabled, -1);
-	if (enabled)
+	if (enabled) {
 		na_cancel_script(model, &iter);
-	else
+		na_update_tooltip();
+	} else
 		na_schedule_script(model, &iter, 1);
 
 	gtk_tree_path_free(tree_path);

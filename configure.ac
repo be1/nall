@@ -31,7 +31,7 @@ AM_CONDITIONAL(DEBUG, test "$enable_debug" = yes)
 
 # Checks for libraries.
 AM_PATH_GLIB_2_0([2.0.0],,[AC_MSG_ERROR([glib 2.0 or newer is required])])
-AM_PATH_GTK_2_0([2.0.0],,[AC_MSG_ERROR([gtk+ 2.0 or newer is required])])
+AM_PATH_GTK_2_0([2.10.0],,[AC_MSG_ERROR([gtk+ 2.0 or newer is required])])
 
 # Check for libnotify
 if test "x$enable_notifications" = "xyes"; then
