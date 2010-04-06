@@ -1,11 +1,11 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# NALL FRENCH TRANSLATION FILE
+# Copyright (C) 2009-2010 Benoît Rouits <brouits@free.fr>
+# This file is distributed under the same license as the nall package.
+# Benoît Rouits <brouits@free.fr>, 2009.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: nall 0.7\n"
+"Project-Id-Version: nall 1.0\n"
 "Report-Msgid-Bugs-To: brouits@free.fr\n"
 "POT-Creation-Date: 2010-04-06 21:06+0200\n"
 "PO-Revision-Date: 2009-09-28 21:43+0200\n"
@@ -62,11 +62,11 @@ msgstr "_Gérer les Scripts"
 
 #: ../src/version.h:12
 msgid "a simple, non-intrusive, everything notifier in the system tray"
-msgstr "un outil de notifiaction extensible pour le systray"
+msgstr "un outil de notification pour tout, dans l'aire de notification"
 
 #: ../src/nall-dialogs.ui.h:1
 msgid "Co_mmand:"
-msgstr "Co_mmande:"
+msgstr "Co_mmande :"
 
 #: ../src/nall-dialogs.ui.h:2
 msgid "Days"
@@ -78,7 +78,7 @@ msgstr "Description"
 
 #: ../src/nall-dialogs.ui.h:4
 msgid "Enabled"
-msgstr ""
+msgstr "Activé"
 
 #: ../src/nall-dialogs.ui.h:5
 msgid "Hours"
@@ -114,23 +114,23 @@ msgstr "Intervalle"
 
 #: ../src/nall-dialogs.ui.h:13
 msgid "_Blink Tray Icon:"
-msgstr "_Clignoter:"
+msgstr "_Clignoter :"
 
 #: ../src/nall-dialogs.ui.h:14
 msgid "_Description:"
-msgstr "_Description:"
+msgstr "_Description :"
 
 #: ../src/nall-dialogs.ui.h:15
 msgid "_Interval:"
-msgstr "_Intervalle:"
+msgstr "_Intervalle :"
 
 #: ../src/nall-dialogs.ui.h:16
 msgid "_Name:"
-msgstr "_Nom:"
+msgstr "_Nom :"
 
 #: ../src/nall-dialogs.ui.h:17
 msgid "_Raise Notification:"
-msgstr "_Lever une notification:"
+msgstr "_Lever une notification :"
 
 #: ../data/nall.desktop.in.in.h:1
 msgid "Display your scripts notifications"
