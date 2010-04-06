@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nall 0.7\n"
 "Report-Msgid-Bugs-To: brouits@free.fr\n"
-"POT-Creation-Date: 2009-11-24 20:55+0100\n"
+"POT-Creation-Date: 2010-04-06 21:06+0200\n"
 "PO-Revision-Date: 2009-11-08 15:48+0200\n"
 "Last-Translator: Ingo van Lil <inguin@gmx.de>\n"
 "Language-Team: \n"
@@ -73,50 +73,62 @@ msgid "Days"
 msgstr "Tage"
 
 #: ../src/nall-dialogs.ui.h:3
+msgid "Description"
+msgstr "Beschreibung"
+
+#: ../src/nall-dialogs.ui.h:4
+msgid "Enabled"
+msgstr "Aktiv"
+
+#: ../src/nall-dialogs.ui.h:5
 msgid "Hours"
 msgstr "Stunden"
 
-#: ../src/nall-dialogs.ui.h:4
+#: ../src/nall-dialogs.ui.h:6
 msgid "Manage Scripts"
 msgstr "Scripte Verwalten"
 
-#: ../src/nall-dialogs.ui.h:5
+#: ../src/nall-dialogs.ui.h:7
 msgid "Minutes"
 msgstr "Minuten"
 
-#: ../src/nall-dialogs.ui.h:6
+#: ../src/nall-dialogs.ui.h:8
 msgid "Never"
 msgstr "Nie"
 
-#: ../src/nall-dialogs.ui.h:7
+#: ../src/nall-dialogs.ui.h:9
 msgid "On Error"
 msgstr "Bei Fehlern"
 
-#: ../src/nall-dialogs.ui.h:8
+#: ../src/nall-dialogs.ui.h:10
 msgid "On Update"
 msgstr "Bei Änderung"
 
-#: ../src/nall-dialogs.ui.h:9
+#: ../src/nall-dialogs.ui.h:11
 msgid "Seconds"
 msgstr "Sekunden"
 
-#: ../src/nall-dialogs.ui.h:10
+#: ../src/nall-dialogs.ui.h:12
+msgid "Update Interval"
+msgstr "Intervall"
+
+#: ../src/nall-dialogs.ui.h:13
 msgid "_Blink Tray Icon:"
 msgstr "B_linkendes Icon:"
 
-#: ../src/nall-dialogs.ui.h:11
+#: ../src/nall-dialogs.ui.h:14
 msgid "_Description:"
 msgstr "_Beschreibung:"
 
-#: ../src/nall-dialogs.ui.h:12
+#: ../src/nall-dialogs.ui.h:15
 msgid "_Interval:"
 msgstr "_Intervall:"
 
-#: ../src/nall-dialogs.ui.h:13
+#: ../src/nall-dialogs.ui.h:16
 msgid "_Name:"
 msgstr "_Name:"
 
-#: ../src/nall-dialogs.ui.h:14
+#: ../src/nall-dialogs.ui.h:17
 msgid "_Raise Notification:"
 msgstr "B_enachrichtigung Anzeigen:"
 

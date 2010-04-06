@@ -83,10 +83,11 @@
                 <property name="can_focus">True</property>
                 <property name="model">list_store_scripts</property>
                 <property name="reorderable">True</property>
+                <property name="rules_hint">True</property>
                 <signal name="row_activated" handler="manage_dialog_on_row_activated"/>
                 <child>
                   <object class="GtkTreeViewColumn" id="treeview_column_enabled">
-                    <property name="title">Enabled</property>
+                    <property name="title" translatable="yes">Enabled</property>
                     <child>
                       <object class="GtkCellRendererToggle" id="cellrenderertoggle_enabled"/>
                       <attributes>
@@ -97,7 +98,7 @@
                 </child>
                 <child>
                   <object class="GtkTreeViewColumn" id="treeview_column_description">
-                    <property name="title">Description</property>
+                    <property name="title" translatable="yes">Description</property>
                     <property name="expand">True</property>
                     <child>
                       <object class="GtkCellRendererText" id="cellrenderertext_description"/>
@@ -109,7 +110,7 @@
                 </child>
                 <child>
                   <object class="GtkTreeViewColumn" id="treeview_column_interval">
-                    <property name="title">Update Interval</property>
+                    <property name="title" translatable="yes">Update Interval</property>
                     <child>
                       <object class="GtkCellRendererText" id="cellrenderertext_interval"/>
                       <attributes>
