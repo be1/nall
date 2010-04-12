@@ -1,0 +1,19 @@
+Source: nall
+Section: x11
+Priority: extra
+Maintainer: Benoît Rouits <brouits@free.fr>
+Build-Depends: debhelper (>= 7), autotools-dev
+Standards-Version: 3.8.3
+Homepage: http://herewe.servebeer.com/nall/
+Vcs-Git: git://github.com/be1/nall.git
+Vcs-Browser: http://github.com/be1/nall
+
+Package: nall
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: a user-script based everything notifier on the system tray
+ nall is a small application that spawns periodically any kind of user scripts 
+ and collect their output to display one line per script in a tooltip message
+ over the desktop notification area. It can virtually notify about everything
+ and is easily interoperable with Nagios plugins. It is written with the Gtk+ 
+ graphical toolkit.
