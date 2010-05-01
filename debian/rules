@@ -41,7 +41,7 @@ build-stamp:  config.status
 
 	# Add here commands to compile the package.
 	$(MAKE)
-	#docbook-to-man debian/nall.sgml > nall.1
+	docbook-to-man debian/nall.sgml > nall.1
 
 	touch $@
 

@@ -2,4 +2,4 @@
  needs="X11"\
  section="Applications/System/Monitoring"\
  title="Nall!" command="/usr/bin/nall"\
- icon="/usr/share/pixmaps/nall.png" hints="Monitoring"
+ icon="/usr/share/pixmaps/nall.png"
