@@ -17,7 +17,7 @@ manpage.1: manpage.sgml
   -->
 
   <!-- Fill in your name for FIRSTNAME and SURNAME. -->
-  <!ENTITY dhfirstname "<firstname>BENOÎT</firstname>">
+  <!ENTITY dhfirstname "<firstname>BENOIT</firstname>">
   <!ENTITY dhsurname   "<surname>ROUITS</surname>">
   <!-- Please adjust the date whenever revising the manpage. -->
   <!ENTITY dhdate      "<date>May  1, 2010</date>">
@@ -73,13 +73,14 @@ manpage.1: manpage.sgml
 
     <para>This manual page was written for the &debian; distribution
       because the original program does not have a manual page.
+		</para>
 
     <para><command>&dhpackage;</command> is a program that spawns
 		periodically user-made scripts or command-lines and then displays
 		information returned by them into a tooltip over the notification area 
 		of the desktop's system-tray. The main usage of nall is monitoring or
 		just notifying of anything the user has made a script to.
-		<para>
+		</para>
 
   </refsect1>
   <refsect1>
@@ -87,6 +88,7 @@ manpage.1: manpage.sgml
 
     <para>This program has no option.
 		The scripts to spawn are set through the "Manage Scripts" graphical menu.
+		</para>
 
   </refsect1>
   <refsect1>

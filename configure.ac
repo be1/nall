@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.63])
+AC_PREREQ([2.61])
 AC_INIT([Nall!], [1.0], [brouits@free.fr], [nall])
 AC_CONFIG_SRCDIR([src/cb.h])
 AC_CONFIG_HEADERS([config.h])
