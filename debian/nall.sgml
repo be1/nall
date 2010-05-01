@@ -93,7 +93,7 @@ manpage.1: manpage.sgml
   <refsect1>
     <title>AUTHOR</title>
 
-    <para>This manual page was written by &dhusername; &dhemail; for
+    <para>This manual page was written by &dhusername; (&dhemail;) for
       the &debian; system (and may be used by others).  Permission is
       granted to copy, distribute and/or modify this document under
       the terms of the &gnu; General Public License, Version 2 any
