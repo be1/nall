@@ -68,8 +68,7 @@ manpage.1: manpage.sgml
     <title>DESCRIPTION</title>
 
     <para>This manual page documents briefly the
-      <command>&dhpackage;</command>
-      command.</para>
+      <command>&dhpackage;</command> command.</para>
 
     <para>This manual page was written for the &debian; distribution
       because the original program does not have a manual page.
