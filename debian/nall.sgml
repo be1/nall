@@ -17,13 +17,13 @@ manpage.1: manpage.sgml
   -->
 
   <!-- Fill in your name for FIRSTNAME and SURNAME. -->
-  <!ENTITY dhfirstname "<firstname>FIRSTNAME</firstname>">
-  <!ENTITY dhsurname   "<surname>SURNAME</surname>">
+  <!ENTITY dhfirstname "<firstname>BENOÎT</firstname>">
+  <!ENTITY dhsurname   "<surname>ROUITS</surname>">
   <!-- Please adjust the date whenever revising the manpage. -->
   <!ENTITY dhdate      "<date>May  1, 2010</date>">
   <!-- SECTION should be 1-8, maybe w/ subsection other parameters are
        allowed: see man(7), man(1). -->
-  <!ENTITY dhsection   "<manvolnum>SECTION</manvolnum>">
+  <!ENTITY dhsection   "<manvolnum>1</manvolnum>">
   <!ENTITY dhemail     "<email>brouits@free.fr</email>">
   <!ENTITY dhusername  "Benoît Rouits">
   <!ENTITY dhucpackage "<refentrytitle>NALL</refentrytitle>">
@@ -44,7 +44,7 @@ manpage.1: manpage.sgml
       &dhsurname;
     </author>
     <copyright>
-      <year>2003</year>
+      <year>2010</year>
       <holder>&dhusername;</holder>
     </copyright>
     &dhdate;
@@ -57,67 +57,37 @@ manpage.1: manpage.sgml
   <refnamediv>
     <refname>&dhpackage;</refname>
 
-    <refpurpose>program to do something</refpurpose>
+    <refpurpose>a user-script based notifier on the system tray</refpurpose>
   </refnamediv>
   <refsynopsisdiv>
     <cmdsynopsis>
       <command>&dhpackage;</command>
-
-      <arg><option>-e <replaceable>this</replaceable></option></arg>
-
-      <arg><option>--example <replaceable>that</replaceable></option></arg>
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1>
     <title>DESCRIPTION</title>
 
     <para>This manual page documents briefly the
-      <command>&dhpackage;</command> and <command>bar</command>
-      commands.</para>
+      <command>&dhpackage;</command>
+      command.</para>
 
     <para>This manual page was written for the &debian; distribution
       because the original program does not have a manual page.
-      Instead, it has documentation in the &gnu;
-      <application>Info</application> format; see below.</para>
 
-    <para><command>&dhpackage;</command> is a program that...</para>
+    <para><command>&dhpackage;</command> is a program that spawns
+		periodically user-made scripts or command-lines and then displays
+		information returned by them into a tooltip over the notification area 
+		of the desktop's system-tray. The main usage of nall is monitoring or
+		just notifying of anything the user has made a script to.
+		<para>
 
   </refsect1>
   <refsect1>
     <title>OPTIONS</title>
 
-    <para>These programs follow the usual &gnu; command line syntax,
-      with long options starting with two dashes (`-').  A summary of
-      options is included below.  For a complete description, see the
-      <application>Info</application> files.</para>
+    <para>This program has no option.
+		The scripts to spawn are set through the "Manage Scripts" graphical menu.
 
-    <variablelist>
-      <varlistentry>
-        <term><option>-h</option>
-          <option>--help</option>
-        </term>
-        <listitem>
-          <para>Show summary of options.</para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><option>-v</option>
-          <option>--version</option>
-        </term>
-        <listitem>
-          <para>Show version of program.</para>
-        </listitem>
-      </varlistentry>
-    </variablelist>
-  </refsect1>
-  <refsect1>
-    <title>SEE ALSO</title>
-
-    <para>bar (1), baz (1).</para>
-
-    <para>The programs are documented fully by <citetitle>The Rise and
-      Fall of a Fooish Bar</citetitle> available via the
-      <application>Info</application> system.</para>
   </refsect1>
   <refsect1>
     <title>AUTHOR</title>
