@@ -207,10 +207,10 @@ static void manage_dialog_on_enabled_toggled(GtkCellRendererToggle* cell, gchar*
 	gtk_tree_path_free(tree_path);
 }
 
-void manage_dialog_on_selection_changed(GtkTreeSelection* selection, gpointer editbutton)
+void manage_dialog_on_selection_changed(GtkTreeSelection* selection, gpointer button)
 {
 	gboolean sensitive = (gtk_tree_selection_count_selected_rows(selection) > 0);
-	gtk_widget_set_sensitive(GTK_WIDGET(editbutton), sensitive);
+	gtk_widget_set_sensitive(GTK_WIDGET(button), sensitive);
 }
 
 void manage_dialog_on_row_activated(GtkTreeView* tree_view, GtkTreePath* path, GtkTreeViewColumn* column, gpointer data)
@@ -258,7 +258,9 @@ static GtkDialog* manage_dialog_create(void)
 	GtkTreeSelection* selection = gtk_tree_view_get_selection(tree_view);
 	gboolean sensitive = (gtk_tree_selection_count_selected_rows(selection) > 0);
 	gtk_widget_set_sensitive(GTK_WIDGET(button_edit), sensitive);
+	gtk_widget_set_sensitive(GTK_WIDGET(button_delete), sensitive);
 	g_signal_connect(selection, "changed", G_CALLBACK(manage_dialog_on_selection_changed), button_edit);
+	g_signal_connect(selection, "changed", G_CALLBACK(manage_dialog_on_selection_changed), button_delete);
 
 	g_signal_connect(button_add, "clicked", G_CALLBACK(manage_dialog_on_button_add), tree_view);
 	g_signal_connect(button_edit, "clicked", G_CALLBACK(manage_dialog_on_button_edit), tree_view);
