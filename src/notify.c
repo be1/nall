@@ -12,7 +12,11 @@ void nall_notify_init(void)
 
 void nall_notify(run_data_t* s)
 {
+#ifdef HAVE_LIBNOTIFY_OLD
 	NotifyNotification* notification = notify_notification_new(s->name, s->buf, NULL, NULL);
+#else
+	NotifyNotification* notification = notify_notification_new(s->name, s->buf, NULL);
+#endif
 	if (s->status == 0)
 		notify_notification_set_urgency(notification, NOTIFY_URGENCY_NORMAL);
 	else

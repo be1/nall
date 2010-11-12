@@ -42,6 +42,12 @@ Use --disable-notifications to disable desktop notifications.]) ]
 	)
 	AC_SUBST(LIBNOTIFY_CFLAGS)
 	AC_SUBST(LIBNOTIFY_LIBS)
+	PKG_CHECK_MODULES(LIBNOTIFY_OLD, libnotify < 0.7.0,
+		[ AC_MSG_NOTICE([Using old libnotify API.])
+		  AC_DEFINE([HAVE_LIBNOTIFY_OLD], [1],
+			    [Define to 1 if libnotify version is below 0.7.0]) ],
+		[ AC_MSG_NOTICE([Using new libnotify API.]) ]
+	)
 fi
 
 # Checks for header files.
