@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Benoît Rouits <brouits@free.fr>
 Build-Depends: debhelper (>= 7), autotools-dev, intltool, libgtk2.0-dev (>= 2.12), libglib2.0-dev (>= 2.22), libnotify-dev (>= 0.4.4), docbook-to-man
 Standards-Version: 3.8.3
-Homepage: http://herewe.servebeer.com/nall/
+Homepage: http://brouits.free.fr/nall/
 Vcs-Git: git://github.com/be1/nall.git
 Vcs-Browser: http://github.com/be1/nall
 

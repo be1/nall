@@ -7,7 +7,7 @@
 #define NALL_AUTHOR0 "Benoît Rouits"
 #define NALL_AUTHOR1 "Ingo van Lil"
 #define NALL_COPYRIGHT "Copyright © 2008-2010 Benoît Rouits <brouits@free.fr>"
-#define NALL_WEBSITE "http://herewe.servebeer.com/nall"
+#define NALL_WEBSITE "http://brouits.free.fr/nall"
 #define NALL_ICON GTK_STOCK_INFO
 #define NALL_COMMENT _("a simple, non-intrusive, everything notifier in the system tray")
 
