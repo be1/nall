@@ -51,12 +51,12 @@ Here is an example of script that checks emails through an IMAP server:<br>
 $ cat ~/.nall/imap.sh<br>
 #!/bin/sh<br>
 {<br>
-echo X login brouits secretpass<br>
+echo X login username secretpass<br>
 sleep 1<br>
 echo X select inbox<br>
 sleep 1<br>
 echo X logout<br>
-} | telnet imap.free.fr 143 2&gt;/dev/null | grep RECENT | tail -1<br>
+} | telnet imap.provider.net 143 2&gt;/dev/null | grep RECENT | tail -1<br>
 </tt><br>
 <p>
 Got it ? have fun!
